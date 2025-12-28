@@ -5,7 +5,33 @@ import { almacenamiento } from "./storage";
 import { api } from "@shared/routes";
 import { InsertarGestor, Gestor } from "@shared/schema";
 
-// Ayudante para calcular clasificación
+/**
+ * Método de Cálculo de Cuartiles:
+ * 1. Se ordenan los gestores de mayor a menor según 'totalRenovaciones'.
+ * 2. Se divide el total de gestores (N) entre 4 para obtener el tamaño base de cada cuartil.
+ * 3. Se distribuyen los gestores asegurando que cada grupo represente un rango de rendimiento:
+ *    - Q1: Top 25% (Rendimiento superior)
+ *    - Q2: 25% - 50%
+ *    - Q3: 50% - 75%
+ *    - Q4: 75% - 100% (Rendimiento inferior)
+ */
+function calcularCuartiles(lista: Gestor[]) {
+  const ordenados = [...lista].sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
+  const n = ordenados.length;
+  
+  // Usamos índices precisos para evitar inconsistencias por redondeo
+  const q1End = Math.round(n * 0.25);
+  const q2End = Math.round(n * 0.50);
+  const q3End = Math.round(n * 0.75);
+
+  return {
+    q1: ordenados.slice(0, q1End),
+    q2: ordenados.slice(q1End, q2End),
+    q3: ordenados.slice(q2End, q3End),
+    q4: ordenados.slice(q3End)
+  };
+}
+
 function clasificarGestor(g: InsertarGestor) {
   const meta = 36;
   const cumplimiento = (g.totalRenovaciones / meta) * 100;
@@ -87,16 +113,7 @@ export async function registerRoutes(
       const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / listaGestores.length;
       const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaPorPersona).length;
 
-      // Cálculo de Cuartiles por rendimiento (totalRenovaciones)
-      const ordenados = [...listaGestores].sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
-      const tamanoCuartil = Math.ceil(ordenados.length / 4);
-      
-      const cuartiles = {
-        q1: ordenados.slice(0, tamanoCuartil),
-        q2: ordenados.slice(tamanoCuartil, tamanoCuartil * 2),
-        q3: ordenados.slice(tamanoCuartil * 2, tamanoCuartil * 3),
-        q4: ordenados.slice(tamanoCuartil * 3)
-      };
+      const cuartiles = calcularCuartiles(listaGestores);
       
       res.json({
           cumplimientoTotal: (actualTotal / metaTotal) * 100,
