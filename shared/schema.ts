@@ -1,46 +1,46 @@
 
-import { pgTable, text, serial, integer, numeric, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, numeric } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// === TABLE DEFINITIONS ===
-export const managers = pgTable("managers", {
+// === DEFINICIONES DE TABLA ===
+export const gestores = pgTable("gestores", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  nombre: text("nombre").notNull(),
   
-  // Monthly Renewals (Actual)
-  febRenewals: integer("feb_renewals").notNull(),
-  marRenewals: integer("mar_renewals").notNull(),
-  aprRenewals: integer("apr_renewals").notNull(),
+  // Renovaciones Mensuales (Reales)
+  renovacionesFeb: integer("renovaciones_feb").notNull(),
+  renovacionesMar: integer("renovaciones_mar").notNull(),
+  renovacionesAbr: integer("renovaciones_abr").notNull(),
   
   // Total Q1
-  totalRenewals: integer("total_renewals").notNull(),
+  totalRenovaciones: integer("total_renovaciones").notNull(),
   
   // KPIs
-  atrasosPct: numeric("atrasos_pct", { precision: 5, scale: 2 }).notNull(), // e.g. 3.84
-  managedRenewals: integer("managed_renewals").notNull(),
-  qualityScore: integer("quality_score").notNull(),
+  porcentajeAtrasos: numeric("porcentaje_atrasos", { precision: 5, scale: 2 }).notNull(),
+  renovacionesGestionadas: integer("renovaciones_gestionadas").notNull(),
+  puntajeCalidad: integer("puntaje_calidad").notNull(),
   
-  // Calculated status
-  classification: text("classification").notNull(), // 'High Performance', 'Medium', 'Low'
+  // Estado calculado
+  clasificacion: text("clasificacion").notNull(), // 'Alto Desempeño', 'Medio', 'Bajo'
 });
 
-// === SCHEMAS ===
-export const insertManagerSchema = createInsertSchema(managers).omit({ id: true });
+// === ESQUEMAS ===
+export const esquemaInsertarGestor = createInsertSchema(gestores).omit({ id: true });
 
-// === TYPES ===
-export type Manager = typeof managers.$inferSelect;
-export type InsertManager = z.infer<typeof insertManagerSchema>;
+// === TIPOS ===
+export type Gestor = typeof gestores.$inferSelect;
+export type InsertarGestor = z.infer<typeof esquemaInsertarGestor>;
 
-// === API CONTRACT TYPES ===
-export type ManagerResponse = Manager;
-export type ManagersListResponse = Manager[];
+// === TIPOS DE CONTRATO API ===
+export type RespuestaGestor = Gestor;
+export type RespuestaListaGestores = Gestor[];
 
-export interface TeamStats {
-  totalCompliance: number;
-  averageCompliance: number;
-  teamQuality: number;
-  teamAtrasos: number;
-  managersMeetingGoal: number;
-  totalManagers: number;
+export interface EstadisticasEquipo {
+  cumplimientoTotal: number;
+  cumplimientoPromedio: number;
+  calidadEquipo: number;
+  atrasosEquipo: number;
+  gestoresCumplenMeta: number;
+  totalGestores: number;
 }

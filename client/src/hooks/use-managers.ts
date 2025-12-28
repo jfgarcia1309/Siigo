@@ -1,29 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
-import { api, type ManagersListResponse, type TeamStats } from "@shared/routes";
+import { api } from "@shared/routes";
+import { Gestor, EstadisticasEquipo } from "@shared/schema";
 
-// GET /api/managers - List of all managers with their performance data
-export function useManagers() {
-  return useQuery({
-    queryKey: [api.managers.list.path],
+export function useGestores() {
+  return useQuery<Gestor[]>({
+    queryKey: [api.gestores.listar.path],
     queryFn: async () => {
-      const res = await fetch(api.managers.list.path, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch managers");
-      return api.managers.list.responses[200].parse(await res.json());
+      const res = await fetch(api.gestores.listar.path);
+      if (!res.ok) throw new Error("Error al obtener gestores");
+      return res.json();
     },
   });
 }
 
-// GET /api/stats - Aggregated team statistics
-export function useTeamStats() {
-  return useQuery({
-    queryKey: [api.managers.stats.path],
+export function useEstadisticas() {
+  return useQuery<EstadisticasEquipo>({
+    queryKey: [api.gestores.estadisticas.path],
     queryFn: async () => {
-      const res = await fetch(api.managers.stats.path, { credentials: "include" });
-      if (!res.ok) throw new Error("Failed to fetch team stats");
-      // Note: We're manually casting/parsing here since we defined the route but maybe not the exact response schema in shared yet
-      // In a real scenario, use api.managers.stats.responses[200].parse(...)
-      const data = await res.json();
-      return data as TeamStats;
+      const res = await fetch(api.gestores.estadisticas.path);
+      if (!res.ok) throw new Error("Error al obtener estadísticas");
+      return res.json();
     },
   });
 }

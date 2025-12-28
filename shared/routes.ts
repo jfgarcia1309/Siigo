@@ -1,39 +1,39 @@
 
 import { z } from 'zod';
-import { insertManagerSchema, managers } from './schema';
+import { gestores } from './schema';
 
 export const api = {
-  managers: {
-    list: {
+  gestores: {
+    listar: {
       method: 'GET' as const,
-      path: '/api/managers',
-      responses: {
-        200: z.array(z.custom<typeof managers.$inferSelect>()),
+      path: '/api/gestores',
+      respuestas: {
+        200: z.array(z.custom<typeof gestores.$inferSelect>()),
       },
     },
-    stats: {
+    estadisticas: {
       method: 'GET' as const,
-      path: '/api/stats',
-      responses: {
+      path: '/api/estadisticas',
+      respuestas: {
         200: z.object({
-          totalCompliance: z.number(),
-          averageCompliance: z.number(),
-          teamQuality: z.number(),
-          teamAtrasos: z.number(),
-          managersMeetingGoal: z.number(),
-          totalManagers: z.number(),
+          cumplimientoTotal: z.number(),
+          cumplimientoPromedio: z.number(),
+          calidadEquipo: z.number(),
+          atrasosEquipo: z.number(),
+          gestoresCumplenMeta: z.number(),
+          totalGestores: z.number(),
         }),
       },
     }
   },
 };
 
-export function buildUrl(path: string, params?: Record<string, string | number>): string {
-  let url = path;
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (url.includes(`:${key}`)) {
-        url = url.replace(`:${key}`, String(value));
+export function construirUrl(ruta: string, parametros?: Record<string, string | number>): string {
+  let url = ruta;
+  if (parametros) {
+    Object.entries(parametros).forEach(([llave, valor]) => {
+      if (url.includes(`:${llave}`)) {
+        url = url.replace(`:${llave}`, String(valor));
       }
     });
   }

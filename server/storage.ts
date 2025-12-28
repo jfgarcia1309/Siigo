@@ -1,23 +1,23 @@
 
 import { db } from "./db";
-import { managers, type Manager, type InsertManager } from "@shared/schema";
+import { gestores, type Gestor, type InsertarGestor } from "@shared/schema";
 
-export interface IStorage {
-  getManagers(): Promise<Manager[]>;
-  seedManagers(managersList: InsertManager[]): Promise<void>;
+export interface IAlmacenamiento {
+  obtenerGestores(): Promise<Gestor[]>;
+  sembrarGestores(listaGestores: InsertarGestor[]): Promise<void>;
 }
 
-export class DatabaseStorage implements IStorage {
-  async getManagers(): Promise<Manager[]> {
-    return await db.select().from(managers);
+export class AlmacenamientoBaseDatos implements IAlmacenamiento {
+  async obtenerGestores(): Promise<Gestor[]> {
+    return await db.select().from(gestores);
   }
 
-  async seedManagers(managersList: InsertManager[]): Promise<void> {
-    const count = await db.select().from(managers);
-    if (count.length === 0) {
-        await db.insert(managers).values(managersList);
+  async sembrarGestores(listaGestores: InsertarGestor[]): Promise<void> {
+    const conteo = await db.select().from(gestores);
+    if (conteo.length === 0) {
+        await db.insert(gestores).values(listaGestores);
     }
   }
 }
 
-export const storage = new DatabaseStorage();
+export const almacenamiento = new AlmacenamientoBaseDatos();

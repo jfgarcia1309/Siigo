@@ -3,11 +3,11 @@ import { LayoutDashboard, FileText, ChevronRight, BarChart3 } from "lucide-react
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
-  const [location] = useLocation();
+  const [ubicacion] = useLocation();
 
-  const navItems = [
-    { href: "/", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/plan", label: "Strategic Plan", icon: FileText },
+  const itemsNavegacion = [
+    { href: "/", etiqueta: "Tablero", icono: LayoutDashboard },
+    { href: "/plan", etiqueta: "Plan Estratégico", icono: FileText },
   ];
 
   return (
@@ -17,29 +17,29 @@ export function Sidebar() {
           <BarChart3 className="text-primary-foreground w-6 h-6" />
         </div>
         <div>
-          <h1 className="font-display font-bold text-xl text-foreground leading-none">Renewal</h1>
-          <span className="text-xs text-muted-foreground font-medium tracking-wider">ANALYTICS</span>
+          <h1 className="font-bold text-xl text-foreground leading-none">Renovación</h1>
+          <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">Analítica</span>
         </div>
       </div>
 
       <nav className="space-y-2 flex-1">
-        {navItems.map((item) => {
-          const isActive = location === item.href;
+        {itemsNavegacion.map((item) => {
+          const esActivo = ubicacion === item.href;
           return (
             <Link key={item.href} href={item.href}>
               <div
                 className={cn(
                   "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer group",
-                  isActive
+                  esActivo
                     ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 )}
               >
                 <div className="flex items-center gap-3">
-                  <item.icon className={cn("w-5 h-5", isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-primary")} />
-                  <span className="font-medium">{item.label}</span>
+                  <item.icono className={cn("w-5 h-5", esActivo ? "text-primary-foreground" : "text-muted-foreground group-hover:text-primary")} />
+                  <span className="font-medium">{item.etiqueta}</span>
                 </div>
-                {isActive && <ChevronRight className="w-4 h-4 text-primary-foreground/80" />}
+                {esActivo && <ChevronRight className="w-4 h-4 text-primary-foreground/80" />}
               </div>
             </Link>
           );
@@ -52,8 +52,8 @@ export function Sidebar() {
             JD
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-foreground">John Director</span>
-            <span className="text-xs text-muted-foreground">Head of Renewals</span>
+            <span className="text-sm font-semibold text-foreground">Juan Director</span>
+            <span className="text-xs text-muted-foreground">Líder de Renovaciones</span>
           </div>
         </div>
       </div>
