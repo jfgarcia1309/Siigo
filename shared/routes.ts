@@ -22,6 +22,12 @@ export const api = {
           atrasosEquipo: z.number(),
           gestoresCumplenMeta: z.number(),
           totalGestores: z.number(),
+          cuartiles: z.object({
+            q1: z.array(z.custom<typeof gestores.$inferSelect>()),
+            q2: z.array(z.custom<typeof gestores.$inferSelect>()),
+            q3: z.array(z.custom<typeof gestores.$inferSelect>()),
+            q4: z.array(z.custom<typeof gestores.$inferSelect>()),
+          }),
         }),
       },
     }

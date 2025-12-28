@@ -7,7 +7,8 @@ import {
   AlertTriangle, 
   Download, 
   Search,
-  CheckCircle2
+  CheckCircle2,
+  LayoutGrid
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -52,22 +54,64 @@ export default function Dashboard() {
     }
   };
 
-  const manejarExportacion = () => {
-    const encabezados = ["Nombre", "Feb", "Mar", "Abr", "Total Q1", "Cumplimiento %", "Calidad %", "Estado"];
-    const contenidoCsv = "data:text/csv;charset=utf-8," 
-      + encabezados.join(",") + "\n"
-      + gestores?.map(g => 
-          `${g.nombre},${g.renovacionesFeb},${g.renovacionesMar},${g.renovacionesAbr},${g.totalRenovaciones},${((g.totalRenovaciones/36)*100).toFixed(1)}%,${g.puntajeCalidad}%,${g.clasificacion}`
-        ).join("\n");
-    
-    const uriCodificada = encodeURI(contenidoCsv);
-    const enlace = document.createElement("a");
-    enlace.setAttribute("href", uriCodificada);
-    enlace.setAttribute("download", "desempeño_gestores_q1.csv");
-    document.body.appendChild(enlace);
-    enlace.click();
-    document.body.removeChild(enlace);
-  };
+  const TablaGestores = ({ data }: { data: any[] }) => (
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-secondary/50 hover:bg-secondary/50">
+            <TableHead className="font-bold text-foreground w-[200px]">Nombre del Gestor</TableHead>
+            <TableHead className="text-center">Feb (8)</TableHead>
+            <TableHead className="text-center">Mar (13)</TableHead>
+            <TableHead className="text-center">Abr (15)</TableHead>
+            <TableHead className="text-center font-bold text-primary">Total Q1 (36)</TableHead>
+            <TableHead className="text-center">Cumplimiento</TableHead>
+            <TableHead className="text-center">Calidad</TableHead>
+            <TableHead className="text-center">Atrasos</TableHead>
+            <TableHead className="text-right">Estado</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data?.map((gestor) => {
+            const cumplimiento = (gestor.totalRenovaciones / 36) * 100;
+            return (
+              <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors">
+                <TableCell className="font-medium text-foreground">{gestor.nombre}</TableCell>
+                <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesFeb}</TableCell>
+                <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesMar}</TableCell>
+                <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesAbr}</TableCell>
+                <TableCell className="text-center font-bold text-lg font-mono">{gestor.totalRenovaciones}</TableCell>
+                <TableCell className="text-center">
+                  <span className={cn(
+                    "px-2.5 py-1 rounded-md text-xs font-bold",
+                    obtenerColorCumplimiento(cumplimiento)
+                  )}>
+                    {cumplimiento.toFixed(0)}%
+                  </span>
+                </TableCell>
+                <TableCell className="text-center font-mono">
+                  <span className={cn(
+                    gestor.puntajeCalidad >= 80 ? "text-green-600" : "text-yellow-600"
+                  )}>
+                    {gestor.puntajeCalidad}%
+                  </span>
+                </TableCell>
+                <TableCell className="text-center font-mono">
+                  <span className={cn(
+                    Number(gestor.porcentajeAtrasos) <= 2 ? "text-muted-foreground" : "text-red-500 font-bold"
+                  )}>
+                    {gestor.porcentajeAtrasos}%
+                  </span>
+                </TableCell>
+                <TableCell className="text-right">
+                  {obtenerInsigniaEstado(gestor.clasificacion)}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
+  );
 
   if (cargandoGestores || cargandoEstadisticas) {
     return (
@@ -99,10 +143,6 @@ export default function Dashboard() {
                   onChange={(e) => setTerminoBusqueda(e.target.value)}
                 />
               </div>
-              <Button onClick={manejarExportacion} variant="outline" className="gap-2">
-                <Download className="h-4 w-4" />
-                Exportar CSV
-              </Button>
             </div>
           </div>
 
@@ -134,9 +174,9 @@ export default function Dashboard() {
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
               <KPICard 
-                title="Gestores en Meta" 
-                value={`${estadisticas?.gestoresCumplenMeta} / ${estadisticas?.totalGestores}`}
-                subtext="Meta Q1 (36+)"
+                title="Total Gestores" 
+                value={`${estadisticas?.totalGestores}`}
+                subtext={`${estadisticas?.gestoresCumplenMeta} en meta Q1`}
                 icon={<Users className="w-6 h-6" />}
               />
             </motion.div>
@@ -148,71 +188,52 @@ export default function Dashboard() {
             transition={{ delay: 0.5 }}
             className="bg-card rounded-2xl border border-border shadow-lg shadow-black/5 overflow-hidden"
           >
-            <div className="p-6 border-b border-border flex justify-between items-center">
-              <h2 className="text-xl font-bold">Desempeño por Gestor</h2>
-              <div className="flex gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span> En Meta (≥100%)</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-yellow-500"></span> En Riesgo (80-99%)</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500"></span> Crítico ({'<'}80%)</span>
+            <div className="p-6 border-b border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold">Distribución por Rendimiento</h2>
+                <p className="text-sm text-muted-foreground">Visualización por Cuartiles y Lista General</p>
               </div>
             </div>
-            
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-secondary/50 hover:bg-secondary/50">
-                    <TableHead className="font-bold text-foreground w-[200px]">Nombre del Gestor</TableHead>
-                    <TableHead className="text-center">Feb (8)</TableHead>
-                    <TableHead className="text-center">Mar (13)</TableHead>
-                    <TableHead className="text-center">Abr (15)</TableHead>
-                    <TableHead className="text-center font-bold text-primary">Total Q1 (36)</TableHead>
-                    <TableHead className="text-center">Cumplimiento</TableHead>
-                    <TableHead className="text-center">Calidad</TableHead>
-                    <TableHead className="text-center">Atrasos</TableHead>
-                    <TableHead className="text-right">Estado</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {gestoresFiltrados?.map((gestor) => {
-                    const cumplimiento = (gestor.totalRenovaciones / 36) * 100;
-                    return (
-                      <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors">
-                        <TableCell className="font-medium text-foreground">{gestor.nombre}</TableCell>
-                        <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesFeb}</TableCell>
-                        <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesMar}</TableCell>
-                        <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesAbr}</TableCell>
-                        <TableCell className="text-center font-bold text-lg font-mono">{gestor.totalRenovaciones}</TableCell>
-                        <TableCell className="text-center">
-                          <span className={cn(
-                            "px-2.5 py-1 rounded-md text-xs font-bold",
-                            obtenerColorCumplimiento(cumplimiento)
-                          )}>
-                            {cumplimiento.toFixed(0)}%
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-center font-mono">
-                          <span className={cn(
-                            gestor.puntajeCalidad >= 80 ? "text-green-600" : "text-yellow-600"
-                          )}>
-                            {gestor.puntajeCalidad}%
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-center font-mono">
-                          <span className={cn(
-                            Number(gestor.porcentajeAtrasos) <= 2 ? "text-muted-foreground" : "text-red-500 font-bold"
-                          )}>
-                            {gestor.porcentajeAtrasos}%
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {obtenerInsigniaEstado(gestor.clasificacion)}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
+
+            <Tabs defaultValue="todos" className="w-full">
+              <div className="px-6 border-b border-border">
+                <TabsList className="bg-transparent h-12 gap-6">
+                  <TabsTrigger value="todos" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg px-4 h-9">General</TabsTrigger>
+                  <TabsTrigger value="q1" className="data-[state=active]:bg-green-500 data-[state=active]:text-white rounded-lg px-4 h-9">Cuartil 1 (Top)</TabsTrigger>
+                  <TabsTrigger value="q2" className="data-[state=active]:bg-blue-500 data-[state=active]:text-white rounded-lg px-4 h-9">Cuartil 2</TabsTrigger>
+                  <TabsTrigger value="q3" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white rounded-lg px-4 h-9">Cuartil 3</TabsTrigger>
+                  <TabsTrigger value="q4" className="data-[state=active]:bg-red-500 data-[state=active]:text-white rounded-lg px-4 h-9">Cuartil 4 (Bajo)</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="todos" className="m-0 p-0">
+                <TablaGestores data={gestoresFiltrados || []} />
+              </TabsContent>
+              <TabsContent value="q1" className="m-0 p-0">
+                <div className="p-4 bg-green-50 dark:bg-green-900/10 border-b border-green-100 dark:border-green-900/20 text-green-700 dark:text-green-400 text-sm font-medium">
+                  Gestores con el 25% superior de rendimiento.
+                </div>
+                <TablaGestores data={estadisticas?.cuartiles.q1 || []} />
+              </TabsContent>
+              <TabsContent value="q2" className="m-0 p-0">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/10 border-b border-blue-100 dark:border-blue-900/20 text-blue-700 dark:text-blue-400 text-sm font-medium">
+                  Gestores en el rango del 25% al 50%.
+                </div>
+                <TablaGestores data={estadisticas?.cuartiles.q2 || []} />
+              </TabsContent>
+              <TabsContent value="q3" className="m-0 p-0">
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/10 border-b border-orange-100 dark:border-orange-900/20 text-orange-700 dark:text-orange-400 text-sm font-medium">
+                  Gestores en el rango del 50% al 75%.
+                </div>
+                <TablaGestores data={estadisticas?.cuartiles.q3 || []} />
+              </TabsContent>
+              <TabsContent value="q4" className="m-0 p-0">
+                <div className="p-4 bg-red-50 dark:bg-red-900/10 border-b border-red-100 dark:border-red-900/20 text-red-700 dark:text-red-400 text-sm font-medium">
+                  Gestores con el 25% inferior de rendimiento.
+                </div>
+                <TablaGestores data={estadisticas?.cuartiles.q4 || []} />
+              </TabsContent>
+            </Tabs>
           </motion.div>
         </div>
       </main>

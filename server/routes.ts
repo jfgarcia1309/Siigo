@@ -3,7 +3,7 @@ import type { Express } from "express";
 import type { Server } from "http";
 import { almacenamiento } from "./storage";
 import { api } from "@shared/routes";
-import { InsertarGestor } from "@shared/schema";
+import { InsertarGestor, Gestor } from "@shared/schema";
 
 // Ayudante para calcular clasificación
 function clasificarGestor(g: InsertarGestor) {
@@ -78,22 +78,34 @@ export async function registerRoutes(
   });
   
   app.get(api.gestores.estadisticas.path, async (req, res) => {
-      const gestores = await almacenamiento.obtenerGestores();
+      const listaGestores = await almacenamiento.obtenerGestores();
       const metaPorPersona = 36;
-      const metaTotal = gestores.length * metaPorPersona;
-      const actualTotal = gestores.reduce((suma, g) => suma + g.totalRenovaciones, 0);
+      const metaTotal = listaGestores.length * metaPorPersona;
+      const actualTotal = listaGestores.reduce((suma, g) => suma + g.totalRenovaciones, 0);
       
-      const calidadPromedio = gestores.reduce((suma, g) => suma + g.puntajeCalidad, 0) / gestores.length;
-      const atrasosPromedio = gestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / gestores.length;
-      const gestoresCumplenMeta = gestores.filter(g => g.totalRenovaciones >= metaPorPersona).length;
+      const calidadPromedio = listaGestores.reduce((suma, g) => suma + g.puntajeCalidad, 0) / listaGestores.length;
+      const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / listaGestores.length;
+      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaPorPersona).length;
+
+      // Cálculo de Cuartiles por rendimiento (totalRenovaciones)
+      const ordenados = [...listaGestores].sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
+      const tamanoCuartil = Math.ceil(ordenados.length / 4);
+      
+      const cuartiles = {
+        q1: ordenados.slice(0, tamanoCuartil),
+        q2: ordenados.slice(tamanoCuartil, tamanoCuartil * 2),
+        q3: ordenados.slice(tamanoCuartil * 2, tamanoCuartil * 3),
+        q4: ordenados.slice(tamanoCuartil * 3)
+      };
       
       res.json({
           cumplimientoTotal: (actualTotal / metaTotal) * 100,
-          cumplimientoPromedio: (actualTotal / gestores.length),
+          cumplimientoPromedio: (actualTotal / listaGestores.length),
           calidadEquipo: calidadPromedio,
           atrasosEquipo: atrasosPromedio,
           gestoresCumplenMeta,
-          totalGestores: gestores.length
+          totalGestores: listaGestores.length,
+          cuartiles
       });
   });
 

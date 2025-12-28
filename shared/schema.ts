@@ -43,4 +43,10 @@ export interface EstadisticasEquipo {
   atrasosEquipo: number;
   gestoresCumplenMeta: number;
   totalGestores: number;
+  cuartiles: {
+    q1: Gestor[];
+    q2: Gestor[];
+    q3: Gestor[];
+    q4: Gestor[];
+  };
 }
