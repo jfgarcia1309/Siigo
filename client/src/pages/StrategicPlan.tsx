@@ -247,9 +247,9 @@ export default function StrategicPlan() {
                   El equipo de 23 gestores se compromete a alcanzar la meta de 18 renovaciones por persona, asegurando que el portafolio básico de Siigo (Facturación, POS, Nómina) sea renovado oportunamente.
                 </p>
                 <div className="grid grid-cols-2 gap-4 text-[11px] uppercase font-bold text-primary/80">
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Calidad: >80% (Meta)</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: <2% (Meta)</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Gestión: >180 Llamadas</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Calidad: {'>'}80% (Meta)</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: {'<'}2% (Meta)</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Gestión: {'>'}180 Llamadas</div>
                   <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Renovación: 100% Meta</div>
                 </div>
               </div>
