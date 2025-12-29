@@ -207,12 +207,6 @@ export default function Dashboard() {
     }
   };
 
-  const obtenerColorCumplimiento = (porcentaje: number) => {
-    if (porcentaje >= 100) return "text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400";
-    if (porcentaje >= 80) return "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 dark:text-yellow-400";
-    return "text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400";
-  };
-
   const obtenerClasificacionDesempeño = (porcentaje: number) => {
     if (porcentaje >= 100) return { label: "Top Performer", color: "text-green-600 bg-green-50 border-green-200" };
     if (porcentaje >= 80) return { label: "Performance Medio", color: "text-yellow-600 bg-yellow-50 border-yellow-200" };
@@ -231,12 +225,16 @@ export default function Dashboard() {
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Cumplimiento</TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Calidad</TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Atrasos</TableHead>
-            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Productividad</TableHead>
-            <TableHead className="text-right font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Acciones</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">
+              Productividad
+              <div className="text-[9px] lowercase font-normal">(llamadas/seguimientos)</div>
+            </TableHead>
+            <TableHead className="text-right font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Clasificación Impacto</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data?.map((gestor) => {
+            const { cumple: cumpleMes, fallas: fallasMes } = analizarCumplimientoMensual(gestor, mesSeleccionado);
             const renValor = mesSeleccionado === "feb" ? gestor.renovacionesFeb :
                              mesSeleccionado === "mar" ? gestor.renovacionesMar :
                              mesSeleccionado === "abr" ? gestor.renovacionesAbr :
@@ -266,7 +264,12 @@ export default function Dashboard() {
                 <TableCell className="text-center font-bold text-muted-foreground py-6">{gestor.porcentajeAtrasos}%</TableCell>
                 <TableCell className="text-center font-bold text-muted-foreground py-6">{gestiValor}</TableCell>
                 <TableCell className="text-right py-6">
-                  <div className="flex items-center justify-end gap-2">
+                  <div className="flex flex-col items-end gap-1 group-hover:hidden">
+                    <Badge variant="outline" className={cn("text-[10px] font-bold uppercase tracking-tight px-3 py-1", clasif.color)}>
+                      {clasif.label}
+                    </Badge>
+                  </div>
+                  <div className="hidden group-hover:flex items-center justify-end gap-2">
                     <Button 
                       variant="ghost" 
                       size="icon" 
@@ -432,6 +435,19 @@ export default function Dashboard() {
                   <TabsTrigger value="q3" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-2 h-full bg-transparent font-bold">Impacto Medio (Q3)</TabsTrigger>
                   <TabsTrigger value="q4" className="data-[state=active]:border-b-2 data-[state=active]:border-red-600 rounded-none px-2 h-full bg-transparent font-bold">Impacto Crítico (Q4)</TabsTrigger>
                 </TabsList>
+                <div className="bg-muted/50 p-1 rounded-md flex items-center ml-auto">
+                  <Select value={mesSeleccionado} onValueChange={(v: any) => setMesSeleccionado(v)}>
+                    <SelectTrigger className="w-[180px] h-8 border-none bg-transparent font-bold text-xs uppercase tracking-wider">
+                      <SelectValue placeholder="Mes" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="feb">Febrero</SelectItem>
+                      <SelectItem value="mar">Marzo</SelectItem>
+                      <SelectItem value="abr">Abril</SelectItem>
+                      <SelectItem value="tri">Trimestral</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <TabsContent value="todos" className="m-0">
