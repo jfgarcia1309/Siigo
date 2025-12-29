@@ -162,18 +162,11 @@ export default function Dashboard() {
                                 mesSeleccionado === "abr" ? ((gestor.renovacionesAbr / 15) * 100).toFixed(1) :
                                 ((gestor.totalRenovaciones / 36) * 100).toFixed(1);
 
-            // Los indicadores se muestran proporcionales al mes para ser precisos
-            // Calidad y Atrasos son porcentajes, se mantienen consistentes
-            // Renovaciones Gestionadas se muestra proporcional al avance del trimestre si es mensual
-            const caliValor = `${gestor.puntajeCalidad}%`;
-            const atraValor = `${gestor.porcentajeAtrasos}%`;
-            
-            // Ren. Gestión: Representa el volumen de gestiones realizadas (llamadas, correos, seguimientos)
-            // para lograr las renovaciones. Es un indicador de productividad del gestor.
-            // Para la vista mensual, calculamos la proporción correspondiente a la meta del mes.
+            // La productividad mensual se calcula como el total de gestiones realizadas (llamadas, correos, seguimientos)
+            // Para la vista mensual, calculamos la proporción correspondiente basándonos en la efectividad del periodo.
             const gestiValor = mesSeleccionado === "tri" 
               ? gestor.renovacionesGestionadas 
-              : Math.round((gestor.renovacionesGestionadas * (METAS_MENSUALES[mesSeleccionado] / 36)));
+              : Math.round(gestor.renovacionesGestionadas * (renValor / gestor.totalRenovaciones));
 
             const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
             const cumpleRenovaciones = renValor >= metaSeleccionada;
