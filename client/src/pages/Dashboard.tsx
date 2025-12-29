@@ -58,14 +58,16 @@ export default function Dashboard() {
 
   const obtenerInsigniaEstado = (clasificacion: string) => {
     switch (clasificacion) {
-      case 'Alto Desempeño':
-        return <Badge className="bg-green-500 hover:bg-green-600 border-none">Excelente</Badge>;
-      case 'En Camino':
-        return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300">Estable</Badge>;
-      case 'Requiere Mejora':
-        return <Badge variant="destructive">Mejorar</Badge>;
+      case "Impacto Bajo":
+        return <Badge className="bg-green-600 hover:bg-green-700 text-[10px] uppercase font-bold tracking-tighter">Impacto Bajo</Badge>;
+      case "Impacto Medio":
+        return <Badge className="bg-blue-500 hover:bg-blue-600 text-[10px] uppercase font-bold tracking-tighter">Impacto Medio</Badge>;
+      case "Impacto Alto":
+        return <Badge className="bg-orange-500 hover:bg-orange-600 text-[10px] uppercase font-bold tracking-tighter">Impacto Alto</Badge>;
+      case "Impacto Crítico":
+        return <Badge variant="destructive" className="text-[10px] uppercase font-bold tracking-tighter">Impacto Crítico</Badge>;
       default:
-        return <Badge variant="outline">{clasificacion}</Badge>;
+        return <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-tighter">{clasificacion}</Badge>;
     }
   };
 
@@ -143,10 +145,10 @@ export default function Dashboard() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todos">Todos los estados</SelectItem>
-                  <SelectItem value="Alto Desempeño">Alto Desempeño</SelectItem>
-                  <SelectItem value="En Camino">En Camino</SelectItem>
-                  <SelectItem value="Requiere Mejora">Requiere Mejora</SelectItem>
-                  <SelectItem value="Crítico">Crítico</SelectItem>
+                  <SelectItem value="Impacto Bajo">Impacto Bajo</SelectItem>
+                  <SelectItem value="Impacto Medio">Impacto Medio</SelectItem>
+                  <SelectItem value="Impacto Alto">Impacto Alto</SelectItem>
+                  <SelectItem value="Impacto Crítico">Impacto Crítico</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -51,10 +51,10 @@ function calcularCuartiles(lista: Gestor[]) {
 
 function clasificarGestor(g: InsertarGestor) {
   const iit = calcularIIT(g);
-  if (iit <= 0.25) return "Alto Desempeño"; 
-  if (iit <= 0.45) return "En Camino";      
-  if (iit <= 0.65) return "Requiere Mejora"; 
-  return "Crítico";                          
+  if (iit <= 0.25) return "Impacto Bajo"; 
+  if (iit <= 0.45) return "Impacto Medio";      
+  if (iit <= 0.65) return "Impacto Alto"; 
+  return "Impacto Crítico";                          
 }
 
 const DATOS_SEMILLA_BRUTOS = [
