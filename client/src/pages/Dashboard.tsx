@@ -35,6 +35,8 @@ import { cn } from "@/lib/utils";
 
 export default function Dashboard() {
   const [mesSeleccionado, setMesSeleccionado] = useState<"feb" | "mar" | "abr" | "tri">("tri");
+  const [terminoBusqueda, setTerminoBusqueda] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("todos");
   const { data: gestores, isLoading: cargandoGestores } = useGestores();
   const { data: estadisticas, isLoading: cargandoEstadisticas } = useEstadisticas(mesSeleccionado);
 
