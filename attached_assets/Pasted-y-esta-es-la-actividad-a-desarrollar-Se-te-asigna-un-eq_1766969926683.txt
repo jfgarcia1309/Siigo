@@ -1,0 +1,76 @@
+y esta es la actividad a desarrollar
+
+* Se te asigna un equipo compuesto por 23 Gestores de Renovación,
+quienes iniciaron operación en febrero de este año y trabajan en
+modalidad remota (trabajo en casa) desde diferentes zonas del país.
+
+* El proceso de renovación es 100% telefónico y virtual, con contacto
+proactivo y reactivo con los clientes.
+
+* El foco del equipo es la gestión de clientes activos, orientada a la
+renovación oportuna de los servicios, reducción del churn y
+aseguramiento del recaudo.
+
+* Los clientes objetivo son negocios y pequeñas empresas que cuentan
+con el portafolio básico de productos (Facturación Electrónica, Nómina
+Electrónica y POS – Punto de Venta).
+
+* El presupuesto de renovaciones (en unidades) asignado por Gestor ha
+sido el siguiente:
+
+• Febrero: 8 renovaciones
+
+• Marzo: 13 renovaciones
+
+• Abril: 15 renovaciones
+
+* Los indicadores definidos para el seguimiento y evaluación del desempeño del equipo de
+Renovaciones son los siguientes:
+
+• Cumplimiento de renovaciones: debe alcanzar el 100% de la meta asignada.
+
+• Score de Calidad (resultado de la valoración de llamadas y gestión con clientes): debe ser
+superior al 80%.
+
+• Seguimiento atrasado: no debe superar el 2% del total de renovaciones u oportunidades
+abiertas.
+
+• Renovaciones gestionadas por mes: deben ser superiores a 180.
+
+* Los resultados promedio actuales del equipo son:
+
+• Porcentaje de cumplimiento de renovaciones: por determinar.
+
+• Porcentaje de ejecutivos que cumplen la meta: por determinar.
+
+• Media de seguimientos atrasados: 3,84%.
+
+• Score de Calidad: 76%.
+
+• Media de renovaciones gestionadas por Gestor: 174
+
+
+* Determinar el nivel de cumplimiento de renovaciones por ejecutivo
+y el promedio de cumplimiento del equipo. Para esto, usa una
+fórmula condicional que clasifique a los ejecutivos según su
+desempeño, usa la clasificación que consideres, pero usa la
+condicional.
+
+* Definir acciones concretas orientadas a:
+
+• Alcanzar el cumplimiento de los indicadores definidos para
+renovaciones.
+
+• Asegurar que los ejecutivos cumplan con el presupuesto de
+renovaciones del mes de mayo (18 renovaciones).
+
+• Lograr que quienes ya cumplen mantengan su desempeño, y
+que quienes no lo hacen implementen acciones correctivas
+para alcanzar la meta durante el mes.
+
+
+* Elaborar una presentación donde se expongan las acciones concretas
+planteadas, para la fase de sustentación del caso.
+
+* Enviar el archivo en Excel con el análisis de los datos suministrados, que
+sirva como soporte para la presentación realizada.

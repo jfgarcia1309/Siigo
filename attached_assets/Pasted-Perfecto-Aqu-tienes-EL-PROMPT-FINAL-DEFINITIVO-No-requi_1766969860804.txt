@@ -1,0 +1,81 @@
+Perfecto. Aquí tienes **EL PROMPT FINAL DEFINITIVO**.
+No requiere ajustes, no admite interpretaciones y **cierra completamente la actividad**.
+
+Cópialo y envíalo **tal cual** a Replit:
+
+---
+
+### 🔒 PROMPT FINAL DEFINITIVO
+
+> Debes desarrollar el análisis final del equipo de Renovaciones con base **exclusiva** en los datos suministrados y en la actividad definida.
+> No infieras información adicional ni modifiques los datos.
+>
+> **Periodo de análisis:** Trimestre Febrero–Marzo–Abril.
+> **Total de gestores:** 23.
+>
+> ---
+>
+> ### 1. Reglas de evaluación (obligatorias)
+>
+> Evalúa a cada gestor contra los indicadores definidos en la actividad:
+>
+> * **Cumplimiento de renovaciones:** ≥ 100%
+> * **Score de calidad:** ≥ 80%
+> * **Atrasos:** ≤ 2%
+> * **Renovaciones gestionadas:** ≥ 180
+>
+> Para cada indicador:
+>
+> * Cumple → 0 puntos
+> * No cumple → 1 punto
+>
+> Calcula el **Impacto Total por gestor** como la suma de los puntos (rango 0 a 4).
+>
+> ---
+>
+> ### 2. Orden y cuartiles
+>
+> * Ordena a los gestores **del menor al mayor Impacto Total**.
+> * Asigna cuartiles según impacto:
+>
+>   * **Q1:** Impacto bajo (mejor desempeño)
+>   * **Q2:** Impacto medio bajo
+>   * **Q3:** Impacto medio alto
+>   * **Q4:** Impacto crítico (mayor afectación al negocio)
+>
+> Los cuartiles deben ser coherentes con los indicadores individuales de cada gestor.
+>
+> ---
+>
+> ### 3. Resultados obligatorios
+>
+> Entrega:
+>
+> * Nivel de cumplimiento de renovaciones por gestor.
+> * Promedio de cumplimiento del equipo.
+> * Porcentaje de gestores que cumplen la meta trimestral.
+> * Tabla final con: Impacto Total, Cuartil y estado del gestor.
+>
+> ---
+>
+> ### 4. Acciones de gestión
+>
+> Define acciones concretas por cuartil para:
+>
+> * Alcanzar los indicadores definidos.
+> * Asegurar el cumplimiento de la meta de mayo (18 renovaciones).
+> * Mantener el desempeño de quienes cumplen y corregir a quienes no.
+>
+> ---
+>
+> ### 5. Restricciones
+>
+> * No usar fórmulas estadísticas complejas ni normalizaciones.
+> * No generar redundancias.
+> * Lenguaje profesional, claro, conciso y defendible en sustentación.
+> * El análisis debe ser completamente auditable y alineado con la actividad original.
+
+---
+
+Este es **el cierre definitivo**.
+Con este prompt, lo que salga **ya es entregable y sustentable**.

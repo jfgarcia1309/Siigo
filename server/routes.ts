@@ -14,22 +14,19 @@ import { InsertarGestor, Gestor } from "@shared/schema";
  * 3. Atrasos (A): Porcentaje de atrasos (0-10% aprox).
  * 
  * NORMALIZACIÓN (0 a 1, donde 1 es el mayor impacto/riesgo):
- * - nR = 1 - (R / maxR) -> A menor renovación, mayor impacto.
+ * - nR = 1 - (Math.min(R, 36) / 36) -> A menor renovación, mayor impacto.
  * - nC = 1 - (C / 100) -> A menor calidad, mayor impacto.
- * - nA = A / 10       -> A mayor atraso, mayor impacto (tope en 10%).
+ * - nA = Math.min(A, 10) / 10   -> A mayor atraso, mayor impacto (tope en 10%).
  * 
  * FÓRMULA FINAL:
  * IIT = (nR * 0.50) + (nC * 0.30) + (nA * 0.20)
- * 
- * Rango IIT: 0 (Impacto Mínimo / Q1) a 1 (Impacto Máximo / Q4)
  */
 function calcularIIT(g: Gestor | InsertarGestor) {
   const R = g.totalRenovaciones;
   const C = g.puntajeCalidad;
   const A = Number(String(g.porcentajeAtrasos).replace(',', '.'));
 
-  // Normalización (Asumiendo 43 como el máximo de renovaciones observado para la escala)
-  const nR = 1 - (Math.min(R, 43) / 43);
+  const nR = 1 - (Math.min(R, 36) / 36);
   const nC = 1 - (C / 100);
   const nA = Math.min(A, 10) / 10;
 
@@ -37,7 +34,6 @@ function calcularIIT(g: Gestor | InsertarGestor) {
 }
 
 function calcularCuartiles(lista: Gestor[]) {
-  // Ordenamos de MENOR a MAYOR impacto (Q1 -> Q4)
   const ordenados = [...lista].sort((a, b) => calcularIIT(a) - calcularIIT(b));
   const n = ordenados.length;
   
@@ -55,11 +51,11 @@ function calcularCuartiles(lista: Gestor[]) {
 
 function clasificarGestor(g: InsertarGestor) {
   const iit = calcularIIT(g);
-  
-  if (iit <= 0.25) return "Alto Desempeño"; // Q1
-  if (iit <= 0.50) return "En Camino";      // Q2
-  if (iit <= 0.75) return "Requiere Mejora"; // Q3
-  return "Crítico";                          // Q4
+  // Clasificación condicional explícita basada en impacto integral
+  if (iit <= 0.25) return "Alto Desempeño"; 
+  if (iit <= 0.45) return "En Camino";      
+  if (iit <= 0.65) return "Requiere Mejora"; 
+  return "Crítico";                          
 }
 
 const DATOS_SEMILLA_BRUTOS = [
@@ -113,23 +109,22 @@ export async function registerRoutes(
 
   app.get(api.gestores.listar.path, async (req, res) => {
     const gestores = await almacenamiento.obtenerGestores();
-    // Ordenamos por IIT ascendente (Menor impacto primero)
     gestores.sort((a, b) => calcularIIT(a) - calcularIIT(b));
     res.json(gestores);
   });
   
   app.get(api.gestores.estadisticas.path, async (req, res) => {
       const listaGestores = await almacenamiento.obtenerGestores();
-      const metaTotal = listaGestores.length * 36;
+      const metaAcumulada = 36; // 8+13+15
       const actualTotal = listaGestores.reduce((suma, g) => suma + g.totalRenovaciones, 0);
       const calidadPromedio = listaGestores.reduce((suma, g) => suma + g.puntajeCalidad, 0) / listaGestores.length;
       const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / listaGestores.length;
-      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= 36).length;
+      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaAcumulada).length;
 
       const cuartiles = calcularCuartiles(listaGestores);
       
       res.json({
-          cumplimientoTotal: (actualTotal / metaTotal) * 100,
+          cumplimientoTotal: (actualTotal / (listaGestores.length * metaAcumulada)) * 100,
           cumplimientoPromedio: (actualTotal / listaGestores.length),
           calidadEquipo: calidadPromedio,
           atrasosEquipo: atrasosPromedio,
