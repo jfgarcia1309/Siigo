@@ -365,19 +365,6 @@ export default function Dashboard() {
                   onChange={(e) => setTerminoBusqueda(e.target.value)}
                 />
               </div>
-              <Select value={filtroEstado || "todos"} onValueChange={setFiltroEstado}>
-                <SelectTrigger className="w-[200px] bg-card" data-testid="select-impact-filter">
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Filtrar por estado" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="todos" data-testid="option-all-states">Todos los Estados</SelectItem>
-                  <SelectItem value="Impacto Bajo" data-testid="option-low-impact">Impacto Bajo</SelectItem>
-                  <SelectItem value="Impacto Medio" data-testid="option-medium-impact">Impacto Medio</SelectItem>
-                  <SelectItem value="Impacto Alto" data-testid="option-high-impact">Impacto Alto</SelectItem>
-                  <SelectItem value="Impacto Crítico" data-testid="option-critical-impact">Impacto Crítico</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
 
             <div className="bg-card p-1 rounded-lg border flex items-center shadow-sm w-full lg:w-auto overflow-x-auto">
