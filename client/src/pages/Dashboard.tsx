@@ -86,15 +86,31 @@ export default function Dashboard() {
   const obtenerInsigniaEstado = (clasificacion: string) => {
     switch (clasificacion) {
       case "Impacto Bajo":
-        return <Badge className="bg-green-600 hover:bg-green-700 text-[10px] uppercase font-bold tracking-tighter">Impacto Bajo</Badge>;
+        return (
+          <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight border-primary text-primary px-3 py-1">
+            HIGH PERFORMER
+          </Badge>
+        );
       case "Impacto Medio":
-        return <Badge className="bg-blue-500 hover:bg-blue-600 text-[10px] uppercase font-bold tracking-tighter">Impacto Medio</Badge>;
+        return (
+          <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight border-green-600 text-green-600 px-3 py-1">
+            ON TRACK
+          </Badge>
+        );
       case "Impacto Alto":
-        return <Badge className="bg-orange-500 hover:bg-orange-600 text-[10px] uppercase font-bold tracking-tighter">Impacto Alto</Badge>;
+        return (
+          <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight border-orange-500 text-orange-500 px-3 py-1">
+            NEEDS IMPROVEMENT
+          </Badge>
+        );
       case "Impacto Crítico":
-        return <Badge variant="destructive" className="text-[10px] uppercase font-bold tracking-tighter">Impacto Crítico</Badge>;
+        return (
+          <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight border-red-600 text-red-600 px-3 py-1">
+            CRITICAL RISK
+          </Badge>
+        );
       default:
-        return <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-tighter">{clasificacion}</Badge>;
+        return <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-tight px-3 py-1">{clasificacion}</Badge>;
     }
   };
 
@@ -102,46 +118,56 @@ export default function Dashboard() {
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="bg-secondary/50 hover:bg-secondary/50">
-            <TableHead className="font-bold text-foreground w-[200px]">Nombre del Gestor</TableHead>
-            <TableHead className="text-center">Renovaciones ({mesSeleccionado.toUpperCase()})</TableHead>
-            <TableHead className="text-center">Estado Mes</TableHead>
-            <TableHead className="text-center">Indicadores No Cumplidos</TableHead>
-            <TableHead className="text-right">Clasificación Impacto</TableHead>
+          <TableRow className="hover:bg-transparent border-b">
+            <TableHead className="font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Nombre del Gestor</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Renovaciones</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Cumplimiento</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Calidad</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Atrasos</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Ren. Gestión</TableHead>
+            <TableHead className="text-right font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Clasificación Impacto</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data?.map((gestor) => {
-            const { cumple, fallas } = analizarCumplimientoMensual(gestor, mesSeleccionado);
-            const valorMes = mesSeleccionado === "feb" ? gestor.renovacionesFeb : mesSeleccionado === "mar" ? gestor.renovacionesMar : gestor.renovacionesAbr;
-            const metaMes = METAS_MENSUALES[mesSeleccionado];
+            const cumplimiento = (gestor.totalRenovaciones / 36) * 100;
+            const cumpleRenovaciones = gestor.totalRenovaciones >= 36;
+            const { cumple: cumpleMes, fallas: fallasMes } = analizarCumplimientoMensual(gestor, mesSeleccionado);
             
             return (
-              <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors">
-                <TableCell className="font-medium text-foreground">{gestor.nombre}</TableCell>
-                <TableCell className="text-center font-bold">
-                  {valorMes} <span className="text-[10px] text-muted-foreground font-normal">/ {metaMes}</span>
+              <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors border-b last:border-0">
+                <TableCell className="font-bold text-foreground py-6 text-sm">
+                  <div className="max-w-[180px] leading-tight">
+                    {gestor.nombre}
+                  </div>
                 </TableCell>
-                <TableCell className="text-center">
-                  <Badge variant={cumple ? "default" : "destructive"} className="text-[10px] uppercase">
-                    {cumple ? "Cumple" : "No Cumple"}
-                  </Badge>
+                <TableCell className="text-center font-bold text-lg py-6">{gestor.totalRenovaciones}</TableCell>
+                <TableCell className="text-center py-6">
+                  <span className={cn(
+                    "px-3 py-1 rounded text-xs font-bold",
+                    cumpleRenovaciones 
+                      ? "text-green-600 bg-green-50 dark:bg-green-900/20" 
+                      : "text-red-600 bg-red-50 dark:bg-red-900/20"
+                  )}>
+                    {cumplimiento.toFixed(0)}%
+                  </span>
                 </TableCell>
-                <TableCell className="text-center">
-                  {fallas.length > 0 ? (
-                    <div className="flex flex-wrap justify-center gap-1">
-                      {fallas.map((f, i) => (
-                        <Badge key={i} variant="outline" className="text-[9px] border-red-200 text-red-600 bg-red-50">
-                          {f}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : (
-                    <span className="text-xs text-green-600 font-medium">Todos los KPI al día</span>
-                  )}
-                </TableCell>
-                <TableCell className="text-right">
-                  {obtenerInsigniaEstado(gestor.clasificacion)}
+                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.puntajeCalidad}%</TableCell>
+                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.porcentajeAtrasos}%</TableCell>
+                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.renovacionesGestionadas}</TableCell>
+                <TableCell className="text-right py-6">
+                  <div className="flex flex-col items-end gap-1">
+                    {obtenerInsigniaEstado(gestor.clasificacion)}
+                    {!cumpleMes && (
+                      <div className="flex flex-wrap justify-end gap-1 mt-1">
+                        {fallasMes.map((f, i) => (
+                          <Badge key={i} variant="outline" className="text-[8px] border-red-200 text-red-600 bg-red-50 px-1 h-4">
+                            {f.split(' ')[0]}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             );
@@ -166,17 +192,6 @@ export default function Dashboard() {
               <p className="text-muted-foreground mt-1">Análisis de impacto ascendente en los indicadores del equipo</p>
             </div>
             <div className="flex items-center gap-3">
-              <Select value={mesSeleccionado} onValueChange={(v: any) => setMesSeleccionado(v)}>
-                <SelectTrigger className="w-[140px] bg-primary/5 border-primary/20 font-bold">
-                  <Target className="w-4 h-4 mr-2 text-primary" />
-                  <SelectValue placeholder="Mes" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="feb">Febrero</SelectItem>
-                  <SelectItem value="mar">Marzo</SelectItem>
-                  <SelectItem value="abr">Abril</SelectItem>
-                </SelectContent>
-              </Select>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
@@ -233,34 +248,36 @@ export default function Dashboard() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-card rounded-2xl border border-border shadow-lg overflow-hidden"
+            className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden"
           >
-            <div className="p-6 border-b border-border bg-muted/20">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-xl font-bold flex items-center gap-2">
-                    <ArrowUp className="w-5 h-5 text-primary" />
-                    Orden de Afectación Ascendente
-                  </h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Índice de Impacto Total (IIT): Normalización de Renovaciones (50%), Calidad (30%) y Atrasos (20%).
-                  </p>
-                </div>
-                <div className="text-right hidden md:block">
-                  <Badge variant="outline" className="text-[10px] uppercase tracking-tighter">Nivel de Impacto: Ascendente</Badge>
-                </div>
+            <div className="p-6 border-b border-border bg-card">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  Gestión de Renovaciones
+                </h2>
+                <Badge variant="outline" className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Vista Detallada</Badge>
               </div>
             </div>
 
             <Tabs defaultValue="todos" className="w-full">
-              <div className="px-6 border-b border-border bg-card">
+              <div className="px-6 border-b border-border bg-card flex justify-between items-center">
                 <TabsList className="bg-transparent h-14 gap-8">
-                  <TabsTrigger value="todos" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 h-full bg-transparent">Vista Unificada</TabsTrigger>
-                  <TabsTrigger value="q1" className="data-[state=active]:border-b-2 data-[state=active]:border-green-500 rounded-none px-2 h-full bg-transparent">Impacto Mínimo (Q1)</TabsTrigger>
-                  <TabsTrigger value="q2" className="data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none px-2 h-full bg-transparent">Impacto Bajo (Q2)</TabsTrigger>
-                  <TabsTrigger value="q3" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-2 h-full bg-transparent">Impacto Medio (Q3)</TabsTrigger>
-                  <TabsTrigger value="q4" className="data-[state=active]:border-b-2 data-[state=active]:border-red-500 rounded-none px-2 h-full bg-transparent">Impacto Crítico (Q4)</TabsTrigger>
+                  <TabsTrigger value="todos" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 h-full bg-transparent font-bold">Vista Unificada</TabsTrigger>
+                  <TabsTrigger value="q1" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 h-full bg-transparent font-bold">Impacto Mínimo (Q1)</TabsTrigger>
+                  <TabsTrigger value="q2" className="data-[state=active]:border-b-2 data-[state=active]:border-green-600 rounded-none px-2 h-full bg-transparent font-bold">Impacto Bajo (Q2)</TabsTrigger>
+                  <TabsTrigger value="q3" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-2 h-full bg-transparent font-bold">Impacto Medio (Q3)</TabsTrigger>
+                  <TabsTrigger value="q4" className="data-[state=active]:border-b-2 data-[state=active]:border-red-600 rounded-none px-2 h-full bg-transparent font-bold">Impacto Crítico (Q4)</TabsTrigger>
                 </TabsList>
+                <Select value={mesSeleccionado} onValueChange={(v: any) => setMesSeleccionado(v)}>
+                  <SelectTrigger className="w-[140px] h-8 bg-muted/50 border-none font-bold text-xs uppercase tracking-wider">
+                    <SelectValue placeholder="Mes" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="feb">Febrero</SelectItem>
+                    <SelectItem value="mar">Marzo</SelectItem>
+                    <SelectItem value="abr">Abril</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <TabsContent value="todos" className="m-0">
