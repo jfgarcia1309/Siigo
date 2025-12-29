@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { 
   CheckCircle2, 
   XCircle,
-  TrendingUp,
-  Activity,
-  Target
+  Target,
+  AlertTriangle,
+  Award
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,108 +22,134 @@ export default function ComplianceAnalysis() {
     );
   }
 
+  const META_RENOVACIONES = 36;
+  const META_CALIDAD = 80;
+  const MAX_ATRASOS = 2;
+  const MIN_GESTION = 180;
+
   const analizarGestor = (g: any) => {
-    const cumpleRen = g.totalRenovaciones >= 36;
-    const cumpleCal = g.puntajeCalidad >= 80;
-    const cumpleAtr = Number(g.porcentajeAtrasos) <= 2;
-    const cumpleGes = g.renovacionesGestionadas >= 180;
+    const cumpleRen = g.totalRenovaciones >= META_RENOVACIONES;
+    const cumpleCal = g.puntajeCalidad >= META_CALIDAD;
+    const cumpleAtr = Number(g.porcentajeAtrasos) <= MAX_ATRASOS;
+    const cumpleGes = g.renovacionesGestionadas >= MIN_GESTION;
     
     const fallas = [];
-    if (!cumpleRen) fallas.push(`Meta (${g.totalRenovaciones}/36)`);
-    if (!cumpleCal) fallas.push(`Calidad (${g.puntajeCalidad}%)`);
-    if (!cumpleAtr) fallas.push(`Atrasos (${g.porcentajeAtrasos}%)`);
-    if (!cumpleGes) fallas.push(`Gestión (${g.renovacionesGestionadas})`);
+    if (!cumpleRen) fallas.push("Meta de Renovaciones");
+    if (!cumpleCal) fallas.push("Calidad");
+    if (!cumpleAtr) fallas.push("Atrasos");
+    if (!cumpleGes) fallas.push("Renovaciones Gestionadas");
 
     return {
       cumpleTodo: fallas.length === 0,
-      fallas,
-      soloMeta: cumpleRen && fallas.length > 0
+      cumpleSoloMeta: cumpleRen && fallas.length > 0,
+      cumpleMeta: cumpleRen,
+      fallas
     };
   };
+
+  const gestoresAnalizados = gestores?.map(g => ({ ...g, ...analizarGestor(g) })) || [];
+  const cumplenMetaTotal = gestoresAnalizados.filter(g => g.cumpleMeta).length;
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <main className="flex-1 p-8 lg:p-10 overflow-auto">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="flex justify-between items-end">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Análisis de Cumplimiento Integral por Gestor</h1>
-              <p className="text-muted-foreground mt-2">Desempeño consolidado de los 23 gestores (Febrero - Abril)</p>
+        <div className="max-w-7xl mx-auto space-y-10">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold">Desempeño Individual de Gestores</h1>
+            <p className="text-muted-foreground">Identificación clara de cumplimiento (Meta Trimestral: {META_RENOVACIONES} renovaciones)</p>
+          </div>
+
+          <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-primary/10 rounded-xl">
+                <Target className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground font-medium">Cumplimiento de Meta (≥36)</p>
+                <h2 className="text-2xl font-bold">{cumplenMetaTotal} de 23 gestores</h2>
+              </div>
             </div>
-            <div className="text-right">
-              <Badge variant="outline" className="text-xs">Meta Trimestral: 36 Renovaciones</Badge>
+            <div className="flex gap-4">
+              <div className="text-center px-4">
+                <p className="text-xs text-muted-foreground mb-1 uppercase font-bold tracking-tighter">Calidad</p>
+                <Badge variant="outline">{'>'}{META_CALIDAD}%</Badge>
+              </div>
+              <div className="text-center px-4">
+                <p className="text-xs text-muted-foreground mb-1 uppercase font-bold tracking-tighter">Atrasos</p>
+                <Badge variant="outline">≤{MAX_ATRASOS}%</Badge>
+              </div>
+              <div className="text-center px-4">
+                <p className="text-xs text-muted-foreground mb-1 uppercase font-bold tracking-tighter">Gestión</p>
+                <Badge variant="outline">{'>'}{MIN_GESTION}</Badge>
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {gestores?.map((g) => {
-              const { cumpleTodo, fallas, soloMeta } = analizarGestor(g);
-              return (
-                <motion.div
-                  key={g.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className={cn(
-                    "relative p-6 rounded-2xl border transition-all hover:shadow-md",
-                    cumpleTodo ? "bg-green-50/50 border-green-100" : 
-                    soloMeta ? "bg-blue-50/50 border-blue-100" : "bg-card border-border"
+            {gestoresAnalizados.map((g) => (
+              <motion.div
+                key={g.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={cn(
+                  "p-6 rounded-2xl border transition-all relative overflow-hidden",
+                  g.cumpleTodo ? "bg-green-50/50 border-green-200 shadow-sm" : 
+                  g.cumpleSoloMeta ? "bg-blue-50/50 border-blue-200" : "bg-card border-border shadow-sm"
+                )}
+              >
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="font-bold text-lg leading-tight">{g.nombre}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">ID: {g.id}</p>
+                  </div>
+                  {g.cumpleTodo ? (
+                    <Award className="w-8 h-8 text-green-600" />
+                  ) : g.cumpleMeta ? (
+                    <CheckCircle2 className="w-6 h-6 text-blue-500" />
+                  ) : (
+                    <XCircle className="w-6 h-6 text-red-400" />
                   )}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-bold text-lg leading-tight pr-2">{g.nombre}</h3>
-                    {cumpleTodo ? (
-                      <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
-                    ) : (
-                      <XCircle className="w-6 h-6 text-red-400 shrink-0" />
-                    )}
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center bg-background/50 p-3 rounded-xl border border-border/40">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase">Renovaciones</span>
+                    <span className={cn("text-lg font-black", g.cumpleMeta ? "text-green-600" : "text-red-600")}>
+                      {g.totalRenovaciones} <span className="text-xs font-normal text-muted-foreground">/ {META_RENOVACIONES}</span>
+                    </span>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground flex items-center gap-1.5">
-                        <Target className="w-3.5 h-3.5" /> Renovaciones
-                      </span>
-                      <span className={cn("font-bold", g.totalRenovaciones >= 36 ? "text-green-600" : "text-red-500")}>
-                        {g.totalRenovaciones} / 36
-                      </span>
-                    </div>
-
-                    <div className="pt-2 border-t border-border/50">
-                      {cumpleTodo ? (
-                        <div className="text-xs text-green-700 font-medium bg-green-100/50 p-2 rounded-lg">
-                          ¡Excelente! Cumple con el 100% de los indicadores corporativos.
+                  <div className="space-y-2">
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest px-1">Análisis de Cumplimiento</p>
+                    <div className="space-y-2">
+                      {g.cumpleTodo ? (
+                        <div className="flex items-center gap-2 text-xs text-green-700 bg-green-100/50 p-2.5 rounded-lg border border-green-200/50">
+                          <CheckCircle2 className="w-3 h-3" />
+                          Cumple satisfactoriamente todos los criterios.
                         </div>
                       ) : (
-                        <div className="space-y-2">
-                          <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Brechas detectadas:</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {fallas.map((f, i) => (
-                              <Badge key={i} variant="outline" className="text-[10px] bg-white/50 border-red-200 text-red-600 py-0 px-2">
-                                {f}
-                              </Badge>
-                            ))}
-                          </div>
+                        <div className="space-y-1.5">
+                          {g.fallas.map((f: string, i: number) => (
+                            <div key={i} className="flex items-center gap-2 text-[11px] text-red-700 bg-red-50 p-1.5 rounded-md border border-red-100">
+                              <AlertTriangle className="w-3 h-3 shrink-0" />
+                              Incumple {f}
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
                   </div>
+                </div>
 
-                  <div className="mt-4 pt-3 flex items-center justify-between border-t border-border/50">
-                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">Estado:</span>
-                    <Badge 
-                      variant={cumpleTodo ? "default" : "secondary"} 
-                      className={cn(
-                        "text-[10px] h-5",
-                        cumpleTodo && "bg-green-600"
-                      )}
-                    >
-                      {g.clasificacion}
-                    </Badge>
-                  </div>
-                </motion.div>
-              );
-            })}
+                <div className="mt-6 pt-4 border-t border-border/50 flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Clasificación</span>
+                  <Badge variant={g.cumpleTodo ? "default" : "secondary"} className={cn("text-[10px] uppercase", g.cumpleTodo && "bg-green-600 hover:bg-green-700")}>
+                    {g.clasificacion}
+                  </Badge>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </main>

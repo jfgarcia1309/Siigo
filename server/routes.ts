@@ -51,7 +51,6 @@ function calcularCuartiles(lista: Gestor[]) {
 
 function clasificarGestor(g: InsertarGestor) {
   const iit = calcularIIT(g);
-  // Clasificación condicional explícita basada en impacto integral
   if (iit <= 0.25) return "Alto Desempeño"; 
   if (iit <= 0.45) return "En Camino";      
   if (iit <= 0.65) return "Requiere Mejora"; 
@@ -115,16 +114,18 @@ export async function registerRoutes(
   
   app.get(api.gestores.estadisticas.path, async (req, res) => {
       const listaGestores = await almacenamiento.obtenerGestores();
-      const metaAcumulada = 36; // 8+13+15
+      const metaTotalAcumulada = 36;
       const actualTotal = listaGestores.reduce((suma, g) => suma + g.totalRenovaciones, 0);
       const calidadPromedio = listaGestores.reduce((suma, g) => suma + g.puntajeCalidad, 0) / listaGestores.length;
       const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / listaGestores.length;
-      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaAcumulada).length;
+      
+      // Conteo exacto: Solo gestores que llegan a 36 o más renovaciones
+      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaTotalAcumulada).length;
 
       const cuartiles = calcularCuartiles(listaGestores);
       
       res.json({
-          cumplimientoTotal: (actualTotal / (listaGestores.length * metaAcumulada)) * 100,
+          cumplimientoTotal: (actualTotal / (listaGestores.length * metaTotalAcumulada)) * 100,
           cumplimientoPromedio: (actualTotal / listaGestores.length),
           calidadEquipo: calidadPromedio,
           atrasosEquipo: atrasosPromedio,

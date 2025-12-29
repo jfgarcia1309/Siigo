@@ -154,9 +154,9 @@ export default function Dashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <KPICard 
-              title="Cumplimiento Promedio" 
-              value={`${estadisticas?.cumplimientoTotal.toFixed(1)}%`} 
-              subtext="Basado en meta trimestral"
+              title="Cumplimiento Meta Trimestral" 
+              value={`${estadisticas?.gestoresCumplenMeta} de 23`}
+              subtext="Gestores que alcanzaron ≥36 renovaciones"
               icon={<Target className="w-6 h-6" />}
             />
             <KPICard 
