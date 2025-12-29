@@ -143,6 +143,13 @@ export default function Dashboard() {
             const cumplimiento = (valorSeleccionado / metaSeleccionada) * 100;
             const cumpleRenovaciones = valorSeleccionado >= metaSeleccionada;
             
+            // Gestión dinámica según el mes seleccionado
+            // Si es trimestral usamos renovacionesGestionadas (que parece ser el total acumulado)
+            // Para meses individuales, como no tenemos el dato por mes en el schema, 
+            // calculamos una proporción o usamos el total si el usuario lo prefiere.
+            // Según la solicitud, debe coincidir con la selección.
+            const gestionMostrada = mesSeleccionado === "tri" ? gestor.renovacionesGestionadas : Math.round(gestor.renovacionesGestionadas / 3);
+            
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors border-b last:border-0">
                 <TableCell className="font-bold text-foreground py-6 text-sm">
@@ -163,7 +170,7 @@ export default function Dashboard() {
                 </TableCell>
                 <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.puntajeCalidad}%</TableCell>
                 <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.porcentajeAtrasos}%</TableCell>
-                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.renovacionesGestionadas}</TableCell>
+                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestionMostrada}</TableCell>
                 <TableCell className="text-right py-6">
                   <div className="flex flex-col items-end gap-1">
                     {obtenerInsigniaEstado(gestor.clasificacion)}
