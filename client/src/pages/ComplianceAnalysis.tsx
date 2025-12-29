@@ -27,9 +27,9 @@ export default function ComplianceAnalysis() {
   }
 
   const META_RENOVACIONES = 36;
-  const META_CALIDAD = 80;
-  const MAX_ATRASOS = 2;
-  const MIN_GESTION = 180;
+  const META_CALIDAD = 76;
+  const MAX_ATRASOS = 3.84;
+  const MIN_GESTION = 174;
 
   const analizarGestor = (g: any) => {
     const cumpleRen = g.totalRenovaciones >= META_RENOVACIONES;
@@ -133,7 +133,7 @@ export default function ComplianceAnalysis() {
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
                 <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Calidad</p>
-                <Badge variant="outline" className="text-[10px]">{'>'}{META_CALIDAD}%</Badge>
+                <Badge variant="outline" className="text-[10px]">≥{META_CALIDAD}%</Badge>
               </div>
               <div className="text-center">
                 <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Atrasos</p>
@@ -141,7 +141,7 @@ export default function ComplianceAnalysis() {
               </div>
               <div className="text-center">
                 <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Gestión</p>
-                <Badge variant="outline" className="text-[10px]">{'>'}{MIN_GESTION}</Badge>
+                <Badge variant="outline" className="text-[10px]">≥{MIN_GESTION}</Badge>
               </div>
             </div>
           </div>
