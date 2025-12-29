@@ -7,7 +7,7 @@ export function Sidebar() {
 
   const itemsNavegacion = [
     { href: "/", etiqueta: "Tablero", icono: LayoutDashboard },
-    { href: "/analisis-cumplimiento", etiqueta: "Análisis Integral", icono: CheckCircle2 },
+    { href: "/analisis-cumplimiento", etiqueta: "Gestores", icono: CheckCircle2 },
     { href: "/plan", etiqueta: "Plan Estratégico", icono: FileText },
   ];
 

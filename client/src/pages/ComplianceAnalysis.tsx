@@ -4,11 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { 
   CheckCircle2, 
-  AlertCircle, 
-  Target,
-  FileText,
-  Activity
+  XCircle,
+  TrendingUp,
+  Activity,
+  Target
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function ComplianceAnalysis() {
   const { data: gestores, isLoading } = useGestores();
@@ -21,123 +22,108 @@ export default function ComplianceAnalysis() {
     );
   }
 
-  const cumplidoresIntegrales = gestores?.filter(g => 
-    g.totalRenovaciones >= 36 && 
-    g.puntajeCalidad >= 80 && 
-    Number(g.porcentajeAtrasos) <= 2 && 
-    g.renovacionesGestionadas >= 180
-  ) || [];
+  const analizarGestor = (g: any) => {
+    const cumpleRen = g.totalRenovaciones >= 36;
+    const cumpleCal = g.puntajeCalidad >= 80;
+    const cumpleAtr = Number(g.porcentajeAtrasos) <= 2;
+    const cumpleGes = g.renovacionesGestionadas >= 180;
+    
+    const fallas = [];
+    if (!cumpleRen) fallas.push(`Meta (${g.totalRenovaciones}/36)`);
+    if (!cumpleCal) fallas.push(`Calidad (${g.puntajeCalidad}%)`);
+    if (!cumpleAtr) fallas.push(`Atrasos (${g.porcentajeAtrasos}%)`);
+    if (!cumpleGes) fallas.push(`Gestión (${g.renovacionesGestionadas})`);
 
-  const soloMeta = gestores?.filter(g => 
-    g.totalRenovaciones >= 36 && 
-    !(g.puntajeCalidad >= 80 && Number(g.porcentajeAtrasos) <= 2 && g.renovacionesGestionadas >= 180)
-  ) || [];
-
-  const noCumplenMeta = gestores?.filter(g => g.totalRenovaciones < 36) || [];
+    return {
+      cumpleTodo: fallas.length === 0,
+      fallas,
+      soloMeta: cumpleRen && fallas.length > 0
+    };
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <main className="flex-1 p-8 lg:p-10 overflow-auto">
-        <div className="max-w-6xl mx-auto space-y-10 pb-20">
-          
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-foreground">Análisis de Cumplimiento Integral</h1>
-            <p className="text-lg text-muted-foreground">
-              Evaluación detallada de brechas de rendimiento frente a los 4 indicadores corporativos.
-            </p>
+        <div className="max-w-7xl mx-auto space-y-8">
+          <div className="flex justify-between items-end">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Análisis de Cumplimiento Integral por Gestor</h1>
+              <p className="text-muted-foreground mt-2">Desempeño consolidado de los 23 gestores (Febrero - Abril)</p>
+            </div>
+            <div className="text-right">
+              <Badge variant="outline" className="text-xs">Meta Trimestral: 36 Renovaciones</Badge>
+            </div>
           </div>
 
-          <div className="grid gap-8">
-            {/* Sección: Cumplimiento 100% */}
-            <motion.section 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-4"
-            >
-              <div className="flex items-center gap-3 text-green-600 border-b border-green-100 pb-2">
-                <CheckCircle2 className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">Cumplimiento Integral (100%)</h2>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {cumplidoresIntegrales.length > 0 ? (
-                  cumplidoresIntegrales.map(g => (
-                    <div key={g.id} className="bg-green-50 p-6 rounded-2xl border border-green-100 shadow-sm flex justify-between items-center">
-                      <div>
-                        <h3 className="font-bold text-green-900 text-lg">{g.nombre}</h3>
-                        <p className="text-sm text-green-700">Cumple Meta, Calidad, Atrasos y Gestión.</p>
-                      </div>
-                      <Badge className="bg-green-600 px-4 py-1">Líder</Badge>
-                    </div>
-                  ))
-                ) : (
-                  <div className="bg-muted/30 p-8 rounded-2xl text-center md:col-span-2">
-                    <p className="text-muted-foreground italic">No se identifican gestores con cumplimiento del 100% en todos los indicadores.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {gestores?.map((g) => {
+              const { cumpleTodo, fallas, soloMeta } = analizarGestor(g);
+              return (
+                <motion.div
+                  key={g.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className={cn(
+                    "relative p-6 rounded-2xl border transition-all hover:shadow-md",
+                    cumpleTodo ? "bg-green-50/50 border-green-100" : 
+                    soloMeta ? "bg-blue-50/50 border-blue-100" : "bg-card border-border"
+                  )}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="font-bold text-lg leading-tight pr-2">{g.nombre}</h3>
+                    {cumpleTodo ? (
+                      <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
+                    ) : (
+                      <XCircle className="w-6 h-6 text-red-400 shrink-0" />
+                    )}
                   </div>
-                )}
-              </div>
-            </motion.section>
 
-            {/* Sección: Solo Meta */}
-            <motion.section 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="space-y-4"
-            >
-              <div className="flex items-center gap-3 text-blue-600 border-b border-blue-100 pb-2">
-                <Target className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">Cumplimiento Solo de Meta</h2>
-              </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {soloMeta.map(g => (
-                  <div key={g.id} className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100 flex flex-col gap-3">
-                    <h3 className="font-bold text-blue-900">{g.nombre}</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {g.puntajeCalidad < 80 && (
-                        <Badge variant="outline" className="bg-white/50 border-red-200 text-red-600 text-[10px]">
-                          Falla Calidad ({g.puntajeCalidad}%)
-                        </Badge>
-                      )}
-                      {Number(g.porcentajeAtrasos) > 2 && (
-                        <Badge variant="outline" className="bg-white/50 border-red-200 text-red-600 text-[10px]">
-                          Falla Atrasos ({g.porcentajeAtrasos}%)
-                        </Badge>
-                      )}
-                      {g.renovacionesGestionadas < 180 && (
-                        <Badge variant="outline" className="bg-white/50 border-red-200 text-red-600 text-[10px]">
-                          Falla Gestión ({g.renovacionesGestionadas})
-                        </Badge>
-                      )}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground flex items-center gap-1.5">
+                        <Target className="w-3.5 h-3.5" /> Renovaciones
+                      </span>
+                      <span className={cn("font-bold", g.totalRenovaciones >= 36 ? "text-green-600" : "text-red-500")}>
+                        {g.totalRenovaciones} / 36
+                      </span>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </motion.section>
 
-            {/* Sección: Incumplimiento Meta */}
-            <motion.section 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="space-y-4"
-            >
-              <div className="flex items-center gap-3 text-red-600 border-b border-red-100 pb-2">
-                <AlertCircle className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">Brechas Críticas (Meta no alcanzada)</h2>
-              </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {noCumplenMeta.map(g => (
-                  <div key={g.id} className="bg-card p-4 rounded-xl border border-border flex justify-between items-center group hover:border-red-200 transition-colors">
-                    <span className="font-medium text-foreground text-sm truncate max-w-[180px]">{g.nombre}</span>
-                    <div className="text-right">
-                      <span className="block text-xs font-bold text-red-500">-{36 - g.totalRenovaciones} renov.</span>
-                      <span className="text-[10px] text-muted-foreground">{g.totalRenovaciones} / 36</span>
+                    <div className="pt-2 border-t border-border/50">
+                      {cumpleTodo ? (
+                        <div className="text-xs text-green-700 font-medium bg-green-100/50 p-2 rounded-lg">
+                          ¡Excelente! Cumple con el 100% de los indicadores corporativos.
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Brechas detectadas:</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {fallas.map((f, i) => (
+                              <Badge key={i} variant="outline" className="text-[10px] bg-white/50 border-red-200 text-red-600 py-0 px-2">
+                                {f}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
-            </motion.section>
+
+                  <div className="mt-4 pt-3 flex items-center justify-between border-t border-border/50">
+                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">Estado:</span>
+                    <Badge 
+                      variant={cumpleTodo ? "default" : "secondary"} 
+                      className={cn(
+                        "text-[10px] h-5",
+                        cumpleTodo && "bg-green-600"
+                      )}
+                    >
+                      {g.clasificacion}
+                    </Badge>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </main>

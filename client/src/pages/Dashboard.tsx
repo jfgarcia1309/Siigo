@@ -69,77 +69,6 @@ export default function Dashboard() {
     }
   };
 
-  const PanelCumplimientoIntegral = ({ data }: { data: any[] }) => {
-    const cumplidoresIntegrales = data.filter(g => 
-      g.totalRenovaciones >= 36 && 
-      g.puntajeCalidad >= 80 && 
-      Number(g.porcentajeAtrasos) <= 2 && 
-      g.renovacionesGestionadas >= 180
-    );
-
-    const soloMeta = data.filter(g => 
-      g.totalRenovaciones >= 36 && 
-      !(g.puntajeCalidad >= 80 && Number(g.porcentajeAtrasos) <= 2 && g.renovacionesGestionadas >= 180)
-    );
-
-    const noCumplen = data.filter(g => g.totalRenovaciones < 36);
-
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 border-b border-green-200 pb-2">
-            <div className="w-2 h-2 rounded-full bg-green-500" />
-            <h3 className="font-bold text-green-800">Cumplimiento Integral (100%)</h3>
-          </div>
-          {cumplidoresIntegrales.length > 0 ? (
-            cumplidoresIntegrales.map(g => (
-              <div key={g.id} className="bg-green-50 p-4 rounded-xl border border-green-100 shadow-sm flex justify-between items-center">
-                <span className="font-semibold text-green-900">{g.nombre}</span>
-                <Badge className="bg-green-600">Éxito Total</Badge>
-              </div>
-            ))
-          ) : (
-            <p className="text-sm text-muted-foreground italic">Ningún gestor cumple todos los criterios.</p>
-          )}
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 border-b border-blue-200 pb-2">
-            <div className="w-2 h-2 rounded-full bg-blue-500" />
-            <h3 className="font-bold text-blue-800">Solo Meta de Renovaciones</h3>
-          </div>
-          <div className="space-y-2">
-            {soloMeta.map(g => (
-              <div key={g.id} className="bg-blue-50 p-3 rounded-xl border border-blue-100 flex flex-col gap-1">
-                <span className="font-semibold text-blue-900">{g.nombre}</span>
-                <div className="flex gap-2">
-                  {g.puntajeCalidad < 80 && <Badge variant="outline" className="text-[10px] border-red-200 text-red-700">Calidad</Badge>}
-                  {Number(g.porcentajeAtrasos) > 2 && <Badge variant="outline" className="text-[10px] border-red-200 text-red-700">Atrasos</Badge>}
-                  {g.renovacionesGestionadas < 180 && <Badge variant="outline" className="text-[10px] border-red-200 text-red-700">Gestión</Badge>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 border-b border-red-200 pb-2">
-            <div className="w-2 h-2 rounded-full bg-red-500" />
-            <h3 className="font-bold text-red-800">Brechas Críticas (Incumplimiento Meta)</h3>
-          </div>
-          <div className="grid grid-cols-1 gap-2">
-            {noCumplen.map(g => (
-              <div key={g.id} className="bg-muted/30 p-2 rounded-lg border border-border flex justify-between items-center text-xs">
-                <span className="text-foreground truncate max-w-[150px]">{g.nombre}</span>
-                <span className="text-red-500 font-bold">-{36 - g.totalRenovaciones} renov.</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const TablaGestores = ({ data }: { data: any[] }) => (
     <div className="overflow-x-auto">
       <Table>
@@ -250,21 +179,6 @@ export default function Dashboard() {
               icon={<Users className="w-6 h-6" />}
             />
           </div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-card rounded-2xl border border-border shadow-lg p-6"
-          >
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground">Análisis de Cumplimiento Integral</h2>
-                <p className="text-sm text-muted-foreground mt-1">Identificación de brechas: Meta (36), Calidad ({'>'}80%), Atrasos (≤2%), Gestión ({'>'}180)</p>
-              </div>
-              <Badge variant="outline" className="py-1">Corte Trimestral: Feb - Abr</Badge>
-            </div>
-            <PanelCumplimientoIntegral data={gestores || []} />
-          </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
