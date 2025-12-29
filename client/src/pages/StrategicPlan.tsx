@@ -97,6 +97,18 @@ export default function StrategicPlan() {
     }
   ];
 
+  const incentivos = [
+    { titulo: "Bono de Excelencia", desc: "Reconocimiento económico por cumplir los 4 KPIs simultáneamente.", icono: ShieldCheck },
+    { titulo: "Círculo de Mentores", desc: "Gestores con Impacto Bajo lideran sesiones de mejora para el equipo.", icono: MessageSquare },
+    { titulo: "Insignia Gestor Top", desc: "Visibilidad en el tablero principal para los 3 mejores IIT.", icono: Target }
+  ];
+
+  const herramientas = [
+    { nombre: "Dashboard en Vivo", funcion: "Seguimiento minuto a minuto de gestiones y renovaciones." },
+    { nombre: "Plantillero EARC", funcion: "Guía rápida de respuestas ante objeciones comunes." },
+    { nombre: "Monitor de Atrasos", funcion: "Alerta visual para casos con más de 24h sin gestión." }
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -105,9 +117,9 @@ export default function StrategicPlan() {
           <div className="flex justify-between items-end">
             <div>
               <h1 className="text-3xl font-bold tracking-tight text-foreground">Plan Estratégico de Mejora</h1>
-              <p className="text-muted-foreground mt-2">Acciones correctivas basadas en el desempeño del Q1 2025.</p>
+              <p className="text-muted-foreground mt-2">Acciones correctivas y preventivas para el Q2 2025.</p>
             </div>
-            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs py-1 px-3">Estrategia Mayo 2025</Badge>
+            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs py-1 px-3">Estrategia Optimizada</Badge>
           </div>
 
           <Card className="border-primary/20 shadow-xl overflow-hidden">
@@ -123,33 +135,75 @@ export default function StrategicPlan() {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {acciones.map((accion, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="h-full border-border/50 hover:border-primary/30 transition-colors shadow-sm">
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <Badge variant={accion.prioridad === "Crítica" ? "destructive" : "secondary"} className="text-[10px] uppercase">
-                        {accion.prioridad}
-                      </Badge>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{accion.indicador}</span>
-                    </div>
-                    <CardTitle className="text-lg leading-tight">{accion.titulo}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{accion.desc}</p>
-                    <div className="mt-6 flex items-center gap-2 text-[10px] font-bold text-primary uppercase">
-                      <TrendingUp className="w-3 h-3" /> Meta de Mejora: +15%
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Target className="w-5 h-5 text-primary" />
+              Estrategias por Indicador
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {acciones.map((accion, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="h-full border-border/50 hover:border-primary/30 transition-colors shadow-sm">
+                    <CardHeader className="pb-3">
+                      <div className="flex justify-between items-start mb-2">
+                        <Badge variant={accion.prioridad === "Crítica" ? "destructive" : "secondary"} className="text-[10px] uppercase">
+                          {accion.prioridad}
+                        </Badge>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{accion.indicador}</span>
+                      </div>
+                      <CardTitle className="text-base leading-tight">{accion.titulo}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{accion.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <ThumbsUp className="w-5 h-5 text-primary" />
+                Plan de Incentivos y Reconocimiento
+              </h2>
+              <div className="grid gap-4">
+                {incentivos.map((i, idx) => (
+                  <Card key={idx} className="border-border/40 bg-muted/20">
+                    <CardContent className="p-4 flex items-center gap-4">
+                      <div className="p-2 bg-background rounded-lg border border-border">
+                        <i.icono className="w-5 h-5 text-primary" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm">{i.titulo}</h4>
+                        <p className="text-xs text-muted-foreground">{i.desc}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-primary" />
+                Herramientas de Apoyo
+              </h2>
+              <div className="bg-card border border-border rounded-xl divide-y">
+                {herramientas.map((h, idx) => (
+                  <div key={idx} className="p-4 flex justify-between items-center group hover:bg-muted/30 transition-colors">
+                    <span className="text-sm font-medium">{h.nombre}</span>
+                    <Badge variant="outline" className="text-[10px] font-normal">{h.funcion}</Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="bg-muted/30 p-8 rounded-2xl border border-dashed border-border flex flex-col md:flex-row items-center gap-8">
