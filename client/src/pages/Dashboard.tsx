@@ -149,10 +149,17 @@ export default function Dashboard() {
                                 mesSeleccionado === "abr" ? ((gestor.renovacionesAbr / 15) * 100).toFixed(1) :
                                 ((gestor.totalRenovaciones / 36) * 100).toFixed(1);
 
-            // Los indicadores de calidad, atrasos y gestión se muestran para todas las selecciones
+            // Los indicadores se muestran proporcionales al mes para ser precisos
+            // Calidad y Atrasos son porcentajes, se mantienen consistentes
+            // Renovaciones Gestionadas se muestra proporcional al avance del trimestre si es mensual
             const caliValor = `${gestor.puntajeCalidad}%`;
             const atraValor = `${gestor.porcentajeAtrasos}%`;
-            const gestiValor = gestor.renovacionesGestionadas;
+            
+            // Para la gestión, si es mensual mostramos una estimación basada en la meta de renovaciones
+            // Si es trimestral, mostramos el dato real del reporte
+            const gestiValor = mesSeleccionado === "tri" 
+              ? gestor.renovacionesGestionadas 
+              : Math.round((gestor.renovacionesGestionadas * (METAS_MENSUALES[mesSeleccionado] / 36)));
 
             const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
             const cumpleRenovaciones = renValor >= metaSeleccionada;
