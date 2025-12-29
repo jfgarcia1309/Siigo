@@ -98,9 +98,10 @@ export default function StrategicPlan() {
   ];
 
   const incentivos = [
-    { titulo: "Reconocimiento 'Top Renovador'", desc: "Bonificación por alcanzar las 18 renovaciones antes de la cuarta semana del mes.", icono: ThumbsUp },
-    { titulo: "Upgrade de Herramientas", desc: "Acceso a licencias premium de gestión para quienes mantengan calidad >85%.", icono: RotateCcw },
-    { titulo: "Tarde de Bienestar", desc: "Medio día libre remunerado por cumplimiento del 100% de la meta semanal de recaudo.", icono: ShieldCheck }
+    { titulo: "Bienestar en Turno", desc: "Entrega de snacks saludables durante la jornada por cumplimiento de hitos diarios.", icono: ThumbsUp },
+    { titulo: "Recarga de Energía", desc: "Tiempo extra de break otorgado al alcanzar la meta de gestiones del bloque morning.", icono: RotateCcw },
+    { titulo: "Flexibilidad Horaria", desc: "Permiso para ingreso tardío o salida temprana tras cumplir el 100% de la meta de renovación semanal.", icono: ShieldCheck },
+    { titulo: "Reconocimiento por Diplomas", desc: "Entrega trimestral de diplomas 'Excelencia Siigo' a los gestores con mejor Score de Calidad y Cumplimiento.", icono: Target }
   ];
 
   const herramientas = [
