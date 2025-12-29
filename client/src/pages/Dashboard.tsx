@@ -46,9 +46,11 @@ export default function Dashboard() {
     abr: 15,
     tri: 36
   };
-  const META_CALIDAD = 80;
-  const MAX_ATRASOS = 2;
-  const MIN_GESTION = 180;
+  
+  // Baselines de medición actual del equipo
+  const BASELINE_CALIDAD = 76;
+  const BASELINE_ATRASOS = 3.84;
+  const BASELINE_GESTION = 174;
 
   const filtrarYOrdenar = (lista: any[]) => {
     if (!lista) return [];
@@ -68,15 +70,15 @@ export default function Dashboard() {
                      gestor.totalRenovaciones;
     const metaMes = METAS_MENSUALES[mes];
     const cumpleRenovaciones = valorMes >= metaMes;
-    const cumpleCalidad = gestor.puntajeCalidad >= META_CALIDAD;
-    const cumpleAtrasos = Number(gestor.porcentajeAtrasos) <= MAX_ATRASOS;
-    const cumpleGestion = gestor.renovacionesGestionadas >= MIN_GESTION;
+    const cumpleCalidad = gestor.puntajeCalidad >= BASELINE_CALIDAD;
+    const cumpleAtrasos = Number(gestor.porcentajeAtrasos) <= BASELINE_ATRASOS;
+    const cumpleGestion = gestor.renovacionesGestionadas >= BASELINE_GESTION;
 
     const fallas = [];
     if (!cumpleRenovaciones) fallas.push(`Renovaciones (${valorMes}/${metaMes})`);
     if (!cumpleCalidad) fallas.push(`Calidad (${gestor.puntajeCalidad}%)`);
     if (!cumpleAtrasos) fallas.push(`Atrasos (${gestor.porcentajeAtrasos}%)`);
-    if (!cumpleGestion) fallas.push(`Gestión (${gestor.renovacionesGestionadas}/${MIN_GESTION})`);
+    if (!cumpleGestion) fallas.push(`Gestión (${gestor.renovacionesGestionadas}/${BASELINE_GESTION})`);
 
     return { cumple: fallas.length === 0, fallas };
   };
@@ -260,14 +262,14 @@ export default function Dashboard() {
             <KPICard 
               title="Score de Calidad" 
               value={`${Math.round(estadisticas?.calidadEquipo || 0)}%`}
-              subtext="Meta corporativa >80%"
+              subtext={`Medición actual: ${BASELINE_CALIDAD}%`}
               icon={<CheckCircle2 className="w-6 h-6" />}
             />
             {/* Indicador de Atrasos */}
             <KPICard 
               title="Seguimientos Atrasados" 
               value={`${Number(estadisticas?.atrasosEquipo || 0).toFixed(2)}%`}
-              subtext="Límite máximo permitido 2%"
+              subtext={`Media actual: ${BASELINE_ATRASOS}%`}
               icon={<AlertTriangle className="w-6 h-6" />}
               className="border-l-4 border-l-orange-400"
             />
@@ -286,7 +288,7 @@ export default function Dashboard() {
                   : Math.round((g.renovacionesGestionadas * (METAS_MENSUALES[mesSeleccionado] / 36)));
                 return acc + renGest;
               }, 0) || 0).toLocaleString()}
-              subtext="Total de llamadas, correos y seguimientos realizados"
+              subtext={`Referencia: ${BASELINE_GESTION} gestiones/mes`}
               icon={<ArrowUp className="w-6 h-6 text-blue-500" />}
             />
           </div>
