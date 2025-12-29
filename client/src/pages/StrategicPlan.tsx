@@ -72,22 +72,28 @@ const CicloEARC = () => {
 export default function StrategicPlan() {
   const acciones = [
     {
-      titulo: "Recuperación de Meta (Meta Mayo: 18)",
-      desc: "Implementar jornadas de 'Día de Cierre' quincenales para asegurar el volumen mínimo de 18 renovaciones por gestor.",
-      prioridad: "Alta",
-      indicador: "Volumen"
+      titulo: "Maximización del Cumplimiento (Meta 100%)",
+      desc: "Implementar 'Días de Cierre' quincenales y micro-metas semanales. Vinculación directa: Cada gestor debe alcanzar el 100% de su meta mensual (Feb: 8, Mar: 13, Abr: 15) para asegurar el bono de desempeño.",
+      prioridad: "Crítica",
+      indicador: "Cumplimiento"
     },
     {
-      titulo: "Clínicas de Calidad",
-      desc: "Sesiones semanales de escucha de llamadas para gestores con Impacto Alto/Crítico, enfocadas en el modelo EARC.",
+      titulo: "Excelencia en Calidad (>80%)",
+      desc: "Clínicas semanales de escucha enfocadas en el modelo EARC. Aplicación: Retroalimentación inmediata tras evaluaciones de llamadas para corregir desviaciones en tiempo real y superar el umbral del 80%.",
       prioridad: "Crítica",
       indicador: "Calidad"
     },
     {
-      titulo: "Plan de Choque Atrasos",
-      desc: "Automatización de alertas preventivas 5 días antes del vencimiento para reducir el KPI de atrasos al <2%.",
-      prioridad: "Media",
+      titulo: "Control Riguroso de Atrasos (<2%)",
+      desc: "Alertas preventivas automatizadas 5 días antes del vencimiento. Objetivo: Limitar los seguimientos atrasados a menos del 2% del total de oportunidades para evitar fugas de ingresos.",
+      prioridad: "Alta",
       indicador: "Atrasos"
+    },
+    {
+      titulo: "Productividad de Alto Impacto (>180)",
+      desc: "Seguimiento diario de gestiones (llamadas/correos). Meta: Superar las 180 gestiones mensuales por gestor. Ejemplo: Una productividad de 46 gestiones con solo 11 renovaciones indica baja conversión; se requiere reforzar el cierre.",
+      prioridad: "Alta",
+      indicador: "Productividad"
     }
   ];
 
@@ -151,9 +157,9 @@ export default function StrategicPlan() {
               <ShieldCheck className="w-12 h-12 text-primary" />
             </div>
             <div className="space-y-2 text-center md:text-left">
-              <h3 className="text-xl font-bold">Compromiso de Recuperación</h3>
+              <h3 className="text-xl font-bold">Compromiso de Recuperación y Productividad</h3>
               <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-                Este plan estratégico tiene como objetivo estandarizar el nivel de impacto en el equipo, moviendo al 40% de los gestores de "Impacto Crítico/Alto" hacia "Impacto Medio/Bajo" mediante la aplicación rigurosa de la técnica EARC y el seguimiento diario de la meta de 18 renovaciones para mayo.
+                Este plan estratégico tiene como objetivo estandarizar el nivel de impacto en el equipo, asegurando que cada gestor alcance el 100% de cumplimiento y mantenga una productividad superior a 180 gestiones mensuales. La técnica EARC será el eje central para transformar la alta actividad en cierres efectivos, optimizando la tasa de conversión de cada llamada.
               </p>
             </div>
           </div>
