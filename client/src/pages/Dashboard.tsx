@@ -172,7 +172,20 @@ export default function Dashboard() {
     if (filtroEstado !== "todos") {
       filtrados = filtrados.filter(g => g.clasificacion === filtroEstado);
     }
-    return filtrados;
+    
+    // Ordenar por impacto: de menor a mayor impacto negativo (mejor a peor desempeño)
+    const ordenImpacto: Record<string, number> = {
+      "Impacto Bajo": 0,
+      "Impacto Medio": 1,
+      "Impacto Alto": 2,
+      "Impacto Crítico": 3
+    };
+    
+    return filtrados.sort((a, b) => {
+      const impactoA = ordenImpacto[a.clasificacion] ?? 999;
+      const impactoB = ordenImpacto[b.clasificacion] ?? 999;
+      return impactoA - impactoB;
+    });
   };
 
   const analizarCumplimientoMensual = (gestor: any, mes: "feb" | "mar" | "abr" | "tri") => {
