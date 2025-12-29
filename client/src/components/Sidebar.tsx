@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { LayoutDashboard, FileText, ChevronRight, BarChart3 } from "lucide-react";
+import { LayoutDashboard, FileText, ChevronRight, BarChart3, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Sidebar() {
@@ -7,6 +7,7 @@ export function Sidebar() {
 
   const itemsNavegacion = [
     { href: "/", etiqueta: "Tablero", icono: LayoutDashboard },
+    { href: "/analisis-cumplimiento", etiqueta: "Análisis Integral", icono: CheckCircle2 },
     { href: "/plan", etiqueta: "Plan Estratégico", icono: FileText },
   ];
 
