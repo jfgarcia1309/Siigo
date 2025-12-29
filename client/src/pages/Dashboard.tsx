@@ -144,15 +144,15 @@ export default function Dashboard() {
                              mesSeleccionado === "abr" ? gestor.renovacionesAbr :
                              gestor.totalRenovaciones;
 
-            const cumpliValor = mesSeleccionado === "feb" ? ((gestor.renovacionesFeb / 8) * 100).toFixed(0) :
-                                mesSeleccionado === "mar" ? ((gestor.renovacionesMar / 13) * 100).toFixed(0) :
-                                mesSeleccionado === "abr" ? ((gestor.renovacionesAbr / 15) * 100).toFixed(0) :
-                                ((gestor.totalRenovaciones / 36) * 100).toFixed(0);
+            const cumpliValor = mesSeleccionado === "feb" ? ((gestor.renovacionesFeb / 8) * 100).toFixed(1) :
+                                mesSeleccionado === "mar" ? ((gestor.renovacionesMar / 13) * 100).toFixed(1) :
+                                mesSeleccionado === "abr" ? ((gestor.renovacionesAbr / 15) * 100).toFixed(1) :
+                                ((gestor.totalRenovaciones / 36) * 100).toFixed(1);
 
-            // En trimestral mostramos los totales reales del reporte
-            const caliValor = mesSeleccionado === "tri" ? `${gestor.puntajeCalidad}%` : "-";
-            const atraValor = mesSeleccionado === "tri" ? `${gestor.porcentajeAtrasos}%` : "-";
-            const gestiValor = mesSeleccionado === "tri" ? gestor.renovacionesGestionadas : "-";
+            // Los indicadores de calidad, atrasos y gestión se muestran para todas las selecciones
+            const caliValor = `${gestor.puntajeCalidad}%`;
+            const atraValor = `${gestor.porcentajeAtrasos}%`;
+            const gestiValor = gestor.renovacionesGestionadas;
 
             const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
             const cumpleRenovaciones = renValor >= metaSeleccionada;
@@ -175,9 +175,9 @@ export default function Dashboard() {
                     {cumpliValor}%
                   </span>
                 </TableCell>
-                <TableCell className="text-center font-medium text-muted-foreground py-6">{caliValor}</TableCell>
-                <TableCell className="text-center font-medium text-muted-foreground py-6">{atraValor}</TableCell>
-                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestiValor}</TableCell>
+                <TableCell className="text-center font-bold text-muted-foreground py-6">{caliValor}</TableCell>
+                <TableCell className="text-center font-bold text-muted-foreground py-6">{atraValor}</TableCell>
+                <TableCell className="text-center font-bold text-muted-foreground py-6">{gestiValor}</TableCell>
                 <TableCell className="text-right py-6">
                   <div className="flex flex-col items-end gap-1">
                     {obtenerInsigniaEstado(gestor.clasificacion)}
