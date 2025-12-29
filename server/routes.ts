@@ -148,5 +148,33 @@ export async function registerRoutes(
       });
   });
 
+  app.post(api.gestores.listar.path, async (req, res) => {
+    const datos = { ...req.body };
+    datos.clasificacion = clasificarGestor(datos);
+    const nuevo = await almacenamiento.crearGestor(datos);
+    res.json(nuevo);
+  });
+
+  app.patch("/api/gestores/:id", async (req, res) => {
+    const id = parseInt(req.params.id);
+    const datos = { ...req.body };
+    if (datos.totalRenovaciones !== undefined || datos.puntajeCalidad !== undefined || datos.porcentajeAtrasos !== undefined) {
+      // Re-clasificar si cambian indicadores
+      const actual = await almacenamiento.obtenerGestores().then(list => list.find(g => g.id === id));
+      if (actual) {
+        const temp = { ...actual, ...datos };
+        datos.clasificacion = clasificarGestor(temp);
+      }
+    }
+    const actualizado = await almacenamiento.actualizarGestor(id, datos);
+    res.json(actualizado);
+  });
+
+  app.delete("/api/gestores/:id", async (req, res) => {
+    const id = parseInt(req.params.id);
+    await almacenamiento.eliminarGestor(id);
+    res.status(204).send();
+  });
+
   return httpServer;
 }
