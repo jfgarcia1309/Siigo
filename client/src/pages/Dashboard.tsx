@@ -208,13 +208,20 @@ export default function Dashboard() {
             className="bg-card rounded-2xl border border-border shadow-lg overflow-hidden"
           >
             <div className="p-6 border-b border-border bg-muted/20">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <LayoutGrid className="w-5 h-5 text-primary" />
-                Organización por Cuartiles de Rendimiento
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Clasificación basada en la distribución porcentual del total de renovaciones (N={estadisticas?.totalGestores}).
-              </p>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-xl font-bold flex items-center gap-2">
+                    <LayoutGrid className="w-5 h-5 text-primary" />
+                    Organización por Cuartiles de Rendimiento
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Clasificación basada en la distribución porcentual del total de renovaciones (N={estadisticas?.totalGestores}).
+                  </p>
+                </div>
+                <div className="text-right hidden md:block">
+                  <Badge variant="outline" className="text-[10px] uppercase tracking-tighter">Metodología: N * [0.25, 0.50, 0.75]</Badge>
+                </div>
+              </div>
             </div>
 
             <Tabs defaultValue="todos" className="w-full">
