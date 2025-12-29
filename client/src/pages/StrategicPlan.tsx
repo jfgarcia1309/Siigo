@@ -91,7 +91,7 @@ export default function StrategicPlan() {
     },
     {
       titulo: "4. Maximización de Actividad (Productividad)",
-      desc: "Meta: >180 Gestiones/mes. Estrategia: Mantener un volumen superior a 180 gestiones mensuales de manera constante. Acción: Implementar bloques de 'Power Dialing' de 90 minutos, enfocados en llamadas de alta prioridad, combinados con seguimiento diario de resultados y ajustes en tiempo real para alimentar el embudo de conversión.",
+      desc: "Meta: >180 Gestiones/mes. Estrategia: Mantener un volumen superior a 180 gestiones mensuales de manera constante. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (Batching) enfocados exclusivamente en barrido de cartera, eliminando distracciones y asegurando que cada contacto alimente el embudo de conversión.",
       prioridad: "Alta",
       indicador: "Productividad"
     }
@@ -213,7 +213,7 @@ export default function StrategicPlan() {
             <div className="space-y-2 text-center md:text-left">
               <h3 className="text-xl font-bold">Compromiso de Recuperación y Productividad</h3>
               <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
-                Este plan estratégico tiene como objetivo estandarizar el nivel de impacto en el equipo, asegurando que cada gestor alcance el 100% de cumplimiento y mantenga una productividad superior a 180 gestiones mensuales. La técnica EARC será el eje central para transformar la alta actividad en cierres efectivos, optimizando la tasa de conversión de cada llamada.
+                Este plan estratégico tiene como objetivo estandarizar el nivel de impacto en el equipo, asegurando que cada gestor alcance el 100% de cumplimiento y mantenga una productividad superior a 180 gestiones mensuales. La técnica de Gestión Intensiva (Batching) será el eje central para transformar la actividad constante en cierres efectivos, optimizando la tasa de conversión de cada contacto.
               </p>
             </div>
           </div>
