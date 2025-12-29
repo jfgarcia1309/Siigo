@@ -72,35 +72,35 @@ const CicloEARC = () => {
 export default function StrategicPlan() {
   const acciones = [
     {
-      titulo: "1. Conversión: Productividad vs Efectividad",
-      desc: "Meta: 100% Cumplimiento. Estrategia: Optimizar la tasa de cierre mediante el 'Embudo 12:1' (12 gestiones = 1 cierre). Acción: Asegurar que la alta productividad (>180 gestiones mensuales) se traduzca en efectividad real, reforzando el cierre en el ciclo EARC para maximizar la conversión de esfuerzo en resultados.",
+      titulo: "1. Optimización de la Conversión (Efectividad)",
+      desc: "Meta: 100% Cumplimiento. Estrategia: Mejorar la conversión de la productividad vs efectividad mediante el 'Embudo 12:1'. Acción: Asegurar que cada 12 gestiones resulten en 1 cierre efectivo, transformando la alta actividad en resultados reales.",
       prioridad: "Crítica",
       indicador: "Cumplimiento"
     },
     {
       titulo: "2. Excelencia Operativa (Calidad)",
-      desc: "Meta: >80% Calidad. Estrategia: Garantizar que el resultado de la valoración de llamadas y gestión con clientes sea superior al 80%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación y estandarizar la calidad.",
+      desc: "Meta: >80% Calidad. Estrategia: Garantizar que el resultado de la valoración de llamadas y gestión con clientes sea superior al 80%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación.",
       prioridad: "Crítica",
       indicador: "Calidad"
     },
     {
       titulo: "3. Blindaje de Cartera (Atrasos)",
-      desc: "Meta: <2% Atrasos. Estrategia: Asegurar que el seguimiento atrasado no supere el 2% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes y asegurar contacto oportuno.",
+      desc: "Meta: <2% Atrasos. Estrategia: Asegurar que el seguimiento atrasado no supere el 2% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes.",
       prioridad: "Alta",
       indicador: "Atrasos"
     },
     {
       titulo: "4. Maximización de Actividad (Productividad)",
-      desc: "Meta: >180 Gestiones/mes. Estrategia: Mantener un volumen superior a 180 gestiones mensuales por gestor de forma constante. Acción: Ejecutar bloques de 'Power Dialing' de 90 minutos para alimentar el embudo de conversión.",
+      desc: "Meta: >180 Gestiones/mes. Estrategia: Mantener un volumen superior a 180 gestiones mensuales de manera constante. Acción: Implementar bloques de 'Power Dialing' de 90 minutos, enfocados en llamadas de alta prioridad, combinados con seguimiento diario de resultados y ajustes en tiempo real para alimentar el embudo de conversión.",
       prioridad: "Alta",
       indicador: "Productividad"
     }
   ];
 
   const incentivos = [
-    { titulo: "Bono de Excelencia", desc: "Reconocimiento económico por cumplir los 4 KPIs simultáneamente.", icono: ShieldCheck },
-    { titulo: "Círculo de Mentores", desc: "Gestores con Impacto Bajo lideran sesiones de mejora para el equipo.", icono: MessageSquare },
-    { titulo: "Insignia Gestor Top", desc: "Visibilidad en el tablero principal para los 3 mejores IIT.", icono: Target }
+    { titulo: "Bienestar en Turno", desc: "Entrega de snacks saludables durante la jornada por cumplimiento de hitos diarios.", icono: ThumbsUp },
+    { titulo: "Recarga de Energía", desc: "Tiempo extra de break otorgado al alcanzar la meta de gestiones del bloque morning.", icono: RotateCcw },
+    { titulo: "Flexibilidad Horaria", desc: "Permiso para ingreso tardío o salida temprana tras cumplir el 100% de la meta de renovación semanal.", icono: ShieldCheck }
   ];
 
   const herramientas = [
