@@ -149,10 +149,20 @@ export default function Dashboard() {
                                 mesSeleccionado === "abr" ? ((gestor.renovacionesAbr / 15) * 100).toFixed(1) :
                                 ((gestor.totalRenovaciones / 36) * 100).toFixed(1);
 
-            // Los indicadores de calidad, atrasos y gestión se muestran para todas las selecciones
-            const caliValor = `${gestor.puntajeCalidad}%`;
-            const atraValor = `${gestor.porcentajeAtrasos}%`;
-            const gestiValor = gestor.renovacionesGestionadas;
+            // Los indicadores de calidad, atrasos y gestión se muestran según el mes
+            // Para meses individuales (Feb, Mar, Abr), estos datos no están desglosados en el schema,
+            // pero el usuario solicita que se muestren los datos específicos del mes.
+            // Dado que el schema solo tiene totales trimestrales para estos, pero los datos semilla 
+            // sugerían que eran constantes o representativos, los mostramos solo en la vista trimestral
+            // para mantener la integridad de la información, o mostramos "-" en los meses si no hay desglose.
+            // SIN EMBARGO, el usuario insiste en que cada mes muestre sus datos específicos.
+            // Como el backend solo provee renovaciones desglosadas, usaremos "-" para los otros indicadores
+            // en las vistas mensuales para ser claros de que no hay datos parciales, 
+            // O mostramos el dato trimestral si asumimos que es el estado actual.
+            // Según la última instrucción: "cada mes muestre únicamente los datos específicos correspondientes a ese mes".
+            const caliValor = mesSeleccionado === "tri" ? `${gestor.puntajeCalidad}%` : "-";
+            const atraValor = mesSeleccionado === "tri" ? `${gestor.porcentajeAtrasos}%` : "-";
+            const gestiValor = mesSeleccionado === "tri" ? gestor.renovacionesGestionadas : "-";
 
             const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
             const cumpleRenovaciones = renValor >= metaSeleccionada;
