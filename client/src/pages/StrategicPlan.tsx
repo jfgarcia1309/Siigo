@@ -18,7 +18,10 @@ import {
   TrendingUp,
   ShieldCheck,
   RotateCcw,
-  LayoutDashboard
+  LayoutDashboard,
+  AlertTriangle,
+  Clock,
+  Briefcase
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -76,26 +79,57 @@ export default function StrategicPlan() {
       titulo: "1. Recuperación de Cumplimiento (Meta 18 renovaciones)",
       desc: "Meta: 100% de cumplimiento (18 unidades para Mayo). Estrategia: Implementar el 'Embudo 10:1'. Acción: Incrementar la contactabilidad diaria para asegurar un cierre por cada 10 gestiones efectivas, priorizando clientes con portafolio básico (POS/Nómina).",
       prioridad: "Crítica",
-      indicador: "Cumplimiento"
+      indicador: "Cumplimiento",
+      detalle: "Análisis de Pareto semanal para enfocar esfuerzos en el 20% de clientes que generan el 80% del valor de renovación."
     },
     {
       titulo: "2. Elevación del Estándar de Calidad",
       desc: "Meta: >80% Score de Calidad. Estrategia: Feedback inmediato y refuerzo de guiones. Acción: Auditoría diaria del 5% de las llamadas de gestores con score <76%, enfocándose en la resolución de objeciones y empatía virtual.",
       prioridad: "Crítica",
-      indicador: "Calidad"
+      indicador: "Calidad",
+      detalle: "Clínicas de ventas quincenales donde se analizan 'Best Calls' y se realizan simulacros de manejo de crisis."
     },
     {
       titulo: "3. Blindaje contra el Atraso Operativo",
       desc: "Meta: <2% de Seguimientos Atrasados. Estrategia: Gestión proactiva de agenda. Acción: Implementar 'Barrido de Pendientes' de 8:00 AM a 9:00 AM. Ningún caso debe superar las 24h sin contacto.",
       prioridad: "Alta",
-      indicador: "Atrasos"
+      indicador: "Atrasos",
+      detalle: "Escalamiento automático al Coordinador tras 48h de inactividad en un caso crítico."
     },
     {
       titulo: "4. Maximización de Productividad Telefónica",
       desc: "Meta: >180 gestiones mensuales. Estrategia: Bloques de gestión intensiva. Acción: Asegurar un mínimo de 45 llamadas diarias por gestor, garantizando que el volumen de actividad soporte el incremento de la meta a 18 unidades.",
       prioridad: "Alta",
-      indicador: "Productividad"
+      indicador: "Productividad",
+      detalle: "Gamificación del volumen de llamadas con ranking diario de 'Power Dialers'."
     }
+  ];
+
+  const estrategiasAdicionales = [
+    {
+      titulo: "Estrategia de Churn Preventivo",
+      subtitulo: "Detección temprana de señales de abandono",
+      contenido: "Implementar un sistema de alertas cuando el cliente disminuye su uso de la plataforma Siigo 60 días antes de la renovación. El gestor debe intervenir con una 'Llamada de Valor' enfocada en capacitación de módulos no usados.",
+      icono: AlertTriangle
+    },
+    {
+      titulo: "Especialización por Producto",
+      subtitulo: "Expertise técnico por segmento",
+      contenido: "Dividir el equipo en 'Squads' especializados en POS, Nómina y Facturación Electrónica para brindar asesoría técnica profunda que reduzca la fricción del cliente ante cambios regulatorios.",
+      icono: Target
+    },
+    {
+      titulo: "Plan de Recobro Inteligente",
+      subtitulo: "Aseguramiento del recaudo oportuno",
+      contenido: "Integración de pasarelas de pago directas en el contacto por WhatsApp para que el cliente pueda renovar y pagar en un solo clic durante la llamada, eliminando el gap entre compromiso y pago.",
+      icono: TrendingUp
+    }
+  ];
+
+  const cronogramaQ2 = [
+    { fase: "Ajuste Operativo", semana: "1-2", actividades: ["Capacitación en meta 18", "Ajuste de guiones EARC", "Auditoría baseline"] },
+    { fase: "Intensificación", semana: "3-5", actividades: ["Lanzamiento de Squads", "Implementación Power Dialing", "Primer corte de diplomas"] },
+    { fase: "Consolidación", semana: "6-8", actividades: ["Refuerzo de Churn Preventivo", "Optimización de Recobro", "Evaluación de impacto Q2"] }
   ];
 
   const incentivos = [
@@ -190,11 +224,66 @@ export default function StrategicPlan() {
                       </div>
                       <CardTitle className="text-base leading-tight">{accion.titulo}</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-2">
                       <p className="text-xs text-muted-foreground leading-relaxed">{accion.desc}</p>
+                      {accion.detalle && (
+                        <div className="pt-2 border-t border-border/50 mt-2">
+                          <p className="text-[10px] font-medium text-primary leading-tight italic">
+                            💡 Detalle: {accion.detalle}
+                          </p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-primary" />
+              Estrategias Avanzadas de Valor Agregado
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {estrategiasAdicionales.map((est, idx) => (
+                <Card key={idx} className="border-primary/10 bg-gradient-to-br from-card to-primary/5">
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <est.icono className="w-4 h-4 text-primary" />
+                      </div>
+                      <CardTitle className="text-sm font-bold">{est.titulo}</CardTitle>
+                    </div>
+                    <CardDescription className="text-[10px] uppercase font-bold text-primary/70">{est.subtitulo}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{est.contenido}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Clock className="w-5 h-5 text-primary" />
+              Cronograma de Ejecución Q2
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {cronogramaQ2.map((fase, idx) => (
+                <div key={idx} className="relative p-6 bg-card border border-border rounded-2xl">
+                  <Badge className="absolute -top-3 left-6 bg-primary">Fase {idx + 1}: {fase.fase}</Badge>
+                  <div className="text-[10px] font-bold text-muted-foreground mb-4">SEMANA {fase.semana}</div>
+                  <ul className="space-y-2">
+                    {fase.actividades.map((act, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground leading-tight">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1 shrink-0" />
+                        {act}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
           </div>
