@@ -79,19 +79,19 @@ export default function StrategicPlan() {
     },
     {
       titulo: "2. Excelencia Operativa (Calidad)",
-      desc: "Meta: >80% Calidad. Estrategia: Garantizar que el resultado de la valoración de llamadas y gestión con clientes sea superior al 80%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación.",
+      desc: "Meta: >80% Calidad. Estrategia: Garantizar que el nivel de atención y registro sea superior al 80%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación.",
       prioridad: "Crítica",
       indicador: "Calidad"
     },
     {
       titulo: "3. Blindaje de Cartera (Atrasos)",
-      desc: "Meta: <2% Atrasos. Estrategia: El seguimiento atrasado no debe superar el 2% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes.",
+      desc: "Meta: <2% Atrasos mensual. Estrategia: Reducir el seguimiento atrasado a menos del 2% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes.",
       prioridad: "Alta",
       indicador: "Atrasos"
     },
     {
       titulo: "4. Maximización de Actividad (Productividad)",
-      desc: "Meta: >180 gestiones mensuales. Asegurar un flujo constante y sostenido de llamadas, seguimientos y renovaciones. Estrategia: Mantener de forma disciplinada un volumen superior a 180 gestiones mensuales, priorizando la regularidad. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (batching) para agrupar tareas similares: barrido de cartera para contactar clientes pendientes, eliminar distracciones enfocándose exclusivamente en llamadas y asegurar que cada contacto genere un avance concreto hacia el cierre.",
+      desc: "Meta: >180 gestiones mensuales. Asegurar un flujo constante y sostenido de llamadas, seguimientos y renovaciones. Estrategia: Mantener de forma disciplinada un volumen superior a 180 gestiones mensuales, priorizando la regularidad y el enfoque en tareas de alto impacto. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (batching) para agrupar tareas similares: barrido de cartera para contactar clientes pendientes, eliminación de distracciones enfocándose exclusivamente en llamadas y asegurar que cada contacto genere un avance concreto hacia el cierre.",
       prioridad: "Alta",
       indicador: "Productividad"
     }
@@ -220,7 +220,7 @@ export default function StrategicPlan() {
                   <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Productividad: &gt;180/mes</div>
                   <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Calidad: &gt;80%</div>
                   <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Cumplimiento: 100% Meta</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: &lt;2% total</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: &lt;2% mensual</div>
                 </div>
                 <p className="italic">
                   La técnica de Gestión Intensiva (Batching) es el eje central para transformar la actividad disciplinada en cierres efectivos, optimizando la tasa de conversión y garantizando la regularidad del desempeño.
