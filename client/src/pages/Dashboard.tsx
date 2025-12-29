@@ -78,7 +78,7 @@ export default function Dashboard() {
             <TableHead className="text-center">Feb (8)</TableHead>
             <TableHead className="text-center">Mar (13)</TableHead>
             <TableHead className="text-center">Abr (15)</TableHead>
-            <TableHead className="text-center font-bold text-primary">Total Q1 (36)</TableHead>
+            <TableHead className="text-center font-bold text-primary">Meta Q1 (36)</TableHead>
             <TableHead className="text-center">Cumplimiento</TableHead>
             <TableHead className="text-center">Calidad</TableHead>
             <TableHead className="text-center">Atrasos</TableHead>
