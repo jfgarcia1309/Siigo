@@ -8,7 +8,8 @@ import {
   Search,
   CheckCircle2,
   Filter,
-  LayoutGrid
+  LayoutGrid,
+  ArrowUp
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,7 @@ export default function Dashboard() {
   const [filtroEstado, setFiltroEstado] = useState("todos");
 
   const filtrarYOrdenar = (lista: any[]) => {
+    // La lista ya viene ordenada por el backend en orden ascendente de afectación (Q1 -> Q4)
     let filtrados = lista.filter(g => 
       g.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase())
     );
@@ -145,8 +147,8 @@ export default function Dashboard() {
           
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Tablero de Desempeño</h1>
-              <p className="text-muted-foreground mt-1">Análisis por Cuartiles y KPIs del Equipo</p>
+              <h1 className="text-3xl font-bold text-foreground text-balance">Tablero de Desempeño</h1>
+              <p className="text-muted-foreground mt-1">Análisis de impacto ascendente en los indicadores del equipo</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -211,15 +213,15 @@ export default function Dashboard() {
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-xl font-bold flex items-center gap-2">
-                    <LayoutGrid className="w-5 h-5 text-primary" />
-                    Organización por Cuartiles de Rendimiento
+                    <ArrowUp className="w-5 h-5 text-primary" />
+                    Orden de Afectación Ascendente
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Clasificación basada en la distribución porcentual del total de renovaciones (N={estadisticas?.totalGestores}).
+                    Visualización organizada desde el menor impacto (Q1) hasta el mayor impacto negativo (Q4) en los KPIs.
                   </p>
                 </div>
                 <div className="text-right hidden md:block">
-                  <Badge variant="outline" className="text-[10px] uppercase tracking-tighter">Metodología: N * [0.25, 0.50, 0.75]</Badge>
+                  <Badge variant="outline" className="text-[10px] uppercase tracking-tighter">Nivel de Impacto: Ascendente</Badge>
                 </div>
               </div>
             </div>
@@ -227,11 +229,11 @@ export default function Dashboard() {
             <Tabs defaultValue="todos" className="w-full">
               <div className="px-6 border-b border-border bg-card">
                 <TabsList className="bg-transparent h-14 gap-8">
-                  <TabsTrigger value="todos" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 h-full bg-transparent">Lista General</TabsTrigger>
-                  <TabsTrigger value="q1" className="data-[state=active]:border-b-2 data-[state=active]:border-green-500 rounded-none px-2 h-full bg-transparent">Q1 (Top 25%)</TabsTrigger>
-                  <TabsTrigger value="q2" className="data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none px-2 h-full bg-transparent">Q2 (25-50%)</TabsTrigger>
-                  <TabsTrigger value="q3" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-2 h-full bg-transparent">Q3 (50-75%)</TabsTrigger>
-                  <TabsTrigger value="q4" className="data-[state=active]:border-b-2 data-[state=active]:border-red-500 rounded-none px-2 h-full bg-transparent">Q4 (Bajo 25%)</TabsTrigger>
+                  <TabsTrigger value="todos" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 h-full bg-transparent">Vista Unificada</TabsTrigger>
+                  <TabsTrigger value="q1" className="data-[state=active]:border-b-2 data-[state=active]:border-green-500 rounded-none px-2 h-full bg-transparent">Impacto Mínimo (Q1)</TabsTrigger>
+                  <TabsTrigger value="q2" className="data-[state=active]:border-b-2 data-[state=active]:border-blue-500 rounded-none px-2 h-full bg-transparent">Impacto Bajo (Q2)</TabsTrigger>
+                  <TabsTrigger value="q3" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-2 h-full bg-transparent">Impacto Medio (Q3)</TabsTrigger>
+                  <TabsTrigger value="q4" className="data-[state=active]:border-b-2 data-[state=active]:border-red-500 rounded-none px-2 h-full bg-transparent">Impacto Crítico (Q4)</TabsTrigger>
                 </TabsList>
               </div>
 
@@ -240,25 +242,25 @@ export default function Dashboard() {
               </TabsContent>
               <TabsContent value="q1" className="m-0">
                 <div className="p-4 bg-green-50/50 dark:bg-green-900/10 text-green-700 dark:text-green-400 text-sm italic">
-                  * Cuartil Superior: Gestores con los mejores resultados acumulados.
+                  * Gestores con rendimiento óptimo: Aportan positivamente a la estabilidad de los indicadores.
                 </div>
                 <TablaGestores data={filtrarYOrdenar(estadisticas?.cuartiles.q1 || [])} />
               </TabsContent>
               <TabsContent value="q2" className="m-0">
-                <div className="p-4 bg-blue-50/50 dark:bg-green-900/10 text-blue-700 dark:text-blue-400 text-sm italic">
-                  * Segundo Cuartil: Gestores con rendimiento por encima de la media.
+                <div className="p-4 bg-blue-50/50 dark:bg-blue-900/10 text-blue-700 dark:text-blue-400 text-sm italic">
+                  * Gestores en rango aceptable: Mantienen el equilibrio del equipo sin afectar negativamente las metas.
                 </div>
                 <TablaGestores data={filtrarYOrdenar(estadisticas?.cuartiles.q2 || [])} />
               </TabsContent>
               <TabsContent value="q3" className="m-0">
                 <div className="p-4 bg-orange-50/50 dark:bg-orange-900/10 text-orange-700 dark:text-orange-400 text-sm italic">
-                  * Tercer Cuartil: Gestores con rendimiento por debajo de la media.
+                  * Gestores en observación: Comienzan a generar una afectación leve en el promedio de renovaciones.
                 </div>
                 <TablaGestores data={filtrarYOrdenar(estadisticas?.cuartiles.q3 || [])} />
               </TabsContent>
               <TabsContent value="q4" className="m-0">
                 <div className="p-4 bg-red-50/50 dark:bg-red-900/10 text-red-700 dark:text-red-400 text-sm italic">
-                  * Cuartil Inferior: Gestores que requieren intervención inmediata.
+                  * Gestores de alto riesgo: Tienen el mayor impacto negativo en los indicadores globales.
                 </div>
                 <TablaGestores data={filtrarYOrdenar(estadisticas?.cuartiles.q4 || [])} />
               </TabsContent>

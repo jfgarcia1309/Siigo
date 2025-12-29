@@ -10,16 +10,15 @@ import { InsertarGestor, Gestor } from "@shared/schema";
  * 1. Se ordenan los gestores de mayor a menor según 'totalRenovaciones'.
  * 2. Se divide el total de gestores (N) entre 4 para obtener el tamaño base de cada cuartil.
  * 3. Se distribuyen los gestores asegurando que cada grupo represente un rango de rendimiento:
- *    - Q1: Top 25% (Rendimiento superior)
+ *    - Q1: Top 25% (Menor afectación a indicadores)
  *    - Q2: 25% - 50%
  *    - Q3: 50% - 75%
- *    - Q4: 75% - 100% (Rendimiento inferior)
+ *    - Q4: 75% - 100% (Mayor afectación a indicadores)
  */
 function calcularCuartiles(lista: Gestor[]) {
   const ordenados = [...lista].sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
   const n = ordenados.length;
   
-  // Usamos índices precisos para evitar inconsistencias por redondeo
   const q1End = Math.round(n * 0.25);
   const q2End = Math.round(n * 0.50);
   const q3End = Math.round(n * 0.75);
@@ -99,6 +98,8 @@ export async function registerRoutes(
 
   app.get(api.gestores.listar.path, async (req, res) => {
     const gestores = await almacenamiento.obtenerGestores();
+    // Orden ascendente por afectación: Q1 (menor impacto) a Q4 (mayor impacto)
+    // Esto se traduce en ordenar por rendimiento de MAYOR a MENOR para los indicadores positivos
     gestores.sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
     res.json(gestores);
   });
