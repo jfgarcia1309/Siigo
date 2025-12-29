@@ -128,9 +128,9 @@ export default function StrategicPlan() {
   ];
 
   const cronogramaQ2 = [
-    { fase: "Ajuste Operativo", semana: "1-2", actividades: ["Capacitación en meta 18", "Ajuste de guiones EARC", "Auditoría baseline"] },
-    { fase: "Intensificación", semana: "3-5", actividades: ["Lanzamiento de Squads", "Implementación Power Dialing", "Primer corte de diplomas"] },
-    { fase: "Consolidación", semana: "6-8", actividades: ["Refuerzo de Churn Preventivo", "Optimización de Recobro", "Evaluación de impacto Q2"] }
+    { fase: "Puesta en Marcha", semana: "1-2", actividades: ["Capacitación en nueva meta (18)", "Ajuste de guiones de llamada", "Revisión del estado inicial"] },
+    { fase: "Aceleración", semana: "3-5", actividades: ["Inicio de Grupos de Especialistas", "Uso intensivo de marcador telefónico", "Primera entrega de diplomas"] },
+    { fase: "Resultados", semana: "6-8", actividades: ["Refuerzo para evitar retiros", "Mejora en el proceso de cobro", "Evaluación final de resultados"] }
   ];
 
   const incentivos = [

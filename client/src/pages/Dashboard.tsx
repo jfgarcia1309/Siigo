@@ -260,16 +260,16 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Indicador de Calidad */}
             <KPICard 
-              title="Score de Calidad" 
+              title="Puntaje de Calidad" 
               value={`${Math.round(estadisticas?.calidadEquipo || 0)}%`}
-              subtext={`Medición actual: ${BASELINE_CALIDAD}%`}
+              subtext={`Estado inicial: ${BASELINE_CALIDAD}%`}
               icon={<CheckCircle2 className="w-6 h-6" />}
             />
             {/* Indicador de Atrasos */}
             <KPICard 
-              title="Seguimientos Atrasados" 
+              title="Seguimientos Pendientes" 
               value={`${Number(estadisticas?.atrasosEquipo || 0).toFixed(2)}%`}
-              subtext={`Media actual: ${BASELINE_ATRASOS}%`}
+              subtext={`Promedio inicial: ${BASELINE_ATRASOS}%`}
               icon={<AlertTriangle className="w-6 h-6" />}
               className="border-l-4 border-l-orange-400"
             />
