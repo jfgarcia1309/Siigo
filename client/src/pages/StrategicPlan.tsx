@@ -72,26 +72,26 @@ const CicloEARC = () => {
 export default function StrategicPlan() {
   const acciones = [
     {
-      titulo: "1. Maximización de la Conversión (Cumplimiento)",
-      desc: "Brecha detectada: 19 de 23 gestores no alcanzan el 100% de la meta. Acción: Implementar un embudo de ventas diario donde cada 10 gestiones deban generar al menos 1 compromiso de pago. Impacto esperado: Asegurar el cumplimiento del 100% de la meta mensual (Feb: 8, Mar: 13, Abr: 15).",
+      titulo: "1. Optimización de la Conversión (Efectividad)",
+      desc: "Meta: 100% de cumplimiento. Brecha: Baja conversión de gestiones en cierres reales. Estrategia: Reforzar el cierre en la fase 'C' del ciclo EARC. Cada 12 gestiones deben resultar en 1 renovación efectiva para mejorar la relación productividad vs efectividad.",
       prioridad: "Crítica",
       indicador: "Cumplimiento"
     },
     {
-      titulo: "2. Estandarización de Calidad EARC",
-      desc: "Brecha detectada: Calidad fluctuante entre gestores (promedio 76%). Acción: Sesiones de 'Role-Play' quincenales enfocadas en la fase de 'Replantear' (R) del ciclo EARC para transformar objeciones en valor. Impacto esperado: Score de Calidad consistente >80% en todo el equipo.",
+      titulo: "2. Excelencia Operativa (Calidad)",
+      desc: "Meta: >80% de score. Estrategia: Auditoría de llamadas con retroalimentación en 24h para gestores en Q3/Q4. Foco en empatía y manejo de objeciones. Impacto: Elevación del estándar de calidad del equipo por encima del umbral crítico.",
       prioridad: "Alta",
       indicador: "Calidad"
     },
     {
-      titulo: "3. Reducción Proactiva de Atrasos",
-      desc: "Brecha detectada: Atrasos concentrados en renovaciones de fin de mes. Acción: Redistribución de carga de trabajo para priorizar vencimientos con 7 días de antelación y uso de plantillas de recordatorio rápido. Impacto esperado: Reducción de Atrasos a <2% constante.",
+      titulo: "3. Blindaje de Cartera (Atrasos)",
+      desc: "Meta: <2% de atrasos. Estrategia: Bloqueo de agenda de 8:00 a 9:00 AM para gestión exclusiva de casos con >24h de atraso. Impacto: Eliminación de cuellos de botella y cumplimiento del KPI de oportunidad.",
       prioridad: "Alta",
       indicador: "Atrasos"
     },
     {
-      titulo: "4. Gestión de Alta Productividad (>180)",
-      desc: "Brecha detectada: Gestores con baja actividad diaria impactan el volumen total. Acción: Seguimiento riguroso de gestiones por hora para estabilizar la Productividad mensual por encima de 180 llamadas/seguimientos. Impacto esperado: Mayor cobertura de la cartera asignada.",
+      titulo: "4. Maximización de Actividad (Productividad)",
+      desc: "Meta: >180 gestiones/mes. Estrategia: Implementar bloques de 'Power Dialing' de 90 minutos sin interrupciones. Impacto: Garantizar el volumen de gestión necesario para alimentar el embudo de conversión y alcanzar las metas de volumen.",
       prioridad: "Crítica",
       indicador: "Productividad"
     }
