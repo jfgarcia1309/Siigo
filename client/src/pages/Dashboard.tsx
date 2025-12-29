@@ -365,17 +365,17 @@ export default function Dashboard() {
                   onChange={(e) => setTerminoBusqueda(e.target.value)}
                 />
               </div>
-              <Select value={filtroEstado} onValueChange={setFiltroEstado}>
-                <SelectTrigger className="w-[180px] bg-card">
+              <Select value={filtroEstado || "todos"} onValueChange={setFiltroEstado}>
+                <SelectTrigger className="w-[200px] bg-card" data-testid="select-impact-filter">
                   <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Estado" />
+                  <SelectValue placeholder="Filtrar por estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="todos">Todos los Estados</SelectItem>
-                  <SelectItem value="Impacto Bajo">Impacto Bajo</SelectItem>
-                  <SelectItem value="Impacto Medio">Impacto Medio</SelectItem>
-                  <SelectItem value="Impacto Alto">Impacto Alto</SelectItem>
-                  <SelectItem value="Impacto Crítico">Impacto Crítico</SelectItem>
+                  <SelectItem value="todos" data-testid="option-all-states">Todos los Estados</SelectItem>
+                  <SelectItem value="Impacto Bajo" data-testid="option-low-impact">Impacto Bajo</SelectItem>
+                  <SelectItem value="Impacto Medio" data-testid="option-medium-impact">Impacto Medio</SelectItem>
+                  <SelectItem value="Impacto Alto" data-testid="option-high-impact">Impacto Alto</SelectItem>
+                  <SelectItem value="Impacto Crítico" data-testid="option-critical-impact">Impacto Crítico</SelectItem>
                 </SelectContent>
               </Select>
             </div>
