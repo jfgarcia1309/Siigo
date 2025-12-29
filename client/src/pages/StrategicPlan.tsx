@@ -17,7 +17,8 @@ import {
   ArrowRight,
   TrendingUp,
   ShieldCheck,
-  RotateCcw
+  RotateCcw,
+  LayoutDashboard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -199,6 +200,7 @@ export default function StrategicPlan() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Plan de Motivación y Reconocimiento */}
             <div className="space-y-6">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <ThumbsUp className="w-5 h-5 text-primary" />
@@ -221,13 +223,41 @@ export default function StrategicPlan() {
               </div>
             </div>
 
+            {/* Dashboard Siigo Real-Time */}
             <div className="space-y-6">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-primary" />
-                Recursos de Soporte al Gestor
+              <h2 className="text-xl font-bold flex items-center gap-2 text-primary">
+                <LayoutDashboard className="w-5 h-5" />
+                Dashboard Siigo Real-Time
               </h2>
+              <Card className="border-primary bg-primary/5 shadow-md border-2">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-primary rounded-xl text-white shadow-lg">
+                      <TrendingUp className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg">Monitoreo en Vivo</h4>
+                      <p className="text-sm text-muted-foreground">Seguimiento de meta individual (18 unidades).</p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-sm font-medium">
+                      <span>Progreso Equipo Siigo</span>
+                      <span className="text-primary font-bold">100% Accesible</span>
+                    </div>
+                    <div className="w-full h-4 bg-muted rounded-full overflow-hidden border border-primary/20">
+                      <div className="h-full bg-primary w-[72%] shadow-[0_0_15px_rgba(0,161,224,0.5)]" />
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] text-muted-foreground font-bold uppercase tracking-widest pt-2">
+                      <span>23 Gestores Activos</span>
+                      <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-primary"/> Sincronizado</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
               <div className="bg-card border border-border rounded-xl divide-y">
-                {herramientas.map((h, idx) => (
+                {herramientas.filter(h => h.nombre !== "Dashboard Siigo Real-Time").map((h, idx) => (
                   <div key={idx} className="p-4 flex justify-between items-center group hover:bg-muted/30 transition-colors">
                     <span className="text-sm font-medium">{h.nombre}</span>
                     <Badge variant="outline" className="text-[10px] font-normal">{h.funcion}</Badge>
