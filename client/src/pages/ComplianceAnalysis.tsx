@@ -37,17 +37,73 @@ export default function ComplianceAnalysis() {
     const cumpleAtr = Number(g.porcentajeAtrasos) <= MAX_ATRASOS;
     const cumpleGes = g.renovacionesGestionadas >= MIN_GESTION;
     
-    const fallas = [];
-    if (!cumpleRen) fallas.push({ label: "Meta de Renovaciones", valor: `${g.totalRenovaciones}/${META_RENOVACIONES}`, icono: Target });
-    if (!cumpleCal) fallas.push({ label: "Calidad", valor: `${g.puntajeCalidad}%`, icono: ShieldAlert });
-    if (!cumpleAtr) fallas.push({ label: "Atrasos", valor: `${g.porcentajeAtrasos}%`, icono: Clock });
-    if (!cumpleGes) fallas.push({ label: "Gestión", valor: g.renovacionesGestionadas, icono: Briefcase });
+    const detalles = [];
+    
+    // Análisis de Renovaciones
+    const brecha_ren = META_RENOVACIONES - g.totalRenovaciones;
+    detalles.push({
+      label: "Renovaciones Gestionadas",
+      cumple: cumpleRen,
+      valor: g.totalRenovaciones,
+      meta: META_RENOVACIONES,
+      brecha: brecha_ren,
+      explicacion: cumpleRen 
+        ? `Superó la meta con ${g.totalRenovaciones} renovaciones (${g.totalRenovaciones - META_RENOVACIONES}+ de lo requerido). Desglose: Feb: ${g.renovacionesFeb}, Mar: ${g.renovacionesMar}, Abr: ${g.renovacionesAbr}`
+        : `Logró ${g.totalRenovaciones} renovaciones pero requería 36 (brecha de -${brecha_ren}). Desglose: Feb: ${g.renovacionesFeb}, Mar: ${g.renovacionesMar}, Abr: ${g.renovacionesAbr}`,
+      icono: Target
+    });
+
+    // Análisis de Calidad
+    const brecha_cal = META_CALIDAD - g.puntajeCalidad;
+    detalles.push({
+      label: "Puntaje de Calidad",
+      cumple: cumpleCal,
+      valor: g.puntajeCalidad,
+      meta: META_CALIDAD,
+      brecha: brecha_cal,
+      explicacion: cumpleCal
+        ? `Alcanzó ${g.puntajeCalidad}% de score de calidad, superando la meta de ${META_CALIDAD}%. Desempeño de calidad óptimo.`
+        : `Obtuvo ${g.puntajeCalidad}% pero la meta es ${META_CALIDAD}% (brecha de -${brecha_cal}%). Requiere mejorar procesos de control de calidad.`,
+      icono: ShieldAlert
+    });
+
+    // Análisis de Atrasos
+    const atrasos_num = Number(g.porcentajeAtrasos);
+    const exceso_atrasos = atrasos_num - MAX_ATRASOS;
+    detalles.push({
+      label: "Porcentaje de Atrasos",
+      cumple: cumpleAtr,
+      valor: atrasos_num,
+      meta: MAX_ATRASOS,
+      brecha: exceso_atrasos,
+      explicacion: cumpleAtr
+        ? `Mantiene ${g.porcentajeAtrasos}% de atrasos, dentro del límite de ${MAX_ATRASOS}%. Gestión de tiempos óptima.`
+        : `Presenta ${g.porcentajeAtrasos}% de atrasos, excediendo el máximo permitido de ${MAX_ATRASOS}% (${atrasos_num > MAX_ATRASOS ? '+' : ''}${exceso_atrasos.toFixed(2)}%). Necesita mejorar puntualidad.`,
+      icono: Clock
+    });
+
+    // Análisis de Gestión
+    const brecha_ges = MIN_GESTION - g.renovacionesGestionadas;
+    detalles.push({
+      label: "Renovaciones Gestionadas",
+      cumple: cumpleGes,
+      valor: g.renovacionesGestionadas,
+      meta: MIN_GESTION,
+      brecha: brecha_ges,
+      explicacion: cumpleGes
+        ? `Gestionó ${g.renovacionesGestionadas} renovaciones, superando la media de ${MIN_GESTION}. Alto volumen de gestión.`
+        : `Gestionó ${g.renovacionesGestionadas} renovaciones pero la media de la unidad es ${MIN_GESTION} (brecha de -${brecha_ges}). Requiere mayor carga de trabajo.`,
+      icono: Briefcase
+    });
+
+    const fallas = detalles.filter(d => !d.cumple);
 
     return {
       cumpleTodo: fallas.length === 0,
       cumpleSoloMeta: cumpleRen && fallas.length > 0,
       cumpleMeta: cumpleRen,
-      fallas
+      fallas,
+      detalles
     };
   };
 
@@ -125,7 +181,7 @@ export default function ComplianceAnalysis() {
                   </div>
 
                   <div className="space-y-3">
-                    <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest px-1">Estado de Indicadores:</p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest px-1">Análisis Detallado de Indicadores:</p>
                     <div className="space-y-2">
                       {g.cumpleTodo ? (
                         <div className="flex items-center gap-3 text-xs text-green-700 bg-green-100/40 p-3 rounded-xl border border-green-200/50">
@@ -133,14 +189,24 @@ export default function ComplianceAnalysis() {
                           <span>¡Cumplimiento Integral! El gestor cumple con el 100% de los KPI corporativos.</span>
                         </div>
                       ) : (
-                        <div className="grid grid-cols-1 gap-2">
-                          {g.fallas.map((f: any, i: number) => (
-                            <div key={i} className="flex items-center justify-between gap-3 text-xs text-red-700 bg-red-50/80 p-3 rounded-xl border border-red-100/80">
-                              <div className="flex items-center gap-2">
-                                <f.icono className="w-3.5 h-3.5 shrink-0" />
-                                <span className="font-medium">No cumple {f.label}</span>
+                        <div className="grid grid-cols-1 gap-2.5">
+                          {g.detalles.map((d: any, i: number) => (
+                            <div key={i} className={cn(
+                              "flex flex-col gap-2 p-3 rounded-xl border transition-colors",
+                              d.cumple 
+                                ? "bg-green-50/50 border-green-100/60 text-green-700" 
+                                : "bg-red-50/50 border-red-100/60 text-red-700"
+                            )}>
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-2">
+                                  <d.icono className="w-4 h-4 shrink-0" />
+                                  <span className="text-xs font-bold uppercase">{d.label}</span>
+                                </div>
+                                <span className="text-xs font-bold bg-white/60 px-2 py-0.5 rounded border" style={{borderColor: d.cumple ? '#86efac' : '#fca5a5'}}>
+                                  {d.valor} / {d.meta}
+                                </span>
                               </div>
-                              <span className="font-bold bg-white/60 px-2 py-0.5 rounded-md border border-red-200/50">{f.valor}</span>
+                              <p className="text-[11px] leading-relaxed font-medium text-opacity-90">{d.explicacion}</p>
                             </div>
                           ))}
                         </div>
