@@ -72,41 +72,41 @@ const CicloEARC = () => {
 export default function StrategicPlan() {
   const acciones = [
     {
-      titulo: "1. Optimización de la Conversión (Efectividad)",
-      desc: "Meta: 100% Cumplimiento de la meta asignada. Estrategia: Mejorar la conversión de la productividad vs efectividad mediante el 'Embudo 12:1'. Acción: Asegurar que cada 12 gestiones resulten en 1 cierre efectivo, transformando la alta actividad en resultados reales y cumplimiento total.",
+      titulo: "1. Recuperación de Cumplimiento (Meta 18 renovaciones)",
+      desc: "Meta: 100% de cumplimiento (18 unidades para Mayo). Estrategia: Implementar el 'Embudo 10:1'. Acción: Incrementar la contactabilidad diaria para asegurar un cierre por cada 10 gestiones efectivas, priorizando clientes con portafolio básico (POS/Nómina).",
       prioridad: "Crítica",
       indicador: "Cumplimiento"
     },
     {
-      titulo: "2. Excelencia Operativa (Calidad)",
-      desc: "Meta: >80% Calidad. Estrategia: Garantizar que el nivel de atención y registro sea superior al 80%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación.",
+      titulo: "2. Elevación del Estándar de Calidad",
+      desc: "Meta: >80% Score de Calidad. Estrategia: Feedback inmediato y refuerzo de guiones. Acción: Auditoría diaria del 5% de las llamadas de gestores con score <76%, enfocándose en la resolución de objeciones y empatía virtual.",
       prioridad: "Crítica",
       indicador: "Calidad"
     },
     {
-      titulo: "3. Blindaje de Cartera (Atrasos)",
-      desc: "Meta: <2% Atrasos mensual. Estrategia: Reducir el seguimiento atrasado a menos del 2% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes.",
+      titulo: "3. Blindaje contra el Atraso Operativo",
+      desc: "Meta: <2% de Seguimientos Atrasados. Estrategia: Gestión proactiva de agenda. Acción: Implementar 'Barrido de Pendientes' de 8:00 AM a 9:00 AM. Ningún caso debe superar las 24h sin contacto.",
       prioridad: "Alta",
       indicador: "Atrasos"
     },
     {
-      titulo: "4. Maximización de Actividad (Productividad)",
-      desc: "Meta: >180 gestiones mensuales. Asegurar un flujo constante y sostenido de llamadas, seguimientos y renovaciones. Estrategia: Mantener de forma disciplinada un volumen superior a 180 gestiones mensuales, priorizando la regularidad y el enfoque en tareas de alto impacto. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (batching) para agrupar tareas similares: barrido de cartera para contactar clientes pendientes, eliminación de distracciones enfocándose exclusivamente en llamadas y asegurar que cada contacto genere un avance concreto hacia el cierre.",
+      titulo: "4. Maximización de Productividad Telefónica",
+      desc: "Meta: >180 gestiones mensuales. Estrategia: Bloques de gestión intensiva. Acción: Asegurar un mínimo de 45 llamadas diarias por gestor, garantizando que el volumen de actividad soporte el incremento de la meta a 18 unidades.",
       prioridad: "Alta",
       indicador: "Productividad"
     }
   ];
 
   const incentivos = [
-    { titulo: "Bienestar en Turno", desc: "Entrega de snacks saludables durante la jornada por cumplimiento de hitos diarios.", icono: ThumbsUp },
-    { titulo: "Recarga de Energía", desc: "Tiempo extra de break otorgado al alcanzar la meta de gestiones del bloque morning.", icono: RotateCcw },
-    { titulo: "Flexibilidad Horaria", desc: "Permiso para ingreso tardío o salida temprana tras cumplir el 100% de la meta de renovación semanal.", icono: ShieldCheck }
+    { titulo: "Reconocimiento 'Top Renovador'", desc: "Bonificación por alcanzar las 18 renovaciones antes de la cuarta semana del mes.", icono: ThumbsUp },
+    { titulo: "Upgrade de Herramientas", desc: "Acceso a licencias premium de gestión para quienes mantengan calidad >85%.", icono: RotateCcw },
+    { titulo: "Tarde de Bienestar", desc: "Medio día libre remunerado por cumplimiento del 100% de la meta semanal de recaudo.", icono: ShieldCheck }
   ];
 
   const herramientas = [
-    { nombre: "Dashboard en Vivo", funcion: "Seguimiento minuto a minuto de gestiones y renovaciones." },
-    { nombre: "Plantillero EARC", funcion: "Guía rápida de respuestas ante objeciones comunes." },
-    { nombre: "Monitor de Atrasos", funcion: "Alerta visual para casos con más de 24h sin gestión." }
+    { nombre: "Dashboard Siigo Real-Time", funcion: "Monitoreo en vivo de renovaciones y cumplimiento de meta de 18 unidades." },
+    { nombre: "Guía de Objeciones POS/Nómina", funcion: "Manual rápido para rebatir dudas sobre Facturación y POS." },
+    { nombre: "Alerta de Atrasos 24h", funcion: "Notificación automática al superar el 2% de casos pendientes." }
   ];
 
   return (
@@ -116,19 +116,49 @@ export default function StrategicPlan() {
         <div className="max-w-6xl mx-auto space-y-10">
           <div className="flex justify-between items-end">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground">Plan Estratégico de Mejora</h1>
-              <p className="text-muted-foreground mt-2">Acciones correctivas y preventivas para el Q2 2025.</p>
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">Plan Estratégico de Mejora - Siigo</h1>
+              <p className="text-muted-foreground mt-2">Acciones para alcanzar la meta de 18 renovaciones en Mayo.</p>
             </div>
-            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs py-1 px-3">Estrategia Optimizada</Badge>
+            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs py-1 px-3">Estrategia Mayo 2025</Badge>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-primary/5 border-primary/20">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-primary uppercase">Meta Mayo</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">18 Unidades</div>
+                <p className="text-xs text-muted-foreground">+38% vs Abril</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-orange-500/5 border-orange-500/20">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-orange-600 uppercase">Gap Calidad</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">4% de Mejora</div>
+                <p className="text-xs text-muted-foreground">Objetivo: 80% (Actual: 76%)</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-red-500/5 border-red-500/20">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-red-600 uppercase">Reducción Atrasos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">-1.84%</div>
+                <p className="text-xs text-muted-foreground">Meta: 2% (Actual: 3.84%)</p>
+              </CardContent>
+            </Card>
           </div>
 
           <Card className="border-primary/20 shadow-xl overflow-hidden">
             <CardHeader className="bg-primary/5 border-b border-primary/10">
               <CardTitle className="flex items-center gap-2 text-primary">
                 <RotateCcw className="w-5 h-5" />
-                Ciclo de Gestión Comercial EARC
+                Ciclo de Gestión Comercial Siigo (EARC)
               </CardTitle>
-              <CardDescription>Modelo circular para el tratamiento de objeciones y cierre de renovaciones.</CardDescription>
+              <CardDescription>Modelo para convertir objeciones en renovaciones exitosas.</CardDescription>
             </CardHeader>
             <CardContent className="bg-card">
               <CicloEARC />
@@ -138,7 +168,7 @@ export default function StrategicPlan() {
           <div className="space-y-6">
             <h2 className="text-xl font-bold flex items-center gap-2">
               <Target className="w-5 h-5 text-primary" />
-              Estrategias por Indicador
+              Estrategias de Recuperación y Crecimiento
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {acciones.map((accion, index) => (
@@ -171,7 +201,7 @@ export default function StrategicPlan() {
             <div className="space-y-6">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <ThumbsUp className="w-5 h-5 text-primary" />
-                Plan de Incentivos y Reconocimiento
+                Plan de Motivación y Reconocimiento
               </h2>
               <div className="grid gap-4">
                 {incentivos.map((i, idx) => (
@@ -193,7 +223,7 @@ export default function StrategicPlan() {
             <div className="space-y-6">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-primary" />
-                Herramientas de Apoyo
+                Recursos de Soporte al Gestor
               </h2>
               <div className="bg-card border border-border rounded-xl divide-y">
                 {herramientas.map((h, idx) => (
@@ -211,20 +241,17 @@ export default function StrategicPlan() {
               <ShieldCheck className="w-12 h-12 text-primary" />
             </div>
             <div className="space-y-2 text-center md:text-left">
-              <h3 className="text-xl font-bold">Resumen Ejecutivo y Compromiso de Recuperación</h3>
+              <h3 className="text-xl font-bold">Compromiso de Gestión Mayo</h3>
               <div className="text-sm text-muted-foreground max-w-2xl space-y-4 leading-relaxed">
                 <p>
-                  Este plan estratégico estandariza el nivel de impacto en el equipo, enfocándose en la revisión diaria de clientes pendientes y el trabajo en bloques concentrados para avanzar cada contacto hacia el cierre.
+                  El equipo de 23 gestores se compromete a alcanzar la meta de 18 renovaciones por persona, asegurando que el portafolio básico de Siigo (Facturación, POS, Nómina) sea renovado oportunamente.
                 </p>
                 <div className="grid grid-cols-2 gap-4 text-[11px] uppercase font-bold text-primary/80">
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Productividad: &gt;180/mes</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Calidad: &gt;80%</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Cumplimiento: 100% Meta</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: &lt;2% mensual</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Calidad: >80% (Meta)</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: <2% (Meta)</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Gestión: >180 Llamadas</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Renovación: 100% Meta</div>
                 </div>
-                <p className="italic">
-                  La técnica de Gestión Intensiva (Batching) es el eje central para transformar la actividad disciplinada en cierres efectivos, optimizando la tasa de conversión y garantizando la regularidad del desempeño.
-                </p>
               </div>
             </div>
           </div>
