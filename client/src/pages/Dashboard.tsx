@@ -69,35 +69,94 @@ export default function Dashboard() {
     }
   };
 
+  const PanelCumplimientoIntegral = ({ data }: { data: any[] }) => {
+    const cumplidoresIntegrales = data.filter(g => 
+      g.totalRenovaciones >= 36 && 
+      g.puntajeCalidad >= 80 && 
+      Number(g.porcentajeAtrasos) <= 2 && 
+      g.renovacionesGestionadas >= 180
+    );
+
+    const soloMeta = data.filter(g => 
+      g.totalRenovaciones >= 36 && 
+      !(g.puntajeCalidad >= 80 && Number(g.porcentajeAtrasos) <= 2 && g.renovacionesGestionadas >= 180)
+    );
+
+    const noCumplen = data.filter(g => g.totalRenovaciones < 36);
+
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 border-b border-green-200 pb-2">
+            <div className="w-2 h-2 rounded-full bg-green-500" />
+            <h3 className="font-bold text-green-800">Cumplimiento Integral (100%)</h3>
+          </div>
+          {cumplidoresIntegrales.length > 0 ? (
+            cumplidoresIntegrales.map(g => (
+              <div key={g.id} className="bg-green-50 p-4 rounded-xl border border-green-100 shadow-sm flex justify-between items-center">
+                <span className="font-semibold text-green-900">{g.nombre}</span>
+                <Badge className="bg-green-600">Éxito Total</Badge>
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-muted-foreground italic">Ningún gestor cumple todos los criterios.</p>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 border-b border-blue-200 pb-2">
+            <div className="w-2 h-2 rounded-full bg-blue-500" />
+            <h3 className="font-bold text-blue-800">Solo Meta de Renovaciones</h3>
+          </div>
+          <div className="space-y-2">
+            {soloMeta.map(g => (
+              <div key={g.id} className="bg-blue-50 p-3 rounded-xl border border-blue-100 flex flex-col gap-1">
+                <span className="font-semibold text-blue-900">{g.nombre}</span>
+                <div className="flex gap-2">
+                  {g.puntajeCalidad < 80 && <Badge variant="outline" className="text-[10px] border-red-200 text-red-700">Calidad</Badge>}
+                  {Number(g.porcentajeAtrasos) > 2 && <Badge variant="outline" className="text-[10px] border-red-200 text-red-700">Atrasos</Badge>}
+                  {g.renovacionesGestionadas < 180 && <Badge variant="outline" className="text-[10px] border-red-200 text-red-700">Gestión</Badge>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 border-b border-red-200 pb-2">
+            <div className="w-2 h-2 rounded-full bg-red-500" />
+            <h3 className="font-bold text-red-800">Brechas Críticas (Incumplimiento Meta)</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-2">
+            {noCumplen.map(g => (
+              <div key={g.id} className="bg-muted/30 p-2 rounded-lg border border-border flex justify-between items-center text-xs">
+                <span className="text-foreground truncate max-w-[150px]">{g.nombre}</span>
+                <span className="text-red-500 font-bold">-{36 - g.totalRenovaciones} renov.</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const TablaGestores = ({ data }: { data: any[] }) => (
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow className="bg-secondary/50 hover:bg-secondary/50">
             <TableHead className="font-bold text-foreground w-[200px]">Nombre del Gestor</TableHead>
-            <TableHead className="text-center">Ren. Trimestrales</TableHead>
+            <TableHead className="text-center">Renovaciones</TableHead>
             <TableHead className="text-center">Cumplimiento</TableHead>
             <TableHead className="text-center">Calidad</TableHead>
             <TableHead className="text-center">Atrasos</TableHead>
             <TableHead className="text-center">Ren. Gestión</TableHead>
-            <TableHead className="text-right">Detalle de Cumplimiento</TableHead>
+            <TableHead className="text-right">Clasificación Impacto</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data?.map((gestor) => {
             const cumplimiento = (gestor.totalRenovaciones / 36) * 100;
-            const cumpleRen = gestor.totalRenovaciones >= 36;
-            const cumpleCal = gestor.puntajeCalidad >= 80;
-            const cumpleAtr = Number(gestor.porcentajeAtrasos) <= 2;
-            const cumpleGes = gestor.renovacionesGestionadas >= 180;
-            const cumpleTodo = cumpleRen && cumpleCal && cumpleAtr && cumpleGes;
-
-            const fallas = [];
-            if (!cumpleRen) fallas.push("Meta");
-            if (!cumpleCal) fallas.push("Calidad");
-            if (!cumpleAtr) fallas.push("Atrasos");
-            if (!cumpleGes) fallas.push("Gestión");
-
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors">
                 <TableCell className="font-medium text-foreground">{gestor.nombre}</TableCell>
@@ -105,43 +164,16 @@ export default function Dashboard() {
                 <TableCell className="text-center">
                   <span className={cn(
                     "px-2 py-0.5 rounded text-xs font-bold",
-                    cumpleRen ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"
+                    gestor.totalRenovaciones >= 36 ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"
                   )}>
                     {cumplimiento.toFixed(0)}%
                   </span>
                 </TableCell>
-                <TableCell className="text-center">
-                  <span className={cn(
-                    "text-xs",
-                    cumpleCal ? "text-green-600" : "text-red-600 font-bold"
-                  )}>
-                    {gestor.puntajeCalidad}%
-                  </span>
-                </TableCell>
-                <TableCell className="text-center">
-                  <span className={cn(
-                    "text-xs",
-                    cumpleAtr ? "text-muted-foreground" : "text-red-600 font-bold"
-                  )}>
-                    {gestor.porcentajeAtrasos}%
-                  </span>
-                </TableCell>
-                <TableCell className="text-center">
-                  <span className={cn(
-                    "text-xs",
-                    cumpleGes ? "text-muted-foreground" : "text-red-600 font-bold"
-                  )}>
-                    {gestor.renovacionesGestionadas}
-                  </span>
-                </TableCell>
+                <TableCell className="text-center text-xs">{gestor.puntajeCalidad}%</TableCell>
+                <TableCell className="text-center text-xs">{gestor.porcentajeAtrasos}%</TableCell>
+                <TableCell className="text-center text-xs">{gestor.renovacionesGestionadas}</TableCell>
                 <TableCell className="text-right">
-                  {cumpleTodo ? (
-                    <Badge className="bg-green-500">Cumple Todo</Badge>
-                  ) : (
-                    <span className="text-[10px] text-red-500 font-semibold uppercase">
-                      Incumple: {fallas.join(", ")}
-                    </span>
-                  )}
+                  {obtenerInsigniaEstado(gestor.clasificacion)}
                 </TableCell>
               </TableRow>
             );
@@ -150,14 +182,6 @@ export default function Dashboard() {
       </Table>
     </div>
   );
-
-  if (cargandoGestores || cargandoEstadisticas) {
-    return (
-      <div className="flex min-h-screen bg-background items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
 
   const gestoresVisualizados = filtrarYOrdenar(gestores || []);
 
@@ -226,6 +250,21 @@ export default function Dashboard() {
               icon={<Users className="w-6 h-6" />}
             />
           </div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-card rounded-2xl border border-border shadow-lg p-6"
+          >
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Análisis de Cumplimiento Integral</h2>
+                <p className="text-sm text-muted-foreground mt-1">Identificación de brechas: Meta (36), Calidad ({'>'}80%), Atrasos (≤2%), Gestión ({'>'}180)</p>
+              </div>
+              <Badge variant="outline" className="py-1">Corte Trimestral: Feb - Abr</Badge>
+            </div>
+            <PanelCumplimientoIntegral data={gestores || []} />
+          </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
