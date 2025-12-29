@@ -38,6 +38,11 @@ export default function Dashboard() {
   const { data: estadisticas, isLoading: cargandoEstadisticas } = useEstadisticas();
   const [terminoBusqueda, setTerminoBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("todos");
+  const [mesSeleccionado, setMesSeleccionado] = useState<"feb" | "mar" | "abr">("abr");
+
+  const META_MENSUAL = 12; // Meta trimestral 36 / 3 meses
+  const META_CALIDAD = 80;
+  const MAX_ATRASOS = 2;
 
   const filtrarYOrdenar = (lista: any[]) => {
     if (!lista) return [];
@@ -48,6 +53,20 @@ export default function Dashboard() {
       filtrados = filtrados.filter(g => g.clasificacion === filtroEstado);
     }
     return filtrados;
+  };
+
+  const analizarCumplimientoMensual = (gestor: any, mes: "feb" | "mar" | "abr") => {
+    const valorMes = mes === "feb" ? gestor.renovacionesFeb : mes === "mar" ? gestor.renovacionesMar : gestor.renovacionesAbr;
+    const cumpleRenovaciones = valorMes >= META_MENSUAL;
+    const cumpleCalidad = gestor.puntajeCalidad >= META_CALIDAD;
+    const cumpleAtrasos = Number(gestor.porcentajeAtrasos) <= MAX_ATRASOS;
+
+    const fallas = [];
+    if (!cumpleRenovaciones) fallas.push(`Renovaciones (${valorMes}/${META_MENSUAL})`);
+    if (!cumpleCalidad) fallas.push(`Calidad (${gestor.puntajeCalidad}%)`);
+    if (!cumpleAtrasos) fallas.push(`Atrasos (${gestor.porcentajeAtrasos}%)`);
+
+    return { cumple: fallas.length === 0, fallas };
   };
 
   const obtenerColorCumplimiento = (porcentaje: number) => {
@@ -77,32 +96,39 @@ export default function Dashboard() {
         <TableHeader>
           <TableRow className="bg-secondary/50 hover:bg-secondary/50">
             <TableHead className="font-bold text-foreground w-[200px]">Nombre del Gestor</TableHead>
-            <TableHead className="text-center">Renovaciones</TableHead>
-            <TableHead className="text-center">Cumplimiento</TableHead>
-            <TableHead className="text-center">Calidad</TableHead>
-            <TableHead className="text-center">Atrasos</TableHead>
-            <TableHead className="text-center">Ren. Gestión</TableHead>
+            <TableHead className="text-center">Renovaciones ({mesSeleccionado.toUpperCase()})</TableHead>
+            <TableHead className="text-center">Estado Mes</TableHead>
+            <TableHead className="text-center">Indicadores No Cumplidos</TableHead>
             <TableHead className="text-right">Clasificación Impacto</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data?.map((gestor) => {
-            const cumplimiento = (gestor.totalRenovaciones / 36) * 100;
+            const { cumple, fallas } = analizarCumplimientoMensual(gestor, mesSeleccionado);
+            const valorMes = mesSeleccionado === "feb" ? gestor.renovacionesFeb : mesSeleccionado === "mar" ? gestor.renovacionesMar : gestor.renovacionesAbr;
+            
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors">
                 <TableCell className="font-medium text-foreground">{gestor.nombre}</TableCell>
-                <TableCell className="text-center font-bold">{gestor.totalRenovaciones}</TableCell>
+                <TableCell className="text-center font-bold">{valorMes}</TableCell>
                 <TableCell className="text-center">
-                  <span className={cn(
-                    "px-2 py-0.5 rounded text-xs font-bold",
-                    gestor.totalRenovaciones >= 36 ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"
-                  )}>
-                    {cumplimiento.toFixed(0)}%
-                  </span>
+                  <Badge variant={cumple ? "default" : "destructive"} className="text-[10px] uppercase">
+                    {cumple ? "Cumple" : "No Cumple"}
+                  </Badge>
                 </TableCell>
-                <TableCell className="text-center text-xs">{gestor.puntajeCalidad}%</TableCell>
-                <TableCell className="text-center text-xs">{gestor.porcentajeAtrasos}%</TableCell>
-                <TableCell className="text-center text-xs">{gestor.renovacionesGestionadas}</TableCell>
+                <TableCell className="text-center">
+                  {fallas.length > 0 ? (
+                    <div className="flex flex-wrap justify-center gap-1">
+                      {fallas.map((f, i) => (
+                        <Badge key={i} variant="outline" className="text-[9px] border-red-200 text-red-600 bg-red-50">
+                          {f}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-xs text-green-600 font-medium">Todos los KPI al día</span>
+                  )}
+                </TableCell>
                 <TableCell className="text-right">
                   {obtenerInsigniaEstado(gestor.clasificacion)}
                 </TableCell>
@@ -129,6 +155,17 @@ export default function Dashboard() {
               <p className="text-muted-foreground mt-1">Análisis de impacto ascendente en los indicadores del equipo</p>
             </div>
             <div className="flex items-center gap-3">
+              <Select value={mesSeleccionado} onValueChange={(v: any) => setMesSeleccionado(v)}>
+                <SelectTrigger className="w-[140px] bg-primary/5 border-primary/20 font-bold">
+                  <Target className="w-4 h-4 mr-2 text-primary" />
+                  <SelectValue placeholder="Mes" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="feb">Febrero</SelectItem>
+                  <SelectItem value="mar">Marzo</SelectItem>
+                  <SelectItem value="abr">Abril</SelectItem>
+                </SelectContent>
+              </Select>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input 
