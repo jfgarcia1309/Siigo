@@ -75,50 +75,73 @@ export default function Dashboard() {
         <TableHeader>
           <TableRow className="bg-secondary/50 hover:bg-secondary/50">
             <TableHead className="font-bold text-foreground w-[200px]">Nombre del Gestor</TableHead>
-            <TableHead className="text-center">Feb (8)</TableHead>
-            <TableHead className="text-center">Mar (13)</TableHead>
-            <TableHead className="text-center">Abr (15)</TableHead>
-            <TableHead className="text-center font-bold text-primary" title="Acumulado de renovaciones para el trimestre (Feb+Mar+Abr)">Acumulado de Renovaciones Trimestral</TableHead>
+            <TableHead className="text-center">Ren. Trimestrales</TableHead>
             <TableHead className="text-center">Cumplimiento</TableHead>
             <TableHead className="text-center">Calidad</TableHead>
             <TableHead className="text-center">Atrasos</TableHead>
-            <TableHead className="text-right">Estado</TableHead>
+            <TableHead className="text-center">Ren. Gestión</TableHead>
+            <TableHead className="text-right">Detalle de Cumplimiento</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data?.map((gestor) => {
             const cumplimiento = (gestor.totalRenovaciones / 36) * 100;
+            const cumpleRen = gestor.totalRenovaciones >= 36;
+            const cumpleCal = gestor.puntajeCalidad >= 80;
+            const cumpleAtr = Number(gestor.porcentajeAtrasos) <= 2;
+            const cumpleGes = gestor.renovacionesGestionadas >= 180;
+            const cumpleTodo = cumpleRen && cumpleCal && cumpleAtr && cumpleGes;
+
+            const fallas = [];
+            if (!cumpleRen) fallas.push("Meta");
+            if (!cumpleCal) fallas.push("Calidad");
+            if (!cumpleAtr) fallas.push("Atrasos");
+            if (!cumpleGes) fallas.push("Gestión");
+
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors">
                 <TableCell className="font-medium text-foreground">{gestor.nombre}</TableCell>
-                <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesFeb}</TableCell>
-                <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesMar}</TableCell>
-                <TableCell className="text-center font-mono text-muted-foreground">{gestor.renovacionesAbr}</TableCell>
-                <TableCell className="text-center font-bold text-lg font-mono">{gestor.totalRenovaciones}</TableCell>
+                <TableCell className="text-center font-bold">{gestor.totalRenovaciones}</TableCell>
                 <TableCell className="text-center">
                   <span className={cn(
-                    "px-2.5 py-1 rounded-md text-xs font-bold",
-                    obtenerColorCumplimiento(cumplimiento)
+                    "px-2 py-0.5 rounded text-xs font-bold",
+                    cumpleRen ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"
                   )}>
                     {cumplimiento.toFixed(0)}%
                   </span>
                 </TableCell>
-                <TableCell className="text-center font-mono">
+                <TableCell className="text-center">
                   <span className={cn(
-                    gestor.puntajeCalidad >= 80 ? "text-green-600" : "text-yellow-600"
+                    "text-xs",
+                    cumpleCal ? "text-green-600" : "text-red-600 font-bold"
                   )}>
                     {gestor.puntajeCalidad}%
                   </span>
                 </TableCell>
-                <TableCell className="text-center font-mono">
+                <TableCell className="text-center">
                   <span className={cn(
-                    Number(gestor.porcentajeAtrasos) <= 2 ? "text-muted-foreground" : "text-red-500 font-bold"
+                    "text-xs",
+                    cumpleAtr ? "text-muted-foreground" : "text-red-600 font-bold"
                   )}>
                     {gestor.porcentajeAtrasos}%
                   </span>
                 </TableCell>
+                <TableCell className="text-center">
+                  <span className={cn(
+                    "text-xs",
+                    cumpleGes ? "text-muted-foreground" : "text-red-600 font-bold"
+                  )}>
+                    {gestor.renovacionesGestionadas}
+                  </span>
+                </TableCell>
                 <TableCell className="text-right">
-                  {obtenerInsigniaEstado(gestor.clasificacion)}
+                  {cumpleTodo ? (
+                    <Badge className="bg-green-500">Cumple Todo</Badge>
+                  ) : (
+                    <span className="text-[10px] text-red-500 font-semibold uppercase">
+                      Incumple: {fallas.join(", ")}
+                    </span>
+                  )}
                 </TableCell>
               </TableRow>
             );
