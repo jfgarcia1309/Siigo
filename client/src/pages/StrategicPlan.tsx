@@ -73,25 +73,25 @@ export default function StrategicPlan() {
   const acciones = [
     {
       titulo: "1. Optimización de la Conversión (Efectividad)",
-      desc: "Meta: 100% Cumplimiento de renovaciones mensual. Estrategia: Mejorar la conversión de la productividad vs efectividad mediante el 'Embudo 12:1'. Acción: Asegurar que cada 12 gestiones resulten en 1 cierre efectivo, transformando la alta actividad en resultados reales.",
+      desc: "Meta: 100% Cumplimiento de la meta asignada. Estrategia: Mejorar la conversión de la productividad vs efectividad mediante el 'Embudo 12:1'. Acción: Asegurar que cada 12 gestiones resulten en 1 cierre efectivo, transformando la alta actividad en resultados reales y cumplimiento total.",
       prioridad: "Crítica",
       indicador: "Cumplimiento"
     },
     {
       titulo: "2. Excelencia Operativa (Calidad)",
-      desc: "Meta: >85% Calidad. Estrategia: Garantizar que el nivel de atención y registro sea superior al 85%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación.",
+      desc: "Meta: >80% Calidad. Estrategia: Garantizar que el resultado de la valoración de llamadas y gestión con clientes sea superior al 80%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación.",
       prioridad: "Crítica",
       indicador: "Calidad"
     },
     {
       titulo: "3. Blindaje de Cartera (Atrasos)",
-      desc: "Meta: <3% Atrasos mensual. Estrategia: Reducir el seguimiento atrasado a menos del 3% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes.",
+      desc: "Meta: <2% Atrasos. Estrategia: El seguimiento atrasado no debe superar el 2% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes.",
       prioridad: "Alta",
       indicador: "Atrasos"
     },
     {
       titulo: "4. Maximización de Actividad (Productividad)",
-      desc: "Meta: >180 gestiones mensuales. Asegurar un flujo constante y sostenido de llamadas, seguimientos y renovaciones. Estrategia: Mantener de forma disciplinada un volumen superior a 180 gestiones mensuales, priorizando la regularidad y el enfoque en tareas de alto impacto. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (batching) para agrupar tareas similares: barrido de cartera para contactar clientes pendientes, eliminación de distracciones enfocándose exclusivamente en llamadas y asegurar que cada contacto genere un avance concreto hacia el cierre.",
+      desc: "Meta: >180 gestiones mensuales. Asegurar un flujo constante y sostenido de llamadas, seguimientos y renovaciones. Estrategia: Mantener de forma disciplinada un volumen superior a 180 gestiones mensuales, priorizando la regularidad. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (batching) para agrupar tareas similares: barrido de cartera para contactar clientes pendientes, eliminar distracciones enfocándose exclusivamente en llamadas y asegurar que cada contacto genere un avance concreto hacia el cierre.",
       prioridad: "Alta",
       indicador: "Productividad"
     }
@@ -218,9 +218,9 @@ export default function StrategicPlan() {
                 </p>
                 <div className="grid grid-cols-2 gap-4 text-[11px] uppercase font-bold text-primary/80">
                   <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Productividad: &gt;180/mes</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Calidad: &gt;85%</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Cumplimiento: Meta Mensual</div>
-                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: &lt;3% mensual</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Calidad: &gt;80%</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Cumplimiento: 100% Meta</div>
+                  <div className="flex items-center gap-2"><CheckCircle2 className="w-3 h-3"/> Atrasos: &lt;2% total</div>
                 </div>
                 <p className="italic">
                   La técnica de Gestión Intensiva (Batching) es el eje central para transformar la actividad disciplinada en cierres efectivos, optimizando la tasa de conversión y garantizando la regularidad del desempeño.
