@@ -6,27 +6,39 @@ import { api } from "@shared/routes";
 import { InsertarGestor, Gestor } from "@shared/schema";
 
 /**
- * Método de Cálculo de Impacto Total:
- * Se calcula un puntaje de impacto combinando:
- * 1. Cumplimiento (Meta 36): Más es mejor (Impacto positivo)
- * 2. Calidad: Más es mejor (Impacto positivo)
- * 3. Atrasos: Menos es mejor (Impacto positivo)
+ * ÍNDICE DE IMPACTO TOTAL (IIT) - FÓRMULA DE CÁLCULO
  * 
- * Fórmula normalizada:
- * Score = (Cumplimiento * 0.5) + (Calidad * 0.3) + ((10 - Atrasos) * 10 * 0.2)
+ * El IIT normaliza tres variables críticas para medir el riesgo/impacto de cada gestor:
+ * 1. Renovaciones (R): Acumulado trimestral (Meta 36).
+ * 2. Calidad (C): Puntaje de calidad (0-100%).
+ * 3. Atrasos (A): Porcentaje de atrasos (0-10% aprox).
+ * 
+ * NORMALIZACIÓN (0 a 1, donde 1 es el mayor impacto/riesgo):
+ * - nR = 1 - (R / maxR) -> A menor renovación, mayor impacto.
+ * - nC = 1 - (C / 100) -> A menor calidad, mayor impacto.
+ * - nA = A / 10       -> A mayor atraso, mayor impacto (tope en 10%).
+ * 
+ * FÓRMULA FINAL:
+ * IIT = (nR * 0.50) + (nC * 0.30) + (nA * 0.20)
+ * 
+ * Rango IIT: 0 (Impacto Mínimo / Q1) a 1 (Impacto Máximo / Q4)
  */
-function calcularImpacto(g: Gestor | InsertarGestor) {
-  const cumplimiento = (g.totalRenovaciones / 36) * 100;
-  const calidad = g.puntajeCalidad;
-  const atrasos = Number(String(g.porcentajeAtrasos).replace(',', '.'));
-  // Normalizamos atrasos (Invertido: 0% es 100 puntos, 10% es 0 puntos)
-  const scoreAtrasos = Math.max(0, 100 - (atrasos * 10));
-  
-  return (cumplimiento * 0.5) + (calidad * 0.3) + (scoreAtrasos * 0.2);
+function calcularIIT(g: Gestor | InsertarGestor) {
+  const R = g.totalRenovaciones;
+  const C = g.puntajeCalidad;
+  const A = Number(String(g.porcentajeAtrasos).replace(',', '.'));
+
+  // Normalización (Asumiendo 43 como el máximo de renovaciones observado para la escala)
+  const nR = 1 - (Math.min(R, 43) / 43);
+  const nC = 1 - (C / 100);
+  const nA = Math.min(A, 10) / 10;
+
+  return (nR * 0.50) + (nC * 0.30) + (nA * 0.20);
 }
 
 function calcularCuartiles(lista: Gestor[]) {
-  const ordenados = [...lista].sort((a, b) => calcularImpacto(b) - calcularImpacto(a));
+  // Ordenamos de MENOR a MAYOR impacto (Q1 -> Q4)
+  const ordenados = [...lista].sort((a, b) => calcularIIT(a) - calcularIIT(b));
   const n = ordenados.length;
   
   const q1End = Math.round(n * 0.25);
@@ -42,12 +54,12 @@ function calcularCuartiles(lista: Gestor[]) {
 }
 
 function clasificarGestor(g: InsertarGestor) {
-  const score = calcularImpacto(g);
+  const iit = calcularIIT(g);
   
-  if (score >= 85) return "Alto Desempeño";
-  if (score >= 70) return "En Camino";
-  if (score >= 50) return "Requiere Mejora";
-  return "Crítico";
+  if (iit <= 0.25) return "Alto Desempeño"; // Q1
+  if (iit <= 0.50) return "En Camino";      // Q2
+  if (iit <= 0.75) return "Requiere Mejora"; // Q3
+  return "Crítico";                          // Q4
 }
 
 const DATOS_SEMILLA_BRUTOS = [
@@ -101,7 +113,8 @@ export async function registerRoutes(
 
   app.get(api.gestores.listar.path, async (req, res) => {
     const gestores = await almacenamiento.obtenerGestores();
-    gestores.sort((a, b) => calcularImpacto(b) - calcularImpacto(a));
+    // Ordenamos por IIT ascendente (Menor impacto primero)
+    gestores.sort((a, b) => calcularIIT(a) - calcularIIT(b));
     res.json(gestores);
   });
   
