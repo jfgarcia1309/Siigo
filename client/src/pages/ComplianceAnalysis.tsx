@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { useGestores } from "@/hooks/use-managers";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { 
   CheckCircle2, 
   XCircle,
@@ -14,9 +15,17 @@ import {
   Briefcase
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ComplianceAnalysis() {
   const { data: gestores, isLoading } = useGestores();
+  const [filtroImpacto, setFiltroImpacto] = useState<string>("todos");
 
   if (isLoading) {
     return (
@@ -121,6 +130,11 @@ export default function ComplianceAnalysis() {
   const gestoresAnalizados = gestores?.map(g => ({ ...g, ...analizarGestor(g) })) || [];
   const cumplenMetaTotal = gestoresAnalizados.filter(g => g.cumpleMeta).length;
 
+  const gestoresFiltrados = gestoresAnalizados.filter(g => {
+    if (filtroImpacto === "todos") return true;
+    return g.clasificacion === filtroImpacto;
+  });
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -131,34 +145,55 @@ export default function ComplianceAnalysis() {
             <p className="text-muted-foreground">Identificación detallada de cumplimiento y brechas de indicadores.</p>
           </div>
 
-          <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-primary/10 rounded-xl">
-                <Target className="w-6 h-6 text-primary" />
+          <div className="space-y-4">
+            <div className="bg-primary/5 p-6 rounded-2xl border border-primary/10 flex flex-col md:flex-row justify-between items-center gap-6">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-primary/10 rounded-xl">
+                  <Target className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground font-medium">Cumplimiento de Meta (≥36)</p>
+                  <h2 className="text-2xl font-bold">{cumplenMetaTotal} de 23 gestores</h2>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground font-medium">Cumplimiento de Meta (≥36)</p>
-                <h2 className="text-2xl font-bold">{cumplenMetaTotal} de 23 gestores</h2>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Calidad</p>
+                  <Badge variant="outline" className="text-[10px]">≥{META_CALIDAD}%</Badge>
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Atrasos</p>
+                  <Badge variant="outline" className="text-[10px]">≤{MAX_ATRASOS}%</Badge>
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Gestión</p>
+                  <Badge variant="outline" className="text-[10px]">≥{MIN_GESTION}</Badge>
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Calidad</p>
-                <Badge variant="outline" className="text-[10px]">≥{META_CALIDAD}%</Badge>
-              </div>
-              <div className="text-center">
-                <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Atrasos</p>
-                <Badge variant="outline" className="text-[10px]">≤{MAX_ATRASOS}%</Badge>
-              </div>
-              <div className="text-center">
-                <p className="text-[10px] text-muted-foreground mb-1 uppercase font-bold">Gestión</p>
-                <Badge variant="outline" className="text-[10px]">≥{MIN_GESTION}</Badge>
-              </div>
+
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Filtrar por Impacto:</label>
+              <Select value={filtroImpacto} onValueChange={setFiltroImpacto}>
+                <SelectTrigger className="w-56">
+                  <SelectValue placeholder="Seleccionar impacto..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todos">Todos los Gestores</SelectItem>
+                  <SelectItem value="Impacto Bajo">Impacto Bajo</SelectItem>
+                  <SelectItem value="Impacto Medio">Impacto Medio</SelectItem>
+                  <SelectItem value="Impacto Alto">Impacto Alto</SelectItem>
+                  <SelectItem value="Impacto Crítico">Impacto Crítico</SelectItem>
+                </SelectContent>
+              </Select>
+              <Badge variant="outline" className="text-xs">
+                {gestoresFiltrados.length} gestor{gestoresFiltrados.length !== 1 ? 'es' : ''}
+              </Badge>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {gestoresAnalizados.map((g) => (
+            {gestoresFiltrados.map((g) => (
               <motion.div
                 key={g.id}
                 initial={{ opacity: 0, y: 10 }}
