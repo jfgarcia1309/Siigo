@@ -73,25 +73,25 @@ export default function StrategicPlan() {
   const acciones = [
     {
       titulo: "1. Conversión: Productividad vs Efectividad",
-      desc: "Meta: 100% Cumplimiento. Estrategia: Optimizar la tasa de cierre mediante el 'Embudo 12:1' (12 gestiones = 1 cierre). Acción: Asegurar que la alta productividad (>180 gestiones/mes) se traduzca en efectividad real, reforzando la etapa de cierre en el ciclo EARC para maximizar la conversión de esfuerzo en resultados.",
+      desc: "Meta: 100% Cumplimiento. Estrategia: Optimizar la tasa de cierre mediante el 'Embudo 12:1' (12 gestiones = 1 cierre). Acción: Asegurar que la alta productividad (>180 gestiones mensuales) se traduzca en efectividad real, reforzando el cierre en el ciclo EARC para maximizar la conversión de esfuerzo en resultados.",
       prioridad: "Crítica",
       indicador: "Cumplimiento"
     },
     {
       titulo: "2. Excelencia Operativa (Calidad)",
-      desc: "Meta: >80% Calidad. Estrategia: Auditoría técnica y actitudinal de llamadas con feedback correctivo inmediato (24h). Foco: Garantizar que el resultado de la valoración de llamadas y gestión con clientes sea superior al 80%, eliminando brechas en la comunicación.",
+      desc: "Meta: >80% Calidad. Estrategia: Garantizar que el resultado de la valoración de llamadas y gestión con clientes sea superior al 80%. Acción: Auditoría técnica y actitudinal con feedback en 24h para eliminar brechas de comunicación y estandarizar la calidad.",
       prioridad: "Crítica",
       indicador: "Calidad"
     },
     {
       titulo: "3. Blindaje de Cartera (Atrasos)",
-      desc: "Meta: <2% Atrasos. Estrategia: Implementar la 'Hora de Oro' (8-9 AM) para limpieza total de seguimientos pendientes. Impacto: No superar el 2% de atrasos sobre el total de renovaciones u oportunidades abiertas, asegurando la oportunidad del contacto.",
+      desc: "Meta: <2% Atrasos. Estrategia: Asegurar que el seguimiento atrasado no supere el 2% del total de renovaciones u oportunidades abiertas. Acción: Bloqueo de agenda 'Hora de Oro' (8-9 AM) para limpieza total de pendientes y asegurar contacto oportuno.",
       prioridad: "Alta",
       indicador: "Atrasos"
     },
     {
       titulo: "4. Maximización de Actividad (Productividad)",
-      desc: "Meta: >180 Gestiones. Estrategia: Ejecutar bloques de 'Power Dialing' de 90 minutos para mantener un volumen superior a 180 gestiones mensuales. Impacto: Garantizar el volumen de gestión necesario para alimentar el embudo de conversión de manera constante.",
+      desc: "Meta: >180 Gestiones/mes. Estrategia: Mantener un volumen superior a 180 gestiones mensuales por gestor de forma constante. Acción: Ejecutar bloques de 'Power Dialing' de 90 minutos para alimentar el embudo de conversión.",
       prioridad: "Alta",
       indicador: "Productividad"
     }
