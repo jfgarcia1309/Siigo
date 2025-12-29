@@ -118,6 +118,12 @@ export default function Dashboard() {
     }
   };
 
+  const obtenerClasificacionDesempeño = (porcentaje: number) => {
+    if (porcentaje >= 100) return { label: "Top Performer", color: "text-green-600 bg-green-50 border-green-200" };
+    if (porcentaje >= 80) return { label: "Performance Medio", color: "text-yellow-600 bg-yellow-50 border-yellow-200" };
+    return { label: "Bajo Desempeño", color: "text-red-600 bg-red-50 border-red-200" };
+  };
+
   const TablaGestores = ({ data }: { data: any[] }) => (
     <div className="overflow-x-auto">
       <Table>
@@ -171,6 +177,7 @@ export default function Dashboard() {
 
             const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
             const cumpleRenovaciones = renValor >= metaSeleccionada;
+            const clasif = obtenerClasificacionDesempeño(Number(cumpliValor));
             
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors border-b last:border-0">
@@ -181,21 +188,18 @@ export default function Dashboard() {
                 </TableCell>
                 <TableCell className="text-center font-bold text-lg py-6">{renValor}</TableCell>
                 <TableCell className="text-center py-6">
-                  <span className={cn(
-                    "px-3 py-1 rounded text-xs font-bold",
-                    cumpleRenovaciones 
-                      ? "text-green-600 bg-green-50 dark:bg-green-900/20" 
-                      : "text-red-600 bg-red-50 dark:bg-red-900/20"
-                  )}>
+                  <Badge variant="outline" className={cn("font-bold px-3 py-1", clasif.color)}>
                     {cumpliValor}%
-                  </span>
+                  </Badge>
                 </TableCell>
                 <TableCell className="text-center font-bold text-muted-foreground py-6">{caliValor}</TableCell>
                 <TableCell className="text-center font-bold text-muted-foreground py-6">{atraValor}</TableCell>
                 <TableCell className="text-center font-bold text-muted-foreground py-6">{gestiValor}</TableCell>
                 <TableCell className="text-right py-6">
                   <div className="flex flex-col items-end gap-1">
-                    {obtenerInsigniaEstado(gestor.clasificacion)}
+                    <Badge variant="outline" className={cn("text-[10px] font-bold uppercase tracking-tight px-3 py-1", clasif.color)}>
+                      {clasif.label}
+                    </Badge>
                     {mesSeleccionado !== "tri" && !cumpleMes && (
                       <div className="flex flex-wrap justify-end gap-1 mt-1">
                         {fallasMes.map((f, i) => (
@@ -272,10 +276,10 @@ export default function Dashboard() {
               className="border-l-4 border-l-orange-400"
             />
             <KPICard 
-              title="Media de Renovaciones" 
-              value="174"
-              subtext="Meta por gestor >180"
-              icon={<Target className="w-6 h-6" />}
+              title="Cumplimiento Promedio" 
+              value={`${Number(estadisticas?.cumplimientoTotal || 0).toFixed(1)}%`}
+              subtext={`Meta Grupal: ${estadisticas?.gestoresCumplenMeta} de ${estadisticas?.totalGestores} gestores`}
+              icon={<Target className="w-6 h-6 text-primary" />}
             />
             {/* Indicador de Productividad */}
             <KPICard 
