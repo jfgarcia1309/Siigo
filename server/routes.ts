@@ -78,9 +78,9 @@ const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map(d => {
         nombre: d.nombre,
         renovacionesFeb: d.feb,
         renovacionesMar: d.mar,
-        renovacionesAbr: d.apr,
+        renovacionesAbr: d.abr,
         totalRenovaciones: d.total,
-        porcentajeAtrasos: d.atrasos.toFixed(2),
+        porcentajeAtrasos: d.atrasos.toFixed(2).replace('.', ','),
         renovacionesGestionadas: d.gest,
         puntajeCalidad: d.qual,
         clasificacion: ""
@@ -98,8 +98,6 @@ export async function registerRoutes(
 
   app.get(api.gestores.listar.path, async (req, res) => {
     const gestores = await almacenamiento.obtenerGestores();
-    // Orden ascendente por afectación: Q1 (menor impacto) a Q4 (mayor impacto)
-    // Esto se traduce en ordenar por rendimiento de MAYOR a MENOR para los indicadores positivos
     gestores.sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
     res.json(gestores);
   });
@@ -111,7 +109,7 @@ export async function registerRoutes(
       const actualTotal = listaGestores.reduce((suma, g) => suma + g.totalRenovaciones, 0);
       
       const calidadPromedio = listaGestores.reduce((suma, g) => suma + g.puntajeCalidad, 0) / listaGestores.length;
-      const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / listaGestores.length;
+      const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos.replace(',', '.')), 0) / listaGestores.length;
       const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaPorPersona).length;
 
       const cuartiles = calcularCuartiles(listaGestores);

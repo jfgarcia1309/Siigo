@@ -1,0 +1,179 @@
+import React, { useState } from 'react';
+import { Search, ArrowUpDown } from 'lucide-react';
+
+const GestoresTable = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
+  const data = [
+    { nombre: "Monica Andrea Perez Pardo", renFeb: 11, cumpliFeb: "138%", renMar: 16, cumpliMar: "123%", renAbr: 16, cumpliAbr: "107%", total: 43, atrasos: "0,30%", renovacionesGestionadas: 180, scoreCalidad: "88%" },
+    { nombre: "Leidy Yolima Castro Rojas", renFeb: 11, cumpliFeb: "138%", renMar: 13, cumpliMar: "100%", renAbr: 11, cumpliAbr: "73%", total: 35, atrasos: "1,60%", renovacionesGestionadas: 160, scoreCalidad: "84%" },
+    { nombre: "Yina Sanchez Roa", renFeb: 11, cumpliFeb: "138%", renMar: 13, cumpliMar: "100%", renAbr: 6, cumpliAbr: "40%", total: 30, atrasos: "8,90%", renovacionesGestionadas: 117, scoreCalidad: "53%" },
+    { nombre: "Laura Alejandra Cañas Prieto", renFeb: 7, cumpliFeb: "88%", renMar: 16, cumpliMar: "123%", renAbr: 17, cumpliAbr: "80%", total: 40, atrasos: "5,90%", renovacionesGestionadas: 140, scoreCalidad: "74%" },
+    { nombre: "Tatiana Paola Rosas Munevar", renFeb: 9, cumpliFeb: "113%", renMar: 10, cumpliMar: "77%", renAbr: 21, cumpliAbr: "140%", total: 40, atrasos: "2,60%", renovacionesGestionadas: 176, scoreCalidad: "78%" },
+    { nombre: "Lina Tatiana Bogota Murcia", renFeb: 11, cumpliFeb: "138%", renMar: 6, cumpliMar: "46%", renAbr: 21, cumpliAbr: "140%", total: 38, atrasos: "2,70%", renovacionesGestionadas: 236, scoreCalidad: "83%" },
+    { nombre: "Fernanda Romero Saenz", renFeb: 8, cumpliFeb: "100%", renMar: 10, cumpliMar: "77%", renAbr: 11, cumpliAbr: "73%", total: 29, atrasos: "2,50%", renovacionesGestionadas: 240, scoreCalidad: "81%" },
+    { nombre: "Ingrid Marcela Peña Buitrago", renFeb: 8, cumpliFeb: "100%", renMar: 14, cumpliMar: "108%", renAbr: 7, cumpliAbr: "47%", total: 29, atrasos: "0,30%", renovacionesGestionadas: 180, scoreCalidad: "88%" },
+    { nombre: "Andrea Lievano Gomez", renFeb: 11, cumpliFeb: "138%", renMar: 8, cumpliMar: "62%", renAbr: 3, cumpliAbr: "20%", total: 22, atrasos: "1,60%", renovacionesGestionadas: 160, scoreCalidad: "84%" },
+    { nombre: "Daniela Ramirez Pacheco", renFeb: 10, cumpliFeb: "125%", renMar: 9, cumpliMar: "69%", renAbr: 5, cumpliAbr: "33%", total: 24, atrasos: "8,90%", renovacionesGestionadas: 117, scoreCalidad: "53%" },
+    { nombre: "Manuel David Casas Orjuela", renFeb: 8, cumpliFeb: "100%", renMar: 6, cumpliMar: "46%", renAbr: 6, cumpliAbr: "40%", total: 20, atrasos: "5,90%", renovacionesGestionadas: 140, scoreCalidad: "74%" },
+    { nombre: "Luz Mary Pinto Alarcon", renFeb: 8, cumpliFeb: "100%", renMar: 6, cumpliMar: "46%", renAbr: 6, cumpliAbr: "40%", total: 20, atrasos: "2,60%", renovacionesGestionadas: 176, scoreCalidad: "78%" },
+    { nombre: "Juan David Perez Moreno", renFeb: 8, cumpliFeb: "100%", renMar: 2, cumpliMar: "15%", renAbr: 6, cumpliAbr: "40%", total: 16, atrasos: "2,70%", renovacionesGestionadas: 236, scoreCalidad: "83%" },
+    { nombre: "Gloria Estefani Gomez Plata", renFeb: 7, cumpliFeb: "88%", renMar: 10, cumpliMar: "77%", renAbr: 4, cumpliAbr: "27%", total: 21, atrasos: "2,50%", renovacionesGestionadas: 240, scoreCalidad: "81%" },
+    { nombre: "Monica Alexandra Rey Munevar", renFeb: 6, cumpliFeb: "75%", renMar: 6, cumpliMar: "46%", renAbr: 5, cumpliAbr: "33%", total: 17, atrasos: "0,30%", renovacionesGestionadas: 180, scoreCalidad: "88%" },
+    { nombre: "Angelica Natalia Rodriguez Prieto", renFeb: 6, cumpliFeb: "75%", renMar: 4, cumpliMar: "31%", renAbr: 6, cumpliAbr: "40%", total: 16, atrasos: "1,60%", renovacionesGestionadas: 160, scoreCalidad: "84%" },
+    { nombre: "John Erick Jaramillo Correa", renFeb: 6, cumpliFeb: "75%", renMar: 4, cumpliMar: "31%", renAbr: 1, cumpliAbr: "7%", total: 11, atrasos: "8,90%", renovacionesGestionadas: 117, scoreCalidad: "53%" },
+    { nombre: "Karolina Arboleda Rios", renFeb: 5, cumpliFeb: "63%", renMar: 9, cumpliMar: "69%", renAbr: 4, cumpliAbr: "27%", total: 18, atrasos: "5,90%", renovacionesGestionadas: 140, scoreCalidad: "74%" },
+    { nombre: "Maria Elena Vanegas Silguero", renFeb: 5, cumpliFeb: "63%", renMar: 7, cumpliMar: "54%", renAbr: 11, cumpliAbr: "73%", total: 23, atrasos: "2,60%", renovacionesGestionadas: 176, scoreCalidad: "78%" },
+    { nombre: "Alisson Mora Benavidez", renFeb: 4, cumpliFeb: "50%", renMar: 4, cumpliMar: "50%", renAbr: 2, cumpliAbr: "13%", total: 10, atrasos: "2,70%", renovacionesGestionadas: 236, scoreCalidad: "83%" },
+    { nombre: "Jessica Tatiana Valderrama Roa", renFeb: 4, cumpliFeb: "50%", renMar: 5, cumpliMar: "38%", renAbr: 10, cumpliAbr: "67%", total: 19, atrasos: "2,50%", renovacionesGestionadas: 240, scoreCalidad: "81%" },
+    { nombre: "Paula Andrea Gomez Bernal", renFeb: 4, cumpliFeb: "50%", renMar: 5, cumpliMar: "38%", renAbr: 8, cumpliAbr: "53%", total: 17, atrasos: "8,90%", renovacionesGestionadas: 117, scoreCalidad: "53%" },
+    { nombre: "Leidy Juliana Santander Roa", renFeb: 3, cumpliFeb: "38%", renMar: 5, cumpliMar: "38%", renAbr: 1, cumpliAbr: "7%", total: 9, atrasos: "5,90%", renovacionesGestionadas: 140, scoreCalidad: "74%" }
+  ];
+
+  const getScoreColor = (score) => {
+    const numScore = parseInt(score);
+    if (numScore >= 80) return 'text-green-600 font-semibold';
+    if (numScore >= 70) return 'text-yellow-600 font-semibold';
+    return 'text-red-600 font-semibold';
+  };
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedData = [...data].filter(item => 
+    item.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  ).sort((a, b) => {
+    if (!sortConfig.key) return 0;
+    
+    let aVal = a[sortConfig.key];
+    let bVal = b[sortConfig.key];
+    
+    if (typeof aVal === 'string' && aVal.includes('%')) {
+      aVal = parseFloat(aVal);
+      bVal = parseFloat(bVal);
+    }
+    
+    if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="bg-white rounded-lg shadow-xl p-6 mb-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Panel de Gestores</h1>
+          <p className="text-gray-600 mb-4">Renovaciones y Score de Calidad - Feb-Abr 2025</p>
+          
+          <div className="relative mb-6">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Buscar gestor..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-semibold cursor-pointer hover:bg-blue-700" onClick={() => handleSort('nombre')}>
+                    <div className="flex items-center gap-1">Nombre Gestor <ArrowUpDown size={14} /></div>
+                  </th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold">Ren. Feb</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold">Cump. Feb</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold">Ren. Mar</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold">Cump. Mar</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold">Ren. Abr</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold">Cump. Abr</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold cursor-pointer hover:bg-blue-700" onClick={() => handleSort('total')}>
+                    <div className="flex items-center justify-center gap-1">Total <ArrowUpDown size={14} /></div>
+                  </th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold">Atrasos</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold cursor-pointer hover:bg-blue-700" onClick={() => handleSort('renovacionesGestionadas')}>
+                    <div className="flex items-center justify-center gap-1">Ren. Gest. <ArrowUpDown size={14} /></div>
+                  </th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold cursor-pointer hover:bg-blue-700" onClick={() => handleSort('scoreCalidad')}>
+                    <div className="flex items-center justify-center gap-1">Score Cal. <ArrowUpDown size={14} /></div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {sortedData.map((row, index) => (
+                  <tr key={index} className="hover:bg-blue-50 transition-colors">
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900">{row.nombre}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.renFeb}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.cumpliFeb}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.renMar}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.cumpliMar}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.renAbr}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.cumpliAbr}</td>
+                    <td className="px-4 py-3 text-sm text-center font-semibold text-gray-900">{row.total}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.atrasos}</td>
+                    <td className="px-4 py-3 text-sm text-center text-gray-700">{row.renovacionesGestionadas}</td>
+                    <td className={`px-4 py-3 text-sm text-center ${getScoreColor(row.scoreCalidad)}`}>{row.scoreCalidad}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-xl p-4">
+            <p className="text-sm text-gray-600">Total de gestores: <span className="font-semibold text-gray-900">{sortedData.length}</span></p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-xl overflow-hidden">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3">
+              <h2 className="text-lg font-bold text-white text-center">Metas</h2>
+            </div>
+            <div className="p-4">
+              <table className="w-full">
+                <tbody className="divide-y divide-gray-200">
+                  <tr className="hover:bg-purple-50 transition-colors">
+                    <td className="py-3 px-2 text-sm font-medium text-gray-700">Feb</td>
+                    <td className="py-3 px-2 text-sm text-right font-semibold text-gray-900">8</td>
+                  </tr>
+                  <tr className="hover:bg-purple-50 transition-colors">
+                    <td className="py-3 px-2 text-sm font-medium text-gray-700">Mar</td>
+                    <td className="py-3 px-2 text-sm text-right font-semibold text-gray-900">13</td>
+                  </tr>
+                  <tr className="hover:bg-purple-50 transition-colors">
+                    <td className="py-3 px-2 text-sm font-medium text-gray-700">Abril</td>
+                    <td className="py-3 px-2 text-sm text-right font-semibold text-gray-900">15</td>
+                  </tr>
+                  <tr className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                    <td className="py-3 px-2 text-sm font-semibold text-gray-800">Media de atrasos</td>
+                    <td className="py-3 px-2 text-sm text-right font-bold text-indigo-700">3,84%</td>
+                  </tr>
+                  <tr className="bg-gradient-to-r from-green-50 to-emerald-50">
+                    <td className="py-3 px-2 text-sm font-semibold text-gray-800">Score calidad</td>
+                    <td className="py-3 px-2 text-sm text-right font-bold text-green-700">76%</td>
+                  </tr>
+                  <tr className="bg-gradient-to-r from-purple-50 to-pink-50">
+                    <td className="py-3 px-2 text-sm font-semibold text-gray-800">Media de renovaciones gestionadas</td>
+                    <td className="py-3 px-2 text-sm text-right font-bold text-purple-700">174</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GestoresTable;
