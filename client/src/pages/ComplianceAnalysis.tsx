@@ -27,20 +27,30 @@ export default function ComplianceAnalysis() {
   }
 
   const META_RENOVACIONES = 36;
+  const META_FEBRERO = 8;
+  const META_MARZO = 13;
+  const META_ABRIL = 15;
   const META_CALIDAD = 76;
   const MAX_ATRASOS = 3.84;
   const MIN_GESTION = 174;
 
   const analizarGestor = (g: any) => {
     const cumpleRen = g.totalRenovaciones >= META_RENOVACIONES;
+    const cumpleFeb = g.renovacionesFeb >= META_FEBRERO;
+    const cumpleMar = g.renovacionesMar >= META_MARZO;
+    const cumpleAbr = g.renovacionesAbr >= META_ABRIL;
+    const cumplenTodasMeses = cumpleFeb && cumpleMar && cumpleAbr;
+    
     const cumpleCal = g.puntajeCalidad >= META_CALIDAD;
     const cumpleAtr = Number(g.porcentajeAtrasos) <= MAX_ATRASOS;
     const cumpleGes = g.renovacionesGestionadas >= MIN_GESTION;
     
     const detalles = [];
     
-    // Análisis de Renovaciones
+    // Análisis de Renovaciones con ponderado mes a mes
     const brecha_ren = META_RENOVACIONES - g.totalRenovaciones;
+    const cumplimientoMeses = `${cumpleFeb ? '✓' : '✗'} Feb(${g.renovacionesFeb}/${META_FEBRERO}) | ${cumpleMar ? '✓' : '✗'} Mar(${g.renovacionesMar}/${META_MARZO}) | ${cumpleAbr ? '✓' : '✗'} Abr(${g.renovacionesAbr}/${META_ABRIL})`;
+    
     detalles.push({
       label: "Renovaciones Gestionadas",
       cumple: cumpleRen,
@@ -48,8 +58,8 @@ export default function ComplianceAnalysis() {
       meta: META_RENOVACIONES,
       brecha: brecha_ren,
       explicacion: cumpleRen 
-        ? `Superó la meta con ${g.totalRenovaciones} renovaciones (${g.totalRenovaciones - META_RENOVACIONES}+ de lo requerido). Desglose: Feb: ${g.renovacionesFeb}, Mar: ${g.renovacionesMar}, Abr: ${g.renovacionesAbr}`
-        : `Logró ${g.totalRenovaciones} renovaciones pero requería 36 (brecha de -${brecha_ren}). Desglose: Feb: ${g.renovacionesFeb}, Mar: ${g.renovacionesMar}, Abr: ${g.renovacionesAbr}`,
+        ? `Total: ${g.totalRenovaciones}/36 ✓ Cumplimiento Ponderado: ${cumplimientoMeses}. Logró la meta total de renovaciones para Q1.`
+        : `Total: ${g.totalRenovaciones}/36 ✗ Brecha: -${brecha_ren} renovaciones. Ponderado: ${cumplimientoMeses}. No alcanzó la meta total de 36 renovaciones.`,
       icono: Target
     });
 
@@ -102,6 +112,7 @@ export default function ComplianceAnalysis() {
       cumpleTodo: fallas.length === 0,
       cumpleSoloMeta: cumpleRen && fallas.length > 0,
       cumpleMeta: cumpleRen,
+      cumplenTodasMeses,
       fallas,
       detalles
     };
