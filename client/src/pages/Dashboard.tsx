@@ -38,12 +38,13 @@ export default function Dashboard() {
   const { data: estadisticas, isLoading: cargandoEstadisticas } = useEstadisticas();
   const [terminoBusqueda, setTerminoBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("todos");
-  const [mesSeleccionado, setMesSeleccionado] = useState<"feb" | "mar" | "abr">("abr");
+  const [mesSeleccionado, setMesSeleccionado] = useState<"feb" | "mar" | "abr" | "tri">("tri");
 
   const METAS_MENSUALES = {
     feb: 8,
     mar: 13,
-    abr: 15
+    abr: 15,
+    tri: 36
   };
   const META_CALIDAD = 80;
   const MAX_ATRASOS = 2;
@@ -60,8 +61,11 @@ export default function Dashboard() {
     return filtrados;
   };
 
-  const analizarCumplimientoMensual = (gestor: any, mes: "feb" | "mar" | "abr") => {
-    const valorMes = mes === "feb" ? gestor.renovacionesFeb : mes === "mar" ? gestor.renovacionesMar : gestor.renovacionesAbr;
+  const analizarCumplimientoMensual = (gestor: any, mes: "feb" | "mar" | "abr" | "tri") => {
+    const valorMes = mes === "feb" ? gestor.renovacionesFeb : 
+                     mes === "mar" ? gestor.renovacionesMar : 
+                     mes === "abr" ? gestor.renovacionesAbr :
+                     gestor.totalRenovaciones;
     const metaMes = METAS_MENSUALES[mes];
     const cumpleRenovaciones = valorMes >= metaMes;
     const cumpleCalidad = gestor.puntajeCalidad >= META_CALIDAD;
@@ -130,9 +134,14 @@ export default function Dashboard() {
         </TableHeader>
         <TableBody>
           {data?.map((gestor) => {
-            const cumplimiento = (gestor.totalRenovaciones / 36) * 100;
-            const cumpleRenovaciones = gestor.totalRenovaciones >= 36;
             const { cumple: cumpleMes, fallas: fallasMes } = analizarCumplimientoMensual(gestor, mesSeleccionado);
+            const valorSeleccionado = mesSeleccionado === "feb" ? gestor.renovacionesFeb : 
+                                      mesSeleccionado === "mar" ? gestor.renovacionesMar : 
+                                      mesSeleccionado === "abr" ? gestor.renovacionesAbr :
+                                      gestor.totalRenovaciones;
+            const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
+            const cumplimiento = (valorSeleccionado / metaSeleccionada) * 100;
+            const cumpleRenovaciones = valorSeleccionado >= metaSeleccionada;
             
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors border-b last:border-0">
@@ -141,7 +150,7 @@ export default function Dashboard() {
                     {gestor.nombre}
                   </div>
                 </TableCell>
-                <TableCell className="text-center font-bold text-lg py-6">{gestor.totalRenovaciones}</TableCell>
+                <TableCell className="text-center font-bold text-lg py-6">{valorSeleccionado}</TableCell>
                 <TableCell className="text-center py-6">
                   <span className={cn(
                     "px-3 py-1 rounded text-xs font-bold",
@@ -269,13 +278,14 @@ export default function Dashboard() {
                   <TabsTrigger value="q4" className="data-[state=active]:border-b-2 data-[state=active]:border-red-600 rounded-none px-2 h-full bg-transparent font-bold">Impacto Crítico (Q4)</TabsTrigger>
                 </TabsList>
                 <Select value={mesSeleccionado} onValueChange={(v: any) => setMesSeleccionado(v)}>
-                  <SelectTrigger className="w-[140px] h-8 bg-muted/50 border-none font-bold text-xs uppercase tracking-wider">
+                  <SelectTrigger className="w-[180px] h-8 bg-muted/50 border-none font-bold text-xs uppercase tracking-wider">
                     <SelectValue placeholder="Mes" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="feb">Febrero</SelectItem>
                     <SelectItem value="mar">Marzo</SelectItem>
                     <SelectItem value="abr">Abril</SelectItem>
+                    <SelectItem value="tri">Trimestral</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
