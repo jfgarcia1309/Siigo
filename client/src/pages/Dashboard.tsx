@@ -40,9 +40,14 @@ export default function Dashboard() {
   const [filtroEstado, setFiltroEstado] = useState("todos");
   const [mesSeleccionado, setMesSeleccionado] = useState<"feb" | "mar" | "abr">("abr");
 
-  const META_MENSUAL = 12; // Meta trimestral 36 / 3 meses
+  const METAS_MENSUALES = {
+    feb: 8,
+    mar: 13,
+    abr: 15
+  };
   const META_CALIDAD = 80;
   const MAX_ATRASOS = 2;
+  const MIN_GESTION = 180;
 
   const filtrarYOrdenar = (lista: any[]) => {
     if (!lista) return [];
@@ -57,14 +62,17 @@ export default function Dashboard() {
 
   const analizarCumplimientoMensual = (gestor: any, mes: "feb" | "mar" | "abr") => {
     const valorMes = mes === "feb" ? gestor.renovacionesFeb : mes === "mar" ? gestor.renovacionesMar : gestor.renovacionesAbr;
-    const cumpleRenovaciones = valorMes >= META_MENSUAL;
+    const metaMes = METAS_MENSUALES[mes];
+    const cumpleRenovaciones = valorMes >= metaMes;
     const cumpleCalidad = gestor.puntajeCalidad >= META_CALIDAD;
     const cumpleAtrasos = Number(gestor.porcentajeAtrasos) <= MAX_ATRASOS;
+    const cumpleGestion = gestor.renovacionesGestionadas >= MIN_GESTION;
 
     const fallas = [];
-    if (!cumpleRenovaciones) fallas.push(`Renovaciones (${valorMes}/${META_MENSUAL})`);
+    if (!cumpleRenovaciones) fallas.push(`Renovaciones (${valorMes}/${metaMes})`);
     if (!cumpleCalidad) fallas.push(`Calidad (${gestor.puntajeCalidad}%)`);
     if (!cumpleAtrasos) fallas.push(`Atrasos (${gestor.porcentajeAtrasos}%)`);
+    if (!cumpleGestion) fallas.push(`Gestión (${gestor.renovacionesGestionadas}/${MIN_GESTION})`);
 
     return { cumple: fallas.length === 0, fallas };
   };
@@ -106,11 +114,14 @@ export default function Dashboard() {
           {data?.map((gestor) => {
             const { cumple, fallas } = analizarCumplimientoMensual(gestor, mesSeleccionado);
             const valorMes = mesSeleccionado === "feb" ? gestor.renovacionesFeb : mesSeleccionado === "mar" ? gestor.renovacionesMar : gestor.renovacionesAbr;
+            const metaMes = METAS_MENSUALES[mesSeleccionado];
             
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors">
                 <TableCell className="font-medium text-foreground">{gestor.nombre}</TableCell>
-                <TableCell className="text-center font-bold">{valorMes}</TableCell>
+                <TableCell className="text-center font-bold">
+                  {valorMes} <span className="text-[10px] text-muted-foreground font-normal">/ {metaMes}</span>
+                </TableCell>
                 <TableCell className="text-center">
                   <Badge variant={cumple ? "default" : "destructive"} className="text-[10px] uppercase">
                     {cumple ? "Cumple" : "No Cumple"}
