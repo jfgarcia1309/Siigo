@@ -168,6 +168,9 @@ export default function Dashboard() {
               ? gestor.renovacionesGestionadas 
               : Math.round(gestor.renovacionesGestionadas * (renValor / gestor.totalRenovaciones));
 
+            const caliValor = `${gestor.puntajeCalidad}%`;
+            const atraValor = `${gestor.porcentajeAtrasos}%`;
+
             const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
             const cumpleRenovaciones = renValor >= metaSeleccionada;
             const clasif = obtenerClasificacionDesempeño(Number(cumpliValor));
