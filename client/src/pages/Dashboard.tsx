@@ -134,7 +134,7 @@ export default function Dashboard() {
             </TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">
               <div className="flex flex-col items-center">
-                <span>Ren. Gestión</span>
+                <span>Productividad</span>
                 <span className="text-[9px] font-normal lowercase">(Llamadas/Seguimientos)</span>
               </div>
             </TableHead>
@@ -256,18 +256,20 @@ export default function Dashboard() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Indicador de Calidad */}
             <KPICard 
-              title="Media de Seguimientos Atrasados" 
-              value="3.84%"
+              title="Score de Calidad" 
+              value={`${Math.round(estadisticas?.calidadEquipo || 0)}%`}
+              subtext="Meta corporativa >80%"
+              icon={<CheckCircle2 className="w-6 h-6" />}
+            />
+            {/* Indicador de Atrasos */}
+            <KPICard 
+              title="Seguimientos Atrasados" 
+              value={`${Number(estadisticas?.atrasosEquipo || 0).toFixed(2)}%`}
               subtext="Límite máximo permitido 2%"
               icon={<AlertTriangle className="w-6 h-6" />}
               className="border-l-4 border-l-orange-400"
-            />
-            <KPICard 
-              title="Score de Calidad" 
-              value="76%"
-              subtext="Meta corporativa >80%"
-              icon={<CheckCircle2 className="w-6 h-6" />}
             />
             <KPICard 
               title="Media de Renovaciones" 
@@ -277,7 +279,7 @@ export default function Dashboard() {
             />
             {/* Indicador de Productividad */}
             <KPICard 
-              title="Renovaciones Gestionadas (Productividad)" 
+              title="Productividad del Equipo" 
               value={gestores?.reduce((acc: number, g: any) => acc + g.renovacionesGestionadas, 0).toLocaleString() || "0"}
               subtext="Total de llamadas, correos y seguimientos realizados"
               icon={<ArrowUp className="w-6 h-6 text-blue-500" />}
