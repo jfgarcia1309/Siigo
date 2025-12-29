@@ -173,7 +173,7 @@ export default function Dashboard() {
       filtrados = filtrados.filter(g => g.clasificacion === filtroEstado);
     }
     
-    // Ordenar por impacto: de menor a mayor impacto negativo (mejor a peor desempeño)
+    // Ordenar por impacto y luego por números de mayor a menor
     const ordenImpacto: Record<string, number> = {
       "Impacto Bajo": 0,
       "Impacto Medio": 1,
@@ -184,7 +184,24 @@ export default function Dashboard() {
     return filtrados.sort((a, b) => {
       const impactoA = ordenImpacto[a.clasificacion] ?? 999;
       const impactoB = ordenImpacto[b.clasificacion] ?? 999;
-      return impactoA - impactoB;
+      
+      // Primero ordenar por impacto
+      if (impactoA !== impactoB) {
+        return impactoA - impactoB;
+      }
+      
+      // Dentro del mismo impacto, ordenar por renovaciones totales de mayor a menor
+      if (b.totalRenovaciones !== a.totalRenovaciones) {
+        return b.totalRenovaciones - a.totalRenovaciones;
+      }
+      
+      // Si tienen las mismas renovaciones, ordenar por calidad de mayor a menor
+      if (b.puntajeCalidad !== a.puntajeCalidad) {
+        return b.puntajeCalidad - a.puntajeCalidad;
+      }
+      
+      // Como último criterio, ordenar por gestiones de mayor a menor
+      return b.renovacionesGestionadas - a.renovacionesGestionadas;
     });
   };
 
