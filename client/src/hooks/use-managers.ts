@@ -13,11 +13,11 @@ export function useGestores() {
   });
 }
 
-export function useEstadisticas() {
+export function useEstadisticas(periodo: string = "tri") {
   return useQuery<EstadisticasEquipo>({
-    queryKey: [api.gestores.estadisticas.path],
+    queryKey: [api.gestores.estadisticas.path, periodo],
     queryFn: async () => {
-      const res = await fetch(api.gestores.estadisticas.path);
+      const res = await fetch(`${api.gestores.estadisticas.path}?periodo=${periodo}`);
       if (!res.ok) throw new Error("Error al obtener estadísticas");
       return res.json();
     },

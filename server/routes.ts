@@ -113,19 +113,32 @@ export async function registerRoutes(
   });
   
   app.get(api.gestores.estadisticas.path, async (req, res) => {
+      const periodo = (req.query.periodo as string) || "tri";
       const listaGestores = await almacenamiento.obtenerGestores();
-      const metaTotalAcumulada = 36;
-      const actualTotal = listaGestores.reduce((suma, g) => suma + g.totalRenovaciones, 0);
+      
+      const meta = {
+        feb: 8,
+        mar: 13,
+        abr: 15,
+        tri: 36
+      }[periodo as "feb" | "mar" | "abr" | "tri"] || 36;
+
+      const getValores = (g: Gestor) => {
+        if (periodo === "feb") return { r: g.renovacionesFeb, g: Math.round(g.renovacionesGestionadas * (8/36)) };
+        if (periodo === "mar") return { r: g.renovacionesMar, g: Math.round(g.renovacionesGestionadas * (13/36)) };
+        if (periodo === "abr") return { r: g.renovacionesAbr, g: Math.round(g.renovacionesGestionadas * (15/36)) };
+        return { r: g.totalRenovaciones, g: g.renovacionesGestionadas };
+      };
+
+      const actualTotal = listaGestores.reduce((suma, g) => suma + getValores(g).r, 0);
       const calidadPromedio = listaGestores.reduce((suma, g) => suma + g.puntajeCalidad, 0) / listaGestores.length;
       const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / listaGestores.length;
       
-      // Conteo exacto: Solo gestores que llegan a 36 o más renovaciones
-      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaTotalAcumulada).length;
-
+      const gestoresCumplenMeta = listaGestores.filter(g => getValores(g).r >= meta).length;
       const cuartiles = calcularCuartiles(listaGestores);
       
       res.json({
-          cumplimientoTotal: (actualTotal / (listaGestores.length * metaTotalAcumulada)) * 100,
+          cumplimientoTotal: (actualTotal / (listaGestores.length * meta)) * 100,
           cumplimientoPromedio: (actualTotal / listaGestores.length),
           calidadEquipo: calidadPromedio,
           atrasosEquipo: atrasosPromedio,

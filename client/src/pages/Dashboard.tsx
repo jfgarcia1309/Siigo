@@ -34,11 +34,9 @@ import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 export default function Dashboard() {
-  const { data: gestores, isLoading: cargandoGestores } = useGestores();
-  const { data: estadisticas, isLoading: cargandoEstadisticas } = useEstadisticas();
-  const [terminoBusqueda, setTerminoBusqueda] = useState("");
-  const [filtroEstado, setFiltroEstado] = useState("todos");
   const [mesSeleccionado, setMesSeleccionado] = useState<"feb" | "mar" | "abr" | "tri">("tri");
+  const { data: gestores, isLoading: cargandoGestores } = useGestores();
+  const { data: estadisticas, isLoading: cargandoEstadisticas } = useEstadisticas(mesSeleccionado);
 
   const METAS_MENSUALES = {
     feb: 8,
@@ -284,7 +282,12 @@ export default function Dashboard() {
             {/* Indicador de Productividad */}
             <KPICard 
               title="Productividad del Equipo" 
-              value={gestores?.reduce((acc: number, g: any) => acc + g.renovacionesGestionadas, 0).toLocaleString() || "0"}
+              value={(gestores?.reduce((acc: number, g: any) => {
+                const renGest = mesSeleccionado === "tri" 
+                  ? g.renovacionesGestionadas 
+                  : Math.round((g.renovacionesGestionadas * (METAS_MENSUALES[mesSeleccionado] / 36)));
+                return acc + renGest;
+              }, 0) || 0).toLocaleString()}
               subtext="Total de llamadas, correos y seguimientos realizados"
               icon={<ArrowUp className="w-6 h-6 text-blue-500" />}
             />
