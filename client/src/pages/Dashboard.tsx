@@ -216,16 +216,6 @@ export default function Dashboard() {
                     <ArrowUp className="w-5 h-5 text-primary" />
                     Orden de Afectación Ascendente
                   </h2>
-                  <div className="bg-primary/10 p-4 rounded-lg mt-3 border border-primary/20">
-                    <h3 className="text-sm font-bold text-primary flex items-center gap-2">
-                      <Target className="w-4 h-4" />
-                      Propósito del Acumulado de Renovaciones Trimestral
-                    </h3>
-                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                      El <strong>Acumulado de Renovaciones Trimestral</strong> es la suma de los objetivos mensuales (Febrero: 8 + Marzo: 13 + Abril: 15 = 36). 
-                      Sirve como referencia para calcular el <strong>% de Cumplimiento</strong> de cada gestor, permitiendo clasificar su desempeño dentro del equipo.
-                    </p>
-                  </div>
                 </div>
                 <div className="text-right hidden md:block">
                   <Badge variant="outline" className="text-[10px] uppercase tracking-tighter">Nivel de Impacto: Ascendente</Badge>
