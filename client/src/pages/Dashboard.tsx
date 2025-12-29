@@ -216,6 +216,9 @@ export default function Dashboard() {
                     <ArrowUp className="w-5 h-5 text-primary" />
                     Orden de Afectación Ascendente
                   </h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Criterio de Impacto: Combinación ponderada de Cumplimiento (50%), Calidad (30%) y Atrasos (20%).
+                  </p>
                 </div>
                 <div className="text-right hidden md:block">
                   <Badge variant="outline" className="text-[10px] uppercase tracking-tighter">Nivel de Impacto: Ascendente</Badge>

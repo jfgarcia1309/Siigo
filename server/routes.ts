@@ -6,17 +6,27 @@ import { api } from "@shared/routes";
 import { InsertarGestor, Gestor } from "@shared/schema";
 
 /**
- * Método de Cálculo de Cuartiles:
- * 1. Se ordenan los gestores de mayor a menor según 'totalRenovaciones'.
- * 2. Se divide el total de gestores (N) entre 4 para obtener el tamaño base de cada cuartil.
- * 3. Se distribuyen los gestores asegurando que cada grupo represente un rango de rendimiento:
- *    - Q1: Top 25% (Menor afectación a indicadores)
- *    - Q2: 25% - 50%
- *    - Q3: 50% - 75%
- *    - Q4: 75% - 100% (Mayor afectación a indicadores)
+ * Método de Cálculo de Impacto Total:
+ * Se calcula un puntaje de impacto combinando:
+ * 1. Cumplimiento (Meta 36): Más es mejor (Impacto positivo)
+ * 2. Calidad: Más es mejor (Impacto positivo)
+ * 3. Atrasos: Menos es mejor (Impacto positivo)
+ * 
+ * Fórmula normalizada:
+ * Score = (Cumplimiento * 0.5) + (Calidad * 0.3) + ((10 - Atrasos) * 10 * 0.2)
  */
+function calcularImpacto(g: Gestor | InsertarGestor) {
+  const cumplimiento = (g.totalRenovaciones / 36) * 100;
+  const calidad = g.puntajeCalidad;
+  const atrasos = Number(String(g.porcentajeAtrasos).replace(',', '.'));
+  // Normalizamos atrasos (Invertido: 0% es 100 puntos, 10% es 0 puntos)
+  const scoreAtrasos = Math.max(0, 100 - (atrasos * 10));
+  
+  return (cumplimiento * 0.5) + (calidad * 0.3) + (scoreAtrasos * 0.2);
+}
+
 function calcularCuartiles(lista: Gestor[]) {
-  const ordenados = [...lista].sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
+  const ordenados = [...lista].sort((a, b) => calcularImpacto(b) - calcularImpacto(a));
   const n = ordenados.length;
   
   const q1End = Math.round(n * 0.25);
@@ -32,18 +42,11 @@ function calcularCuartiles(lista: Gestor[]) {
 }
 
 function clasificarGestor(g: InsertarGestor) {
-  const meta = 36;
-  const cumplimiento = (g.totalRenovaciones / meta) * 100;
+  const score = calcularImpacto(g);
   
-  if (cumplimiento >= 100 && g.puntajeCalidad >= 80 && Number(g.porcentajeAtrasos.replace(',', '.')) <= 2) {
-    return "Alto Desempeño";
-  }
-  if (cumplimiento >= 90) {
-    return "En Camino";
-  }
-  if (cumplimiento >= 70) {
-      return "Requiere Mejora";
-  }
+  if (score >= 85) return "Alto Desempeño";
+  if (score >= 70) return "En Camino";
+  if (score >= 50) return "Requiere Mejora";
   return "Crítico";
 }
 
@@ -80,7 +83,7 @@ const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map(d => {
         renovacionesMar: d.mar,
         renovacionesAbr: d.abr,
         totalRenovaciones: d.total,
-        porcentajeAtrasos: d.atrasos.replace('%', ''),
+        porcentajeAtrasos: d.atrasos.replace('%', '').replace(',', '.'),
         renovacionesGestionadas: d.gest,
         puntajeCalidad: parseInt(d.qual),
         clasificacion: ""
@@ -98,19 +101,17 @@ export async function registerRoutes(
 
   app.get(api.gestores.listar.path, async (req, res) => {
     const gestores = await almacenamiento.obtenerGestores();
-    gestores.sort((a, b) => b.totalRenovaciones - a.totalRenovaciones);
+    gestores.sort((a, b) => calcularImpacto(b) - calcularImpacto(a));
     res.json(gestores);
   });
   
   app.get(api.gestores.estadisticas.path, async (req, res) => {
       const listaGestores = await almacenamiento.obtenerGestores();
-      const metaPorPersona = 36;
-      const metaTotal = listaGestores.length * metaPorPersona;
+      const metaTotal = listaGestores.length * 36;
       const actualTotal = listaGestores.reduce((suma, g) => suma + g.totalRenovaciones, 0);
-      
       const calidadPromedio = listaGestores.reduce((suma, g) => suma + g.puntajeCalidad, 0) / listaGestores.length;
-      const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos.replace(',', '.')), 0) / listaGestores.length;
-      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= metaPorPersona).length;
+      const atrasosPromedio = listaGestores.reduce((suma, g) => suma + Number(g.porcentajeAtrasos), 0) / listaGestores.length;
+      const gestoresCumplenMeta = listaGestores.filter(g => g.totalRenovaciones >= 36).length;
 
       const cuartiles = calcularCuartiles(listaGestores);
       
