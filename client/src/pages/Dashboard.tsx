@@ -14,8 +14,10 @@ import {
   Pencil,
   Trash2,
   X,
-  Check
+  Check,
+  Download
 } from "lucide-react";
+import * as XLSX from "xlsx";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import {
@@ -243,6 +245,103 @@ export default function Dashboard() {
     return { label: "Bajo Desempeño", color: "text-red-600 bg-red-50 border-red-200" };
   };
 
+  const exportarAExcel = () => {
+    if (!gestores || !estadisticas) return;
+
+    const workbook = XLSX.utils.book_new();
+    
+    // Sheet 1: Vista Completa
+    const datosCompletos = gestores.map((g) => ({
+      "ID": g.id,
+      "Nombre Gestor": g.nombre,
+      "Feb": g.renovacionesFeb,
+      "Mar": g.renovacionesMar,
+      "Abr": g.renovacionesAbr,
+      "Total Q1": g.totalRenovaciones,
+      "% Cumplimiento": `=${((g.totalRenovaciones/36)*100).toFixed(1)}%`,
+      "Calidad %": g.puntajeCalidad,
+      "Atrasos %": Number(g.porcentajeAtrasos).toFixed(2),
+      "Gestiones": g.renovacionesGestionadas,
+      "Clasificación": g.clasificacion,
+      "Cuartil": getCuartil(g.id)
+    }));
+
+    const ws1 = XLSX.utils.json_to_sheet(datosCompletos);
+    XLSX.utils.book_append_sheet(workbook, ws1, "Vista Completa");
+
+    // Sheet 2: Q1 - Impacto Mínimo
+    const q1Data = gestores.filter(g => estadisticas.cuartiles.q1.some(q => q.id === g.id)).map(g => ({
+      "Nombre": g.nombre,
+      "Renovaciones": g.totalRenovaciones,
+      "Calidad %": g.puntajeCalidad,
+      "Atrasos %": g.porcentajeAtrasos,
+      "Gestiones": g.renovacionesGestionadas
+    }));
+    const ws2 = XLSX.utils.json_to_sheet(q1Data);
+    XLSX.utils.book_append_sheet(workbook, ws2, "Q1 - Impacto Mínimo");
+
+    // Sheet 3: Q2 - Impacto Bajo
+    const q2Data = gestores.filter(g => estadisticas.cuartiles.q2.some(q => q.id === g.id)).map(g => ({
+      "Nombre": g.nombre,
+      "Renovaciones": g.totalRenovaciones,
+      "Calidad %": g.puntajeCalidad,
+      "Atrasos %": g.porcentajeAtrasos,
+      "Gestiones": g.renovacionesGestionadas
+    }));
+    const ws3 = XLSX.utils.json_to_sheet(q2Data);
+    XLSX.utils.book_append_sheet(workbook, ws3, "Q2 - Impacto Bajo");
+
+    // Sheet 4: Q3 - Impacto Medio
+    const q3Data = gestores.filter(g => estadisticas.cuartiles.q3.some(q => q.id === g.id)).map(g => ({
+      "Nombre": g.nombre,
+      "Renovaciones": g.totalRenovaciones,
+      "Calidad %": g.puntajeCalidad,
+      "Atrasos %": g.porcentajeAtrasos,
+      "Gestiones": g.renovacionesGestionadas
+    }));
+    const ws4 = XLSX.utils.json_to_sheet(q3Data);
+    XLSX.utils.book_append_sheet(workbook, ws4, "Q3 - Impacto Medio");
+
+    // Sheet 5: Q4 - Impacto Crítico
+    const q4Data = gestores.filter(g => estadisticas.cuartiles.q4.some(q => q.id === g.id)).map(g => ({
+      "Nombre": g.nombre,
+      "Renovaciones": g.totalRenovaciones,
+      "Calidad %": g.puntajeCalidad,
+      "Atrasos %": g.porcentajeAtrasos,
+      "Gestiones": g.renovacionesGestionadas
+    }));
+    const ws5 = XLSX.utils.json_to_sheet(q4Data);
+    XLSX.utils.book_append_sheet(workbook, ws5, "Q4 - Impacto Crítico");
+
+    // Sheet 6: Resumen Estadísticas
+    const resumenData = [
+      { Métrica: "Cumplimiento Total %", Valor: estadisticas.cumplimientoTotal.toFixed(1) },
+      { Métrica: "Calidad Equipo %", Valor: estadisticas.calidadEquipo.toFixed(1) },
+      { Métrica: "Atrasos Equipo %", Valor: estadisticas.atrasosEquipo.toFixed(2) },
+      { Métrica: "Gestores que Cumplen Meta", Valor: estadisticas.gestoresCumplenMeta },
+      { Métrica: "Total Gestores", Valor: estadisticas.totalGestores }
+    ];
+    const ws6 = XLSX.utils.json_to_sheet(resumenData);
+    XLSX.utils.book_append_sheet(workbook, ws6, "Resumen");
+
+    // Ajustar ancho de columnas
+    [ws1, ws2, ws3, ws4, ws5, ws6].forEach(sheet => {
+      const colWidths = [{ wch: 25 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 20 }];
+      sheet['!cols'] = colWidths;
+    });
+
+    XLSX.writeFile(workbook, `Tablero_Renovaciones_${new Date().toISOString().split('T')[0]}.xlsx`);
+    toast({ title: "Exportación exitosa", description: "El archivo Excel se ha descargado correctamente." });
+  };
+
+  const getCuartil = (id: number): string => {
+    if (estadisticas?.cuartiles.q1.some(q => q.id === id)) return "Q1 - Mínimo";
+    if (estadisticas?.cuartiles.q2.some(q => q.id === id)) return "Q2 - Bajo";
+    if (estadisticas?.cuartiles.q3.some(q => q.id === id)) return "Q3 - Medio";
+    if (estadisticas?.cuartiles.q4.some(q => q.id === id)) return "Q4 - Crítico";
+    return "N/A";
+  };
+
   const TablaGestores = ({ data }: { data: any[] }) => (
     <div className="overflow-x-auto">
       <Table>
@@ -359,6 +458,15 @@ export default function Dashboard() {
               <p className="text-muted-foreground mt-1">Análisis de impacto ascendente en los indicadores del equipo</p>
             </div>
             <div className="flex items-center gap-3">
+              <Button 
+                variant="outline"
+                className="flex items-center gap-2 hover-elevate shadow-sm"
+                onClick={exportarAExcel}
+                disabled={!gestores || gestores.length === 0}
+              >
+                <Download className="w-4 h-4" />
+                Exportar Excel
+              </Button>
               <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                 <DialogTrigger asChild>
                   <Button className="flex items-center gap-2 hover-elevate shadow-sm">
