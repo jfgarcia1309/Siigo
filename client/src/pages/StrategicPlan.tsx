@@ -72,28 +72,28 @@ const CicloEARC = () => {
 export default function StrategicPlan() {
   const acciones = [
     {
-      titulo: "Maximización del Cumplimiento (Meta 100%)",
-      desc: "Implementar 'Días de Cierre' quincenales y micro-metas semanales. Vinculación directa: Cada gestor debe alcanzar el 100% de su meta mensual (Feb: 8, Mar: 13, Abr: 15) para asegurar el bono de desempeño.",
+      titulo: "1. Optimización de Conversión y Productividad",
+      desc: "Brecha detectada: Alta gestión (180+) con cierres inconsistentes. Acción: Implementar un embudo de ventas diario donde cada 10 gestiones deban generar al menos 1 compromiso de pago. Impacto esperado: Mejora del 20% en la tasa de cierre y estabilización de la Productividad mensual >180.",
       prioridad: "Crítica",
-      indicador: "Cumplimiento"
+      indicador: "Productividad"
     },
     {
-      titulo: "Excelencia en Calidad (>80%)",
-      desc: "Clínicas semanales de escucha enfocadas en el modelo EARC. Aplicación: Retroalimentación inmediata tras evaluaciones de llamadas para corregir desviaciones en tiempo real y superar el umbral del 80%.",
-      prioridad: "Crítica",
+      titulo: "2. Estandarización de Calidad EARC",
+      desc: "Brecha detectada: Calidad fluctuante entre gestores (promedio 76%). Acción: Sesiones de 'Role-Play' quincenales enfocadas en la fase de 'Replantear' (R) del ciclo EARC para transformar objeciones en valor. Impacto esperado: Score de Calidad consistente >80% en todo el equipo.",
+      prioridad: "Alta",
       indicador: "Calidad"
     },
     {
-      titulo: "Control Riguroso de Atrasos (<2%)",
-      desc: "Alertas preventivas automatizadas 5 días antes del vencimiento. Objetivo: Limitar los seguimientos atrasados a menos del 2% del total de oportunidades para evitar fugas de ingresos.",
+      titulo: "3. Reducción Proactiva de Atrasos",
+      desc: "Brecha detectada: Atrasos concentrados en renovaciones de fin de mes. Acción: Redistribución de carga de trabajo para priorizar vencimientos con 7 días de antelación y uso de plantillas de recordatorio rápido. Impacto esperado: Reducción de Atrasos a <2% constante.",
       prioridad: "Alta",
       indicador: "Atrasos"
     },
     {
-      titulo: "Productividad de Alto Impacto (>180)",
-      desc: "Seguimiento diario de gestiones (llamadas/correos). Meta: Superar las 180 gestiones mensuales por gestor. Ejemplo: Una productividad de 46 gestiones con solo 11 renovaciones indica baja conversión; se requiere reforzar el cierre.",
-      prioridad: "Alta",
-      indicador: "Productividad"
+      titulo: "4. Recuperación de Cumplimiento",
+      desc: "Brecha detectada: 19 de 23 gestores no alcanzan el 100% de la meta en periodos pico. Acción: Tablero de cumplimiento en tiempo real con hitos de 'Meta Parcial' (30% meta en semana 1, 60% en semana 2). Impacto esperado: Cumplimiento de Renovaciones al 100% de la meta mensual.",
+      prioridad: "Crítica",
+      indicador: "Cumplimiento"
     }
   ];
 
