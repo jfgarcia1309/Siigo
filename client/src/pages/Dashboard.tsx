@@ -78,7 +78,7 @@ export default function Dashboard() {
             <TableHead className="text-center">Feb (8)</TableHead>
             <TableHead className="text-center">Mar (13)</TableHead>
             <TableHead className="text-center">Abr (15)</TableHead>
-            <TableHead className="text-center font-bold text-primary">Meta Q1 (36)</TableHead>
+            <TableHead className="text-center font-bold text-primary" title="Meta acumulada de renovaciones para Q1 (Feb+Mar+Abr)">Meta Q1 (36)</TableHead>
             <TableHead className="text-center">Cumplimiento</TableHead>
             <TableHead className="text-center">Calidad</TableHead>
             <TableHead className="text-center">Atrasos</TableHead>
@@ -217,7 +217,7 @@ export default function Dashboard() {
                     Orden de Afectación Ascendente
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Visualización organizada desde el menor impacto (Q1) hasta el mayor impacto negativo (Q4) en los KPIs.
+                    Clasificación basada en el cumplimiento de la Meta Q1 (36 renovaciones).
                   </p>
                 </div>
                 <div className="text-right hidden md:block">
