@@ -49,12 +49,12 @@ export function Sidebar() {
 
       <div className="mt-auto pt-6 border-t border-border">
         <div className="flex items-center gap-3 px-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-accent to-primary flex items-center justify-center text-white text-xs font-bold">
-            JD
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#00A1E0] to-[#002B49] flex items-center justify-center text-white text-xs font-bold">
+            JF
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-foreground">Juan Director</span>
-            <span className="text-xs text-muted-foreground">Líder de Renovaciones</span>
+            <span className="text-sm font-semibold text-foreground">Juan Fernando Garcia</span>
+            <span className="text-xs text-muted-foreground">Coordinador de Renovaciones</span>
           </div>
         </div>
       </div>
