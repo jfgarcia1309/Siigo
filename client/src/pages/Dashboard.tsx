@@ -216,9 +216,17 @@ export default function Dashboard() {
                     <ArrowUp className="w-5 h-5 text-primary" />
                     Orden de Afectación Ascendente
                   </h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Clasificación basada en el cumplimiento de la Meta Q1 (36 renovaciones).
-                  </p>
+                  <div className="bg-primary/10 p-4 rounded-lg mt-3 border border-primary/20">
+                    <h3 className="text-sm font-bold text-primary flex items-center gap-2">
+                      <Target className="w-4 h-4" />
+                      Propósito de la Meta Q1 (36)
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                      La <strong>Meta Q1</strong> es el objetivo acumulado de renovaciones para el primer trimestre (Febrero: 8 + Marzo: 13 + Abril: 15 = 36). 
+                      Sirve como el denominador principal para calcular el <strong>% de Cumplimiento</strong> de cada gestor. 
+                      Un gestor con 36 renovaciones alcanza el 100% de su meta trimestral, permitiendo clasificar su desempeño y el impacto real en los resultados globales del equipo.
+                    </p>
+                  </div>
                 </div>
                 <div className="text-right hidden md:block">
                   <Badge variant="outline" className="text-[10px] uppercase tracking-tighter">Nivel de Impacto: Ascendente</Badge>
