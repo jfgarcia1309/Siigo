@@ -91,7 +91,7 @@ export default function StrategicPlan() {
     },
     {
       titulo: "4. Maximización de Actividad (Productividad)",
-      desc: "Meta: >180 Gestiones/mes. Estrategia: Mantener un volumen superior a 180 gestiones mensuales de manera constante. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (Batching) enfocados exclusivamente en barrido de cartera, eliminando distracciones y asegurando que cada contacto alimente el embudo de conversión.",
+      desc: "Meta: >180 Gestiones/mes. Asegurar un flujo constante y sostenido de llamadas, seguimientos o renovaciones. Estrategia: Mantener un volumen superior a 180 gestiones mensuales de manera regular. Acción: Ejecutar bloques de 'Gestión Intensiva' de 60 minutos (Batching) para agrupar tareas similares: Barrido de cartera para contactar clientes pendientes, eliminar distracciones enfocándose solo en llamadas y asegurar que cada contacto alimente el embudo de conversión hacia cierres reales.",
       prioridad: "Alta",
       indicador: "Productividad"
     }
