@@ -124,7 +124,9 @@ export default function Dashboard() {
         <TableHeader>
           <TableRow className="hover:bg-transparent border-b">
             <TableHead className="font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Nombre del Gestor</TableHead>
-            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Renovaciones</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">
+              {mesSeleccionado === "tri" ? "Renovaciones Totales" : "Renovaciones"}
+            </TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Cumplimiento</TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Calidad</TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Atrasos</TableHead>
@@ -135,20 +137,25 @@ export default function Dashboard() {
         <TableBody>
           {data?.map((gestor) => {
             const { cumple: cumpleMes, fallas: fallasMes } = analizarCumplimientoMensual(gestor, mesSeleccionado);
-            const valorSeleccionado = mesSeleccionado === "feb" ? gestor.renovacionesFeb : 
-                                      mesSeleccionado === "mar" ? gestor.renovacionesMar : 
-                                      mesSeleccionado === "abr" ? gestor.renovacionesAbr :
-                                      gestor.totalRenovaciones;
-            const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
-            const cumplimiento = (valorSeleccionado / metaSeleccionada) * 100;
-            const cumpleRenovaciones = valorSeleccionado >= metaSeleccionada;
             
-            // Gestión dinámica según el mes seleccionado
-            // Si es trimestral usamos renovacionesGestionadas (que parece ser el total acumulado)
-            // Para meses individuales, como no tenemos el dato por mes en el schema, 
-            // calculamos una proporción o usamos el total si el usuario lo prefiere.
-            // Según la solicitud, debe coincidir con la selección.
-            const gestionMostrada = mesSeleccionado === "tri" ? gestor.renovacionesGestionadas : Math.round(gestor.renovacionesGestionadas / 3);
+            // Datos dinámicos basados estrictamente en el requerimiento
+            const renValor = mesSeleccionado === "feb" ? gestor.renovacionesFeb :
+                             mesSeleccionado === "mar" ? gestor.renovacionesMar :
+                             mesSeleccionado === "abr" ? gestor.renovacionesAbr :
+                             gestor.totalRenovaciones;
+
+            const cumpliValor = mesSeleccionado === "feb" ? ((gestor.renovacionesFeb / 8) * 100).toFixed(0) :
+                                mesSeleccionado === "mar" ? ((gestor.renovacionesMar / 13) * 100).toFixed(0) :
+                                mesSeleccionado === "abr" ? ((gestor.renovacionesAbr / 15) * 100).toFixed(0) :
+                                ((gestor.totalRenovaciones / 36) * 100).toFixed(0);
+
+            // En trimestral mostramos los totales reales del reporte
+            const caliValor = mesSeleccionado === "tri" ? `${gestor.puntajeCalidad}%` : "-";
+            const atraValor = mesSeleccionado === "tri" ? `${gestor.porcentajeAtrasos}%` : "-";
+            const gestiValor = mesSeleccionado === "tri" ? gestor.renovacionesGestionadas : "-";
+
+            const metaSeleccionada = METAS_MENSUALES[mesSeleccionado];
+            const cumpleRenovaciones = renValor >= metaSeleccionada;
             
             return (
               <TableRow key={gestor.id} className="hover:bg-muted/30 transition-colors border-b last:border-0">
@@ -157,7 +164,7 @@ export default function Dashboard() {
                     {gestor.nombre}
                   </div>
                 </TableCell>
-                <TableCell className="text-center font-bold text-lg py-6">{valorSeleccionado}</TableCell>
+                <TableCell className="text-center font-bold text-lg py-6">{renValor}</TableCell>
                 <TableCell className="text-center py-6">
                   <span className={cn(
                     "px-3 py-1 rounded text-xs font-bold",
@@ -165,16 +172,16 @@ export default function Dashboard() {
                       ? "text-green-600 bg-green-50 dark:bg-green-900/20" 
                       : "text-red-600 bg-red-50 dark:bg-red-900/20"
                   )}>
-                    {cumplimiento.toFixed(0)}%
+                    {cumpliValor}%
                   </span>
                 </TableCell>
-                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.puntajeCalidad}%</TableCell>
-                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestor.porcentajeAtrasos}%</TableCell>
-                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestionMostrada}</TableCell>
+                <TableCell className="text-center font-medium text-muted-foreground py-6">{caliValor}</TableCell>
+                <TableCell className="text-center font-medium text-muted-foreground py-6">{atraValor}</TableCell>
+                <TableCell className="text-center font-medium text-muted-foreground py-6">{gestiValor}</TableCell>
                 <TableCell className="text-right py-6">
                   <div className="flex flex-col items-end gap-1">
                     {obtenerInsigniaEstado(gestor.clasificacion)}
-                    {!cumpleMes && (
+                    {mesSeleccionado !== "tri" && !cumpleMes && (
                       <div className="flex flex-wrap justify-end gap-1 mt-1">
                         {fallasMes.map((f, i) => (
                           <Badge key={i} variant="outline" className="text-[8px] border-red-200 text-red-600 bg-red-50 px-1 h-4">
