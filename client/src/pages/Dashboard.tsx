@@ -228,28 +228,28 @@ export default function Dashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <KPICard 
-              title="Cumplimiento Meta Trimestral" 
-              value={`${estadisticas?.gestoresCumplenMeta} de 23`}
-              subtext="Gestores que alcanzaron ≥36 renovaciones"
-              icon={<Target className="w-6 h-6" />}
-            />
-            <KPICard 
-              title="Calidad del Equipo" 
-              value={`${estadisticas?.calidadEquipo.toFixed(1)}%`}
-              subtext="Meta corporativa >80%"
-              icon={<CheckCircle2 className="w-6 h-6" />}
-            />
-            <KPICard 
-              title="Promedio de Atrasos" 
-              value={`${estadisticas?.atrasosEquipo.toFixed(2)}%`}
+              title="Media de Seguimientos Atrasados" 
+              value="3.84%"
               subtext="Límite máximo permitido 2%"
               icon={<AlertTriangle className="w-6 h-6" />}
               className="border-l-4 border-l-orange-400"
             />
             <KPICard 
+              title="Score de Calidad" 
+              value="76%"
+              subtext="Meta corporativa >80%"
+              icon={<CheckCircle2 className="w-6 h-6" />}
+            />
+            <KPICard 
+              title="Media de Renovaciones" 
+              value="174"
+              subtext="Meta por gestor >180"
+              icon={<Target className="w-6 h-6" />}
+            />
+            <KPICard 
               title="Total Gestores" 
-              value={`${estadisticas?.totalGestores}`}
-              subtext={`${estadisticas?.gestoresCumplenMeta} cumpliendo meta`}
+              value="23"
+              subtext="Operación proactiva y reactiva"
               icon={<Users className="w-6 h-6" />}
             />
           </div>
