@@ -50,7 +50,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { esquemaInsertarGestor, type InsertarGestor, type Gestor } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 // Componente para el Formulario de Gestor
@@ -237,7 +237,6 @@ export default function Dashboard() {
         </TableHeader>
         <TableBody>
           {data?.map((gestor) => {
-            const { cumple: cumpleMes, fallas: fallasMes } = analizarCumplimientoMensual(gestor, mesSeleccionado);
             const renValor = mesSeleccionado === "feb" ? gestor.renovacionesFeb :
                              mesSeleccionado === "mar" ? gestor.renovacionesMar :
                              mesSeleccionado === "abr" ? gestor.renovacionesAbr :
@@ -324,7 +323,7 @@ export default function Dashboard() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold text-foreground text-balance">Tablero de Desempeño</h1>
-              <p className="text-muted-foreground mt-1">Monitoreo en tiempo real de los Gestores de Renovación Siigo.</p>
+              <p className="text-muted-foreground mt-1">Análisis de impacto ascendente en los indicadores del equipo</p>
             </div>
             <div className="flex items-center gap-3">
               <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -419,10 +418,38 @@ export default function Dashboard() {
           </div>
 
           <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-border bg-card">
+            <div className="p-6 border-b border-border bg-card flex justify-between items-center">
               <h2 className="text-xl font-bold">Gestión de Renovaciones</h2>
+              <Badge variant="outline" className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Vista Detallada</Badge>
             </div>
-            <TablaGestores data={gestoresVisualizados} />
+            
+            <Tabs defaultValue="todos" className="w-full">
+              <div className="px-6 border-b border-border bg-card flex justify-between items-center overflow-x-auto">
+                <TabsList className="bg-transparent h-14 gap-8">
+                  <TabsTrigger value="todos" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 h-full bg-transparent font-bold">Vista Unificada</TabsTrigger>
+                  <TabsTrigger value="q1" className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-2 h-full bg-transparent font-bold">Impacto Mínimo (Q1)</TabsTrigger>
+                  <TabsTrigger value="q2" className="data-[state=active]:border-b-2 data-[state=active]:border-green-600 rounded-none px-2 h-full bg-transparent font-bold">Impacto Bajo (Q2)</TabsTrigger>
+                  <TabsTrigger value="q3" className="data-[state=active]:border-b-2 data-[state=active]:border-orange-500 rounded-none px-2 h-full bg-transparent font-bold">Impacto Medio (Q3)</TabsTrigger>
+                  <TabsTrigger value="q4" className="data-[state=active]:border-b-2 data-[state=active]:border-red-600 rounded-none px-2 h-full bg-transparent font-bold">Impacto Crítico (Q4)</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="todos" className="m-0">
+                <TablaGestores data={gestoresVisualizados} />
+              </TabsContent>
+              <TabsContent value="q1" className="m-0">
+                <TablaGestores data={gestoresVisualizados.filter(g => estadisticas?.cuartiles.q1.some((q: any) => q.id === g.id))} />
+              </TabsContent>
+              <TabsContent value="q2" className="m-0">
+                <TablaGestores data={gestoresVisualizados.filter(g => estadisticas?.cuartiles.q2.some((q: any) => q.id === g.id))} />
+              </TabsContent>
+              <TabsContent value="q3" className="m-0">
+                <TablaGestores data={gestoresVisualizados.filter(g => estadisticas?.cuartiles.q3.some((q: any) => q.id === g.id))} />
+              </TabsContent>
+              <TabsContent value="q4" className="m-0">
+                <TablaGestores data={gestoresVisualizados.filter(g => estadisticas?.cuartiles.q4.some((q: any) => q.id === g.id))} />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </main>
