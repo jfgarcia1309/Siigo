@@ -21,7 +21,8 @@ import {
   LayoutDashboard,
   AlertTriangle,
   Clock,
-  Briefcase
+  Briefcase,
+  Users
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -107,16 +108,16 @@ export default function StrategicPlan() {
 
   const estrategiasAdicionales = [
     {
+      titulo: "Programa Mentores Siigo",
+      subtitulo: "El éxito se comparte",
+      contenido: "Los gestores con mejores resultados (Top Performers) apoyan y orientan a quienes tienen un desempeño más bajo. Se crean parejas de trabajo para compartir 'tips' reales de llamadas, trucos para cerrar renovaciones y apoyo en el manejo de clientes difíciles.",
+      icono: Users
+    },
+    {
       titulo: "Estrategia de Churn Preventivo",
       subtitulo: "Detección temprana de señales de abandono",
       contenido: "Implementar un sistema de alertas cuando el cliente disminuye su uso de la plataforma Siigo 60 días antes de la renovación. El gestor debe intervenir con una 'Llamada de Valor' enfocada en capacitación de módulos no usados.",
       icono: AlertTriangle
-    },
-    {
-      titulo: "Especialización por Producto",
-      subtitulo: "Expertise técnico por segmento",
-      contenido: "Dividir el equipo en 'Squads' especializados en POS, Nómina y Facturación Electrónica para brindar asesoría técnica profunda que reduzca la fricción del cliente ante cambios regulatorios.",
-      icono: Target
     },
     {
       titulo: "Plan de Recobro Inteligente",
