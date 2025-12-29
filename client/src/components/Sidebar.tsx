@@ -18,8 +18,8 @@ export function Sidebar() {
           <BarChart3 className="text-primary-foreground w-6 h-6" />
         </div>
         <div>
-          <h1 className="font-bold text-xl text-foreground leading-none">Renovación</h1>
-          <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">Analítica</span>
+          <h1 className="font-bold text-xl text-foreground leading-none">Renewal</h1>
+          <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">SIIGO</span>
         </div>
       </div>
 
