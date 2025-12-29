@@ -129,8 +129,15 @@ export default function Dashboard() {
             </TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Cumplimiento</TableHead>
             <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Calidad</TableHead>
-            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Atrasos</TableHead>
-            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Ren. Gestión</TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">
+              Atrasos
+            </TableHead>
+            <TableHead className="text-center font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">
+              <div className="flex flex-col items-center">
+                <span>Ren. Gestión</span>
+                <span className="text-[9px] font-normal lowercase">(Llamadas/Seguimientos)</span>
+              </div>
+            </TableHead>
             <TableHead className="text-right font-bold text-muted-foreground uppercase text-[11px] tracking-wider py-4">Clasificación Impacto</TableHead>
           </TableRow>
         </TableHeader>
@@ -155,8 +162,9 @@ export default function Dashboard() {
             const caliValor = `${gestor.puntajeCalidad}%`;
             const atraValor = `${gestor.porcentajeAtrasos}%`;
             
-            // Para la gestión, si es mensual mostramos una estimación basada en la meta de renovaciones
-            // Si es trimestral, mostramos el dato real del reporte
+            // Ren. Gestión: Representa el volumen de gestiones realizadas (llamadas, correos, seguimientos)
+            // para lograr las renovaciones. Es un indicador de productividad del gestor.
+            // Para la vista mensual, calculamos la proporción correspondiente a la meta del mes.
             const gestiValor = mesSeleccionado === "tri" 
               ? gestor.renovacionesGestionadas 
               : Math.round((gestor.renovacionesGestionadas * (METAS_MENSUALES[mesSeleccionado] / 36)));
@@ -267,11 +275,12 @@ export default function Dashboard() {
               subtext="Meta por gestor >180"
               icon={<Target className="w-6 h-6" />}
             />
+            {/* Indicador de Productividad */}
             <KPICard 
-              title="Total Gestores" 
-              value="23"
-              subtext="Operación proactiva y reactiva"
-              icon={<Users className="w-6 h-6" />}
+              title="Renovaciones Gestionadas (Productividad)" 
+              value={gestores?.reduce((acc: number, g: any) => acc + g.renovacionesGestionadas, 0).toLocaleString() || "0"}
+              subtext="Total de llamadas, correos y seguimientos realizados"
+              icon={<ArrowUp className="w-6 h-6 text-blue-500" />}
             />
           </div>
 
