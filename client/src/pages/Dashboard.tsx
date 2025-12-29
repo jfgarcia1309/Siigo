@@ -250,15 +250,26 @@ export default function Dashboard() {
 
     const workbook = XLSX.utils.book_new();
     
-    // Sheet 1: Vista Completa
-    const datosCompletos = gestores.map((g) => ({
+    // Ordenar gestores como en tu tabla: por cuartil y luego por el orden que mostraste
+    const gestoresOrdenados = gestores.map(g => ({
+      ...g,
+      cuartil: getCuartilNumerico(g.id)
+    })).sort((a, b) => {
+      const cuartilDiff = a.cuartil - b.cuartil;
+      if (cuartilDiff !== 0) return cuartilDiff;
+      // Dentro del cuartil, mantener orden por ID
+      return a.id - b.id;
+    });
+
+    // Sheet 1: Vista Completa (exactamente como tu imagen)
+    const datosCompletos = gestoresOrdenados.map((g) => ({
       "ID": g.id,
       "Nombre Gestor": g.nombre,
       "Feb": g.renovacionesFeb,
       "Mar": g.renovacionesMar,
       "Abr": g.renovacionesAbr,
       "Total Q1": g.totalRenovaciones,
-      "% Cumplimiento": `=${((g.totalRenovaciones/36)*100).toFixed(1)}%`,
+      "% Cumplimiento": `${((g.totalRenovaciones/36)*100).toFixed(1)}%`,
       "Calidad %": g.puntajeCalidad,
       "Atrasos %": Number(g.porcentajeAtrasos).toFixed(2),
       "Gestiones": g.renovacionesGestionadas,
@@ -267,51 +278,39 @@ export default function Dashboard() {
     }));
 
     const ws1 = XLSX.utils.json_to_sheet(datosCompletos);
+    ws1['!cols'] = [
+      { wch: 5 }, { wch: 28 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 10 },
+      { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 16 }, { wch: 15 }
+    ];
     XLSX.utils.book_append_sheet(workbook, ws1, "Vista Completa");
 
-    // Sheet 2: Q1 - Impacto Mínimo
-    const q1Data = gestores.filter(g => estadisticas.cuartiles.q1.some(q => q.id === g.id)).map(g => ({
-      "Nombre": g.nombre,
-      "Renovaciones": g.totalRenovaciones,
-      "Calidad %": g.puntajeCalidad,
-      "Atrasos %": g.porcentajeAtrasos,
-      "Gestiones": g.renovacionesGestionadas
-    }));
-    const ws2 = XLSX.utils.json_to_sheet(q1Data);
-    XLSX.utils.book_append_sheet(workbook, ws2, "Q1 - Impacto Mínimo");
-
-    // Sheet 3: Q2 - Impacto Bajo
-    const q2Data = gestores.filter(g => estadisticas.cuartiles.q2.some(q => q.id === g.id)).map(g => ({
-      "Nombre": g.nombre,
-      "Renovaciones": g.totalRenovaciones,
-      "Calidad %": g.puntajeCalidad,
-      "Atrasos %": g.porcentajeAtrasos,
-      "Gestiones": g.renovacionesGestionadas
-    }));
-    const ws3 = XLSX.utils.json_to_sheet(q2Data);
-    XLSX.utils.book_append_sheet(workbook, ws3, "Q2 - Impacto Bajo");
-
-    // Sheet 4: Q3 - Impacto Medio
-    const q3Data = gestores.filter(g => estadisticas.cuartiles.q3.some(q => q.id === g.id)).map(g => ({
-      "Nombre": g.nombre,
-      "Renovaciones": g.totalRenovaciones,
-      "Calidad %": g.puntajeCalidad,
-      "Atrasos %": g.porcentajeAtrasos,
-      "Gestiones": g.renovacionesGestionadas
-    }));
-    const ws4 = XLSX.utils.json_to_sheet(q3Data);
-    XLSX.utils.book_append_sheet(workbook, ws4, "Q3 - Impacto Medio");
-
-    // Sheet 5: Q4 - Impacto Crítico
-    const q4Data = gestores.filter(g => estadisticas.cuartiles.q4.some(q => q.id === g.id)).map(g => ({
-      "Nombre": g.nombre,
-      "Renovaciones": g.totalRenovaciones,
-      "Calidad %": g.puntajeCalidad,
-      "Atrasos %": g.porcentajeAtrasos,
-      "Gestiones": g.renovacionesGestionadas
-    }));
-    const ws5 = XLSX.utils.json_to_sheet(q4Data);
-    XLSX.utils.book_append_sheet(workbook, ws5, "Q4 - Impacto Crítico");
+    // Sheets 2-5: Cuartiles (datos completos como en Vista Completa)
+    [
+      { cuartil: 1, label: "Q1 - Mínimo", color: "Impacto Bajo" },
+      { cuartil: 2, label: "Q2 - Bajo", color: "Impacto Bajo" },
+      { cuartil: 3, label: "Q3 - Medio", color: "Impacto Medio" },
+      { cuartil: 4, label: "Q4 - Crítico", color: "Impacto Alto" }
+    ].forEach((q, idx) => {
+      const qData = gestoresOrdenados.filter(g => g.cuartil === q.cuartil).map(g => ({
+        "ID": g.id,
+        "Nombre Gestor": g.nombre,
+        "Feb": g.renovacionesFeb,
+        "Mar": g.renovacionesMar,
+        "Abr": g.renovacionesAbr,
+        "Total Q1": g.totalRenovaciones,
+        "% Cumplimiento": `${((g.totalRenovaciones/36)*100).toFixed(1)}%`,
+        "Calidad %": g.puntajeCalidad,
+        "Atrasos %": Number(g.porcentajeAtrasos).toFixed(2),
+        "Gestiones": g.renovacionesGestionadas,
+        "Clasificación": g.clasificacion
+      }));
+      const ws = XLSX.utils.json_to_sheet(qData);
+      ws['!cols'] = [
+        { wch: 5 }, { wch: 28 }, { wch: 8 }, { wch: 8 }, { wch: 8 }, { wch: 10 },
+        { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 12 }, { wch: 16 }
+      ];
+      XLSX.utils.book_append_sheet(workbook, ws, q.label);
+    });
 
     // Sheet 6: Resumen Estadísticas
     const resumenData = [
@@ -322,16 +321,19 @@ export default function Dashboard() {
       { Métrica: "Total Gestores", Valor: estadisticas.totalGestores }
     ];
     const ws6 = XLSX.utils.json_to_sheet(resumenData);
+    ws6['!cols'] = [{ wch: 25 }, { wch: 20 }];
     XLSX.utils.book_append_sheet(workbook, ws6, "Resumen");
-
-    // Ajustar ancho de columnas
-    [ws1, ws2, ws3, ws4, ws5, ws6].forEach(sheet => {
-      const colWidths = [{ wch: 25 }, { wch: 15 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 20 }];
-      sheet['!cols'] = colWidths;
-    });
 
     XLSX.writeFile(workbook, `Tablero_Renovaciones_${new Date().toISOString().split('T')[0]}.xlsx`);
     toast({ title: "Exportación exitosa", description: "El archivo Excel se ha descargado correctamente." });
+  };
+
+  const getCuartilNumerico = (id: number): number => {
+    if (estadisticas?.cuartiles.q1.some(q => q.id === id)) return 1;
+    if (estadisticas?.cuartiles.q2.some(q => q.id === id)) return 2;
+    if (estadisticas?.cuartiles.q3.some(q => q.id === id)) return 3;
+    if (estadisticas?.cuartiles.q4.some(q => q.id === id)) return 4;
+    return 999;
   };
 
   const getCuartil = (id: number): string => {

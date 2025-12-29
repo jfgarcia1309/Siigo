@@ -37,15 +37,17 @@ function calcularCuartiles(lista: Gestor[]) {
   const ordenados = [...lista].sort((a, b) => calcularIIT(a) - calcularIIT(b));
   const n = ordenados.length;
   
-  const q1End = Math.round(n * 0.25);
-  const q2End = Math.round(n * 0.50);
-  const q3End = Math.round(n * 0.75);
+  // Distribuir en 4 cuartiles lo más equitativo posible
+  const q1Size = Math.ceil(n * 0.25);
+  const q2Size = Math.ceil(n * 0.25);
+  const q3Size = Math.ceil(n * 0.25);
+  const q4Size = n - q1Size - q2Size - q3Size;
 
   return {
-    q1: ordenados.slice(0, q1End),
-    q2: ordenados.slice(q1End, q2End),
-    q3: ordenados.slice(q2End, q3End),
-    q4: ordenados.slice(q3End)
+    q1: ordenados.slice(0, q1Size),
+    q2: ordenados.slice(q1Size, q1Size + q2Size),
+    q3: ordenados.slice(q1Size + q2Size, q1Size + q2Size + q3Size),
+    q4: ordenados.slice(q1Size + q2Size + q3Size)
   };
 }
 
