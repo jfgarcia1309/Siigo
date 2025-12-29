@@ -72,10 +72,10 @@ const CicloEARC = () => {
 export default function StrategicPlan() {
   const acciones = [
     {
-      titulo: "1. Optimización de Conversión y Productividad",
-      desc: "Brecha detectada: Alta gestión (180+) con cierres inconsistentes. Acción: Implementar un embudo de ventas diario donde cada 10 gestiones deban generar al menos 1 compromiso de pago. Impacto esperado: Mejora del 20% en la tasa de cierre y estabilización de la Productividad mensual >180.",
+      titulo: "1. Maximización de la Conversión (Cumplimiento)",
+      desc: "Brecha detectada: 19 de 23 gestores no alcanzan el 100% de la meta. Acción: Implementar un embudo de ventas diario donde cada 10 gestiones deban generar al menos 1 compromiso de pago. Impacto esperado: Asegurar el cumplimiento del 100% de la meta mensual (Feb: 8, Mar: 13, Abr: 15).",
       prioridad: "Crítica",
-      indicador: "Productividad"
+      indicador: "Cumplimiento"
     },
     {
       titulo: "2. Estandarización de Calidad EARC",
@@ -90,10 +90,10 @@ export default function StrategicPlan() {
       indicador: "Atrasos"
     },
     {
-      titulo: "4. Recuperación de Cumplimiento",
-      desc: "Brecha detectada: 19 de 23 gestores no alcanzan el 100% de la meta en periodos pico. Acción: Tablero de cumplimiento en tiempo real con hitos de 'Meta Parcial' (30% meta en semana 1, 60% en semana 2). Impacto esperado: Cumplimiento de Renovaciones al 100% de la meta mensual.",
+      titulo: "4. Gestión de Alta Productividad (>180)",
+      desc: "Brecha detectada: Gestores con baja actividad diaria impactan el volumen total. Acción: Seguimiento riguroso de gestiones por hora para estabilizar la Productividad mensual por encima de 180 llamadas/seguimientos. Impacto esperado: Mayor cobertura de la cartera asignada.",
       prioridad: "Crítica",
-      indicador: "Cumplimiento"
+      indicador: "Productividad"
     }
   ];
 
