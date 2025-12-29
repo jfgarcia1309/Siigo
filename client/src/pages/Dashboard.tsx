@@ -40,7 +40,7 @@ export default function Dashboard() {
   const [filtroEstado, setFiltroEstado] = useState("todos");
 
   const filtrarYOrdenar = (lista: any[]) => {
-    // La lista ya viene ordenada por el backend en orden ascendente de afectación (Q1 -> Q4)
+    if (!lista) return [];
     let filtrados = lista.filter(g => 
       g.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase())
     );

@@ -1,169 +1,162 @@
 import { Sidebar } from "@/components/Sidebar";
 import { motion } from "framer-motion";
 import { 
-  CheckSquare, 
-  TrendingUp, 
-  AlertOctagon, 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  CardDescription
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Target, 
+  Search, 
+  MessageSquare, 
+  ThumbsUp, 
+  CheckCircle2,
   ArrowRight,
-  Target
+  TrendingUp,
+  ShieldCheck,
+  RotateCcw
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const CicloEARC = () => {
+  const pasos = [
+    { id: "E", titulo: "Escuchar", color: "bg-blue-500", icono: Search, desc: "Identificar necesidades y objeciones del cliente sin interrumpir." },
+    { id: "A", titulo: "Aceptar", color: "bg-indigo-500", icono: ThumbsUp, desc: "Validar la postura del cliente para generar empatía y apertura." },
+    { id: "R", titulo: "Replantear", color: "bg-purple-500", icono: MessageSquare, desc: "Transformar la objeción en una oportunidad de valor conjunto." },
+    { id: "Re", titulo: "Rebatir", color: "bg-violet-500", icono: ShieldCheck, desc: "Presentar argumentos sólidos que neutralicen dudas técnicas o de costo." },
+    { id: "C", titulo: "Cerrar", color: "bg-green-600", icono: CheckCircle2, desc: "Confirmar el compromiso y formalizar la renovación del servicio." }
+  ];
+
+  return (
+    <div className="relative py-12 px-4 flex flex-col items-center">
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+        <RotateCcw className="w-[400px] h-[400px] animate-spin-slow" />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-full max-w-5xl relative z-10">
+        {pasos.map((paso, index) => (
+          <motion.div
+            key={paso.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="flex flex-col items-center text-center group"
+          >
+            <div className={cn(
+              "w-16 h-16 rounded-full flex items-center justify-center text-white mb-4 shadow-lg transition-transform group-hover:scale-110",
+              paso.color
+            )}>
+              <paso.icono className="w-8 h-8" />
+            </div>
+            <h4 className="font-bold text-sm mb-1 uppercase tracking-wider">{paso.titulo}</h4>
+            <p className="text-[10px] text-muted-foreground leading-tight px-2">{paso.desc}</p>
+            {index < pasos.length - 1 && (
+              <div className="hidden md:block absolute top-8 translate-x-1/2 right-[calc(100%/10*-1)]">
+                <ArrowRight className="w-6 h-6 text-muted-foreground/30" />
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+      
+      <div className="mt-12 p-4 bg-muted/30 rounded-full border border-border/50 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+        <RotateCcw className="w-3 h-3" /> Flujo Continuo de Gestión Comercial
+      </div>
+    </div>
+  );
+};
 
 export default function StrategicPlan() {
-  const contenedor = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15
-      }
+  const acciones = [
+    {
+      titulo: "Recuperación de Meta (Meta Mayo: 18)",
+      desc: "Implementar jornadas de 'Día de Cierre' quincenales para asegurar el volumen mínimo de 18 renovaciones por gestor.",
+      prioridad: "Alta",
+      indicador: "Volumen"
+    },
+    {
+      titulo: "Clínicas de Calidad",
+      desc: "Sesiones semanales de escucha de llamadas para gestores con Impacto Alto/Crítico, enfocadas en el modelo EARC.",
+      prioridad: "Crítica",
+      indicador: "Calidad"
+    },
+    {
+      titulo: "Plan de Choque Atrasos",
+      desc: "Automatización de alertas preventivas 5 días antes del vencimiento para reducir el KPI de atrasos al <2%.",
+      prioridad: "Media",
+      indicador: "Atrasos"
     }
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
+  ];
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      
       <main className="flex-1 p-8 lg:p-10 overflow-auto">
-        <div className="max-w-5xl mx-auto space-y-10 pb-20">
-          
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold text-foreground">Plan de Acción Estratégico</h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Análisis del desempeño del Q1 y estrategia correctiva para asegurar los objetivos corporativos en el próximo periodo.
-            </p>
+        <div className="max-w-6xl mx-auto space-y-10">
+          <div className="flex justify-between items-end">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">Plan Estratégico de Mejora</h1>
+              <p className="text-muted-foreground mt-2">Acciones correctivas basadas en el desempeño del Q1 2025.</p>
+            </div>
+            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs py-1 px-3">Estrategia Mayo 2025</Badge>
           </div>
 
-          <motion.div 
-            variants={contenedor}
-            initial="hidden"
-            animate="show"
-            className="grid gap-10"
-          >
-            {/* Sección 1: Diagnóstico */}
-            <motion.section variants={item} className="space-y-6">
-              <div className="flex items-center gap-3 text-primary mb-4 border-b border-border pb-2">
-                <AlertOctagon className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">1. Diagnóstico y Brechas</h2>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-card p-6 rounded-2xl border border-red-100 shadow-sm">
-                  <h3 className="text-lg font-bold text-red-700 mb-3">Problemas Críticos</h3>
-                  <ul className="space-y-3">
-                    <li className="flex gap-3 text-sm text-muted-foreground">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0" />
-                      <span><strong>Atrasos Elevados:</strong> El promedio del equipo es del 3.84%, superando el límite del 2%.</span>
-                    </li>
-                    <li className="flex gap-3 text-sm text-muted-foreground">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0" />
-                      <span><strong>Desempeño Inconsistente:</strong> Gran brecha entre los gestores top y los de bajo rendimiento.</span>
-                    </li>
-                  </ul>
-                </div>
+          <Card className="border-primary/20 shadow-xl overflow-hidden">
+            <CardHeader className="bg-primary/5 border-b border-primary/10">
+              <CardTitle className="flex items-center gap-2 text-primary">
+                <RotateCcw className="w-5 h-5" />
+                Ciclo de Gestión Comercial EARC
+              </CardTitle>
+              <CardDescription>Modelo circular para el tratamiento de objeciones y cierre de renovaciones.</CardDescription>
+            </CardHeader>
+            <CardContent className="bg-card">
+              <CicloEARC />
+            </CardContent>
+          </Card>
 
-                <div className="bg-card p-6 rounded-2xl border border-blue-100 shadow-sm">
-                  <h3 className="text-lg font-bold text-blue-700 mb-3">Oportunidades</h3>
-                  <ul className="space-y-3">
-                    <li className="flex gap-3 text-sm text-muted-foreground">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
-                      <span><strong>Calidad Base:</strong> El equipo tiene buen conocimiento de los procesos de gestión.</span>
-                    </li>
-                    <li className="flex gap-3 text-sm text-muted-foreground">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
-                      <span><strong>Mentores Internos:</strong> Contamos con gestores de alto desempeño para guiar al equipo.</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </motion.section>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {acciones.map((accion, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="h-full border-border/50 hover:border-primary/30 transition-colors shadow-sm">
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant={accion.prioridad === "Crítica" ? "destructive" : "secondary"} className="text-[10px] uppercase">
+                        {accion.prioridad}
+                      </Badge>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{accion.indicador}</span>
+                    </div>
+                    <CardTitle className="text-lg leading-tight">{accion.titulo}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{accion.desc}</p>
+                    <div className="mt-6 flex items-center gap-2 text-[10px] font-bold text-primary uppercase">
+                      <TrendingUp className="w-3 h-3" /> Meta de Mejora: +15%
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
 
-            {/* Sección 2: Plan Mayo */}
-            <motion.section variants={item} className="space-y-6">
-              <div className="flex items-center gap-3 text-accent mb-4 border-b border-border pb-2">
-                <Target className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">2. Plan de Acción: Mayo (Meta 18)</h2>
-              </div>
-
-              <div className="bg-gradient-to-br from-card to-secondary p-8 rounded-3xl border border-border shadow-lg">
-                <div className="flex flex-col md:flex-row gap-8 items-center mb-8">
-                  <div className="flex-1">
-                    <h3 className="text-3xl font-bold text-foreground mb-2">Operación "Recuperación"</h3>
-                    <p className="text-muted-foreground">Objetivo: Lograr 18 renovaciones por gestor en mayo.</p>
-                  </div>
-                  <div className="bg-primary/10 px-6 py-4 rounded-2xl text-center min-w-[200px]">
-                    <span className="block text-sm text-primary font-bold uppercase tracking-wider mb-1">Nueva Meta</span>
-                    <span className="block text-4xl font-black text-primary">18</span>
-                    <span className="text-xs text-muted-foreground">Renovaciones / Gestor</span>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold mb-2">1</div>
-                    <h4 className="font-bold text-foreground">Micro-Metas Diarias</h4>
-                    <p className="text-sm text-muted-foreground">Desglosar las 18 renovaciones en objetivos diarios alcanzables.</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold mb-2">2</div>
-                    <h4 className="font-bold text-foreground">Limpieza de Embudo</h4>
-                    <p className="text-sm text-muted-foreground">Priorizar el cierre de casos pendientes de abril en la primera semana.</p>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold mb-2">3</div>
-                    <h4 className="font-bold text-foreground">Incentivos Semanales</h4>
-                    <p className="text-sm text-muted-foreground">Reconocimiento público y bonos por cumplimiento temprano.</p>
-                  </div>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Sección 3: Acciones Correctivas */}
-            <motion.section variants={item} className="space-y-6">
-              <div className="flex items-center gap-3 text-orange-600 mb-4 border-b border-border pb-2">
-                <TrendingUp className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">3. Recuperación de Desempeño</h2>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="bg-card p-6 rounded-2xl border border-border">
-                  <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                    <span className="p-1 bg-red-100 text-red-600 rounded">Bajo Rendimiento</span>
-                  </h3>
-                  <ul className="space-y-4">
-                    <li className="flex items-start gap-3">
-                      <ArrowRight className="w-5 h-5 text-red-400 mt-0.5" />
-                      <p className="text-sm text-muted-foreground"><strong className="text-foreground">Plan de Mejora:</strong> Implementación de PIP enfocado en métricas de actividad diaria.</p>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <ArrowRight className="w-5 h-5 text-red-400 mt-0.5" />
-                      <p className="text-sm text-muted-foreground"><strong className="text-foreground">Acompañamiento:</strong> Sesiones de escucha de llamadas con gestores top.</p>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-card p-6 rounded-2xl border border-border">
-                  <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                    <span className="p-1 bg-green-100 text-green-600 rounded">Retención de Talento</span>
-                  </h3>
-                  <ul className="space-y-4">
-                    <li className="flex items-start gap-3">
-                      <CheckSquare className="w-5 h-5 text-green-500 mt-0.5" />
-                      <p className="text-sm text-muted-foreground"><strong className="text-foreground">Liderazgo:</strong> Asignación de roles de mentoría para los mejores gestores.</p>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <CheckSquare className="w-5 h-5 text-green-500 mt-0.5" />
-                      <p className="text-sm text-muted-foreground"><strong className="text-foreground">Plan de Carrera:</strong> Conversaciones sobre crecimiento profesional.</p>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </motion.section>
-          </motion.div>
+          <div className="bg-muted/30 p-8 rounded-2xl border border-dashed border-border flex flex-col md:flex-row items-center gap-8">
+            <div className="p-4 bg-background rounded-2xl shadow-inner border border-border">
+              <ShieldCheck className="w-12 h-12 text-primary" />
+            </div>
+            <div className="space-y-2 text-center md:text-left">
+              <h3 className="text-xl font-bold">Compromiso de Recuperación</h3>
+              <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
+                Este plan estratégico tiene como objetivo estandarizar el nivel de impacto en el equipo, moviendo al 40% de los gestores de "Impacto Crítico/Alto" hacia "Impacto Medio/Bajo" mediante la aplicación rigurosa de la técnica EARC y el seguimiento diario de la meta de 18 renovaciones para mayo.
+              </p>
+            </div>
+          </div>
         </div>
       </main>
     </div>
