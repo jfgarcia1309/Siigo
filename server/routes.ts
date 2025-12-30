@@ -30,20 +30,12 @@ function calcularPorcentajeCumplimiento(g: Gestor | InsertarGestor): number {
 }
 
 function calcularCuartiles(lista: Gestor[]) {
-  const ordenados = [...lista].sort((a, b) => calcularPorcentajeCumplimiento(b) - calcularPorcentajeCumplimiento(a));
-  const n = ordenados.length;
-  
-  // Distribuir en 4 cuartiles lo más equitativo posible
-  const q1Size = Math.ceil(n * 0.25);
-  const q2Size = Math.ceil(n * 0.25);
-  const q3Size = Math.ceil(n * 0.25);
-  const q4Size = n - q1Size - q2Size - q3Size;
-
+  // Usar mapeo directo según el MAPA_CUARTILES
   return {
-    q1: ordenados.slice(0, q1Size),
-    q2: ordenados.slice(q1Size, q1Size + q2Size),
-    q3: ordenados.slice(q1Size + q2Size, q1Size + q2Size + q3Size),
-    q4: ordenados.slice(q1Size + q2Size + q3Size)
+    q1: lista.filter(g => MAPA_CUARTILES[g.id] === "Impacto Mínimo"),
+    q2: lista.filter(g => MAPA_CUARTILES[g.id] === "Impacto Bajo"),
+    q3: lista.filter(g => MAPA_CUARTILES[g.id] === "Impacto Medio"),
+    q4: lista.filter(g => MAPA_CUARTILES[g.id] === "Impacto Crítico")
   };
 }
 
@@ -112,8 +104,13 @@ export async function registerRoutes(
 
   app.get(api.gestores.listar.path, async (req, res) => {
     const gestores = await almacenamiento.obtenerGestores();
-    gestores.sort((a, b) => calcularPorcentajeCumplimiento(b) - calcularPorcentajeCumplimiento(a));
-    res.json(gestores);
+    // Aplicar clasificación correcta del MAPA_CUARTILES
+    const gestoresConClasificacion = gestores.map(g => ({
+      ...g,
+      clasificacion: MAPA_CUARTILES[g.id] || g.clasificacion
+    }));
+    gestoresConClasificacion.sort((a, b) => calcularPorcentajeCumplimiento(b) - calcularPorcentajeCumplimiento(a));
+    res.json(gestoresConClasificacion);
   });
   
   app.get(api.gestores.estadisticas.path, async (req, res) => {
