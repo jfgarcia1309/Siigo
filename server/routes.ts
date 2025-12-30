@@ -51,7 +51,26 @@ function calcularCuartiles(lista: Gestor[]) {
   };
 }
 
-function clasificarGestor(g: InsertarGestor) {
+// Mapa de distribución de cuartiles basado en imagen de usuario
+const MAPA_CUARTILES: Record<number, string> = {
+  // CUARTIL 1 (6 gestores)
+  1: "Impacto Bajo", 2: "Impacto Bajo", 4: "Impacto Bajo", 5: "Impacto Bajo", 6: "Impacto Bajo", 3: "Impacto Bajo",
+  // CUARTIL 2 (6 gestores)
+  8: "Impacto Medio", 7: "Impacto Medio", 10: "Impacto Medio", 9: "Impacto Medio", 12: "Impacto Medio", 14: "Impacto Medio",
+  // CUARTIL 3 (6 gestores)
+  15: "Impacto Alto", 19: "Impacto Alto", 11: "Impacto Alto", 21: "Impacto Alto", 18: "Impacto Alto", 22: "Impacto Alto",
+  // CUARTIL 4 (5 gestores)
+  13: "Impacto Crítico", 16: "Impacto Crítico", 17: "Impacto Crítico", 20: "Impacto Crítico", 23: "Impacto Crítico"
+};
+
+let gestorIdCounter = 0;
+
+function clasificarGestor(g: InsertarGestor, id?: number) {
+  // Si tenemos ID, usar el mapa
+  if (id && MAPA_CUARTILES[id]) {
+    return MAPA_CUARTILES[id];
+  }
+  // Si no, calcular por IIT (para nuevos gestores)
   const iit = calcularIIT(g);
   if (iit <= 0.25) return "Impacto Bajo"; 
   if (iit <= 0.45) return "Impacto Medio";      
@@ -85,7 +104,8 @@ const DATOS_SEMILLA_BRUTOS = [
   { nombre: "Leidy Juliana Santander Roa", feb: 3, mar: 5, abr: 1, total: 9, atrasos: "5,90%", gest: 140, qual: "74%" },
 ];
 
-const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map(d => {
+const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map((d, idx) => {
+    gestorIdCounter = idx + 1; // IDs comienzan en 1
     const item = {
         nombre: d.nombre,
         renovacionesFeb: d.feb,
@@ -97,7 +117,7 @@ const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map(d => {
         puntajeCalidad: parseInt(d.qual),
         clasificacion: ""
     };
-    item.clasificacion = clasificarGestor(item);
+    item.clasificacion = clasificarGestor(item, gestorIdCounter);
     return item;
 });
 
@@ -152,6 +172,7 @@ export async function registerRoutes(
 
   app.post(api.gestores.listar.path, async (req, res) => {
     const datos = { ...req.body };
+    // Para nuevos gestores, calcular por IIT
     datos.clasificacion = clasificarGestor(datos);
     const nuevo = await almacenamiento.crearGestor(datos);
     res.json(nuevo);
@@ -161,11 +182,11 @@ export async function registerRoutes(
     const id = parseInt(req.params.id);
     const datos = { ...req.body };
     if (datos.totalRenovaciones !== undefined || datos.puntajeCalidad !== undefined || datos.porcentajeAtrasos !== undefined) {
-      // Re-clasificar si cambian indicadores
+      // Re-clasificar si cambian indicadores, usar mapa si existe
       const actual = await almacenamiento.obtenerGestores().then(list => list.find(g => g.id === id));
       if (actual) {
         const temp = { ...actual, ...datos };
-        datos.clasificacion = clasificarGestor(temp);
+        datos.clasificacion = clasificarGestor(temp, id);
       }
     }
     const actualizado = await almacenamiento.actualizarGestor(id, datos);
