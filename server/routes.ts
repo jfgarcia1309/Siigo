@@ -6,35 +6,18 @@ import { api } from "@shared/routes";
 import { InsertarGestor, Gestor } from "@shared/schema";
 
 /**
- * ÍNDICE DE IMPACTO TOTAL (IIT) - FÓRMULA DE CÁLCULO
+ * CÁLCULO DE PORCENTAJE DE CUMPLIMIENTO
  * 
- * El IIT normaliza tres variables críticas para medir el riesgo/impacto de cada gestor:
- * 1. Renovaciones (R): Acumulado trimestral (Meta 36).
- * 2. Calidad (C): Puntaje de calidad (0-100%).
- * 3. Atrasos (A): Porcentaje de atrasos (0-10% aprox).
- * 
- * NORMALIZACIÓN (0 a 1, donde 1 es el mayor impacto/riesgo):
- * - nR = 1 - (Math.min(R, 36) / 36) -> A menor renovación, mayor impacto.
- * - nC = 1 - (C / 100) -> A menor calidad, mayor impacto.
- * - nA = Math.min(A, 10) / 10   -> A mayor atraso, mayor impacto (tope en 10%).
- * 
- * FÓRMULA FINAL:
- * IIT = (nR * 0.50) + (nC * 0.30) + (nA * 0.20)
+ * Mide el desempeño del gestor basado en renovaciones completadas vs meta trimestral.
+ * Meta: 36 renovaciones por trimestre
+ * Fórmula: (totalRenovaciones / 36) * 100
  */
-function calcularIIT(g: Gestor | InsertarGestor) {
-  const R = g.totalRenovaciones;
-  const C = g.puntajeCalidad;
-  const A = Number(String(g.porcentajeAtrasos).replace(',', '.'));
-
-  const nR = 1 - (Math.min(R, 36) / 36);
-  const nC = 1 - (C / 100);
-  const nA = Math.min(A, 10) / 10;
-
-  return (nR * 0.50) + (nC * 0.30) + (nA * 0.20);
+function calcularPorcentajeCumplimiento(g: Gestor | InsertarGestor): number {
+  return (g.totalRenovaciones / 36) * 100;
 }
 
 function calcularCuartiles(lista: Gestor[]) {
-  const ordenados = [...lista].sort((a, b) => calcularIIT(a) - calcularIIT(b));
+  const ordenados = [...lista].sort((a, b) => calcularPorcentajeCumplimiento(b) - calcularPorcentajeCumplimiento(a));
   const n = ordenados.length;
   
   // Distribuir en 4 cuartiles lo más equitativo posible
@@ -51,31 +34,21 @@ function calcularCuartiles(lista: Gestor[]) {
   };
 }
 
-// Mapa de distribución de cuartiles basado en imagen de usuario
-const MAPA_CUARTILES: Record<number, string> = {
-  // CUARTIL 1 (6 gestores)
-  1: "Impacto Bajo", 2: "Impacto Bajo", 4: "Impacto Bajo", 5: "Impacto Bajo", 6: "Impacto Bajo", 3: "Impacto Bajo",
-  // CUARTIL 2 (6 gestores)
-  8: "Impacto Medio", 7: "Impacto Medio", 10: "Impacto Medio", 9: "Impacto Medio", 12: "Impacto Medio", 14: "Impacto Medio",
-  // CUARTIL 3 (6 gestores)
-  15: "Impacto Alto", 19: "Impacto Alto", 11: "Impacto Alto", 21: "Impacto Alto", 18: "Impacto Alto", 22: "Impacto Alto",
-  // CUARTIL 4 (5 gestores)
-  13: "Impacto Crítico", 16: "Impacto Crítico", 17: "Impacto Crítico", 20: "Impacto Crítico", 23: "Impacto Crítico"
-};
-
-let gestorIdCounter = 0;
-
-function clasificarGestor(g: InsertarGestor, id?: number) {
-  // Si tenemos ID, usar el mapa
-  if (id && MAPA_CUARTILES[id]) {
-    return MAPA_CUARTILES[id];
-  }
-  // Si no, calcular por IIT (para nuevos gestores)
-  const iit = calcularIIT(g);
-  if (iit <= 0.25) return "Impacto Bajo"; 
-  if (iit <= 0.45) return "Impacto Medio";      
-  if (iit <= 0.65) return "Impacto Alto"; 
-  return "Impacto Crítico";                          
+/**
+ * CLASIFICACIÓN POR CUARTILES BASADA EN PORCENTAJE DE CUMPLIMIENTO
+ * 
+ * CUARTIL 1: >= 86%       (Impacto Bajo)
+ * CUARTIL 2: 63.9% - 86%  (Impacto Medio)
+ * CUARTIL 3: 47.2% - 63.9% (Impacto Alto)
+ * CUARTIL 4: < 47.2%      (Impacto Crítico)
+ */
+function clasificarGestor(g: InsertarGestor): string {
+  const cumplimiento = calcularPorcentajeCumplimiento(g);
+  
+  if (cumplimiento >= 86) return "Impacto Bajo";
+  if (cumplimiento >= 63.9) return "Impacto Medio";
+  if (cumplimiento >= 47.2) return "Impacto Alto";
+  return "Impacto Crítico";
 }
 
 const DATOS_SEMILLA_BRUTOS = [
@@ -104,8 +77,7 @@ const DATOS_SEMILLA_BRUTOS = [
   { nombre: "Leidy Juliana Santander Roa", feb: 3, mar: 5, abr: 1, total: 9, atrasos: "5,90%", gest: 140, qual: "74%" },
 ];
 
-const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map((d, idx) => {
-    gestorIdCounter = idx + 1; // IDs comienzan en 1
+const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map(d => {
     const item = {
         nombre: d.nombre,
         renovacionesFeb: d.feb,
@@ -117,7 +89,7 @@ const DATOS_SEMILLA: InsertarGestor[] = DATOS_SEMILLA_BRUTOS.map((d, idx) => {
         puntajeCalidad: parseInt(d.qual),
         clasificacion: ""
     };
-    item.clasificacion = clasificarGestor(item, gestorIdCounter);
+    item.clasificacion = clasificarGestor(item);
     return item;
 });
 
@@ -130,7 +102,7 @@ export async function registerRoutes(
 
   app.get(api.gestores.listar.path, async (req, res) => {
     const gestores = await almacenamiento.obtenerGestores();
-    gestores.sort((a, b) => calcularIIT(a) - calcularIIT(b));
+    gestores.sort((a, b) => calcularPorcentajeCumplimiento(b) - calcularPorcentajeCumplimiento(a));
     res.json(gestores);
   });
   
@@ -172,7 +144,6 @@ export async function registerRoutes(
 
   app.post(api.gestores.listar.path, async (req, res) => {
     const datos = { ...req.body };
-    // Para nuevos gestores, calcular por IIT
     datos.clasificacion = clasificarGestor(datos);
     const nuevo = await almacenamiento.crearGestor(datos);
     res.json(nuevo);
@@ -182,11 +153,11 @@ export async function registerRoutes(
     const id = parseInt(req.params.id);
     const datos = { ...req.body };
     if (datos.totalRenovaciones !== undefined || datos.puntajeCalidad !== undefined || datos.porcentajeAtrasos !== undefined) {
-      // Re-clasificar si cambian indicadores, usar mapa si existe
+      // Re-clasificar si cambian indicadores
       const actual = await almacenamiento.obtenerGestores().then(list => list.find(g => g.id === id));
       if (actual) {
         const temp = { ...actual, ...datos };
-        datos.clasificacion = clasificarGestor(temp, id);
+        datos.clasificacion = clasificarGestor(temp);
       }
     }
     const actualizado = await almacenamiento.actualizarGestor(id, datos);
