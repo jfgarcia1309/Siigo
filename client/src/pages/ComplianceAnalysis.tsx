@@ -180,10 +180,10 @@ export default function ComplianceAnalysis() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todos">Todos los Gestores</SelectItem>
-                  <SelectItem value="Impacto Bajo">Impacto Bajo</SelectItem>
-                  <SelectItem value="Impacto Medio">Impacto Medio</SelectItem>
-                  <SelectItem value="Impacto Alto">Impacto Alto</SelectItem>
-                  <SelectItem value="Impacto Crítico">Impacto Crítico</SelectItem>
+                  <SelectItem value="Impacto Mínimo">Impacto Mínimo (Q1)</SelectItem>
+                  <SelectItem value="Impacto Bajo">Impacto Bajo (Q2)</SelectItem>
+                  <SelectItem value="Impacto Medio">Impacto Medio (Q3)</SelectItem>
+                  <SelectItem value="Impacto Crítico">Impacto Crítico (Q4)</SelectItem>
                 </SelectContent>
               </Select>
               <Badge variant="outline" className="text-xs">

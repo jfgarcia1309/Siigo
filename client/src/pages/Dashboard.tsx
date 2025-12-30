@@ -79,7 +79,7 @@ const FormularioGestor = ({ initialData, onSuccess, onCancel }: { initialData?: 
       porcentajeAtrasos: "0",
       renovacionesGestionadas: 0,
       puntajeCalidad: 0,
-      clasificacion: "Impacto Medio"
+      clasificacion: "Impacto Mínimo"
     }
   });
 
@@ -177,9 +177,9 @@ export default function Dashboard() {
     
     // Ordenar por impacto y luego por números de mayor a menor
     const ordenImpacto: Record<string, number> = {
-      "Impacto Bajo": 0,
-      "Impacto Medio": 1,
-      "Impacto Alto": 2,
+      "Impacto Mínimo": 0,
+      "Impacto Bajo": 1,
+      "Impacto Medio": 2,
       "Impacto Crítico": 3
     };
     
@@ -286,10 +286,10 @@ export default function Dashboard() {
 
     // Sheets 2-5: Cuartiles (datos completos como en Vista Completa)
     [
-      { cuartil: 1, label: "Q1 - Mínimo", color: "Impacto Bajo" },
-      { cuartil: 2, label: "Q2 - Bajo", color: "Impacto Bajo" },
-      { cuartil: 3, label: "Q3 - Medio", color: "Impacto Medio" },
-      { cuartil: 4, label: "Q4 - Crítico", color: "Impacto Alto" }
+      { cuartil: 1, label: "Q1 - Impacto Mínimo", color: "Impacto Mínimo" },
+      { cuartil: 2, label: "Q2 - Impacto Bajo", color: "Impacto Bajo" },
+      { cuartil: 3, label: "Q3 - Impacto Medio", color: "Impacto Medio" },
+      { cuartil: 4, label: "Q4 - Impacto Crítico", color: "Impacto Crítico" }
     ].forEach((q, idx) => {
       const qData = gestoresOrdenados.filter(g => g.cuartil === q.cuartil).map(g => ({
         "ID": g.id,
